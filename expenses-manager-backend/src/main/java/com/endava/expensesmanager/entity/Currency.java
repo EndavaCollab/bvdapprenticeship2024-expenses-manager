@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class Currency{
     @Id
-    @Column(name = "currency_id")
-    private int currencyId;
+    @Column(name = "id")
+    private int id;
 
-    @Column(name = "currency_code", nullable = true, unique = true)
-    private String currencyCode;
+    @Column(name = "code", nullable = false, unique = true)
+    private String code;
 }

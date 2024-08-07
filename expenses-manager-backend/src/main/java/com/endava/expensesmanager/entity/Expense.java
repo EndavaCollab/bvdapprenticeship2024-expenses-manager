@@ -2,34 +2,33 @@ package com.endava.expensesmanager.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 public class Expense{
     @Id
-    @Column(name = "expense_id")
-    private String expenseId;
+    @Column(name = "id")
+    private int id;
 
-    @Column(name = "expense_description", nullable = true, unique = false)
+    @Column(name = "description", nullable = true, unique = false)
     private String description;
 
-    @Column(name = "expense_date", nullable = false, unique = false)
-    private Timestamp expenseDate;
+    @Column(name = "date", nullable = false, unique = false)
+    private LocalDateTime date;
 
-    @Column(name = "expense_amount", nullable=false, unique = false)
-    private int expenseAmount;
+    @Column(name = "amount", nullable = false, unique = false)
+    private int amount;
 
     @OneToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
     @OneToOne
-    @JoinColumn(name = "currency_id", referencedColumnName = "currency_id")
+    @JoinColumn(name = "currency_id", referencedColumnName = "id", nullable = false)
     private Currency currency;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private Users user;
 }

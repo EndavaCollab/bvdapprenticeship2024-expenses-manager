@@ -7,13 +7,13 @@ import lombok.Data;
 @Data
 public class Category{
     @Id
-    @Column(name = "category_id")
-    private int categoryId;
+    @Column(name = "id")
+    private int id;
 
-    @Column(name = "category_description", nullable = false, unique = true)
-    private String categoryDescription;
+    @Column(name = "description", nullable = false, unique = true)
+    private String description;
 
-    @Column(name = "category_color", nullable = false, unique = true)
-    private String categoryColor;
+    @Column(name = "color", nullable = false, unique = true)
+    private String color;
 }
 

@@ -2,19 +2,18 @@ package com.endava.expensesmanager.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 public class Users{
     @Id
-    @Column(name = "user_id")
-    private String userId;
+    @Column(name = "id")
+    private int id;
 
-    @Column(name = "user_name", nullable=false, unique=true)
-    private String userName;
+    @Column(name = "name", nullable = false, unique=true)
+    private String name;
 
-    @Column(name = "user_created", nullable=false)
-    private Timestamp userCreated;
+    @Column(name = "created", nullable = false)
+    private LocalDateTime created;
 }
