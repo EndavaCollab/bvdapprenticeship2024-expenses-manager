@@ -1,0 +1,77 @@
+.b-login {
+    background-image: url("../../assets/images/background.svg");
+    
+    @mixin login-layout {
+        height: 100%;
+        width: 100%;
+        margin: 0px;
+      
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    @include login-layout;
+
+    .login-overlay{
+        background-image: url("../../assets/images/overlay.svg");
+
+        position: absolute;
+
+        @include login-layout;
+    }
+
+
+    .logo{
+        position: relative;
+        top: 200px;
+        width:100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .logo-icon{
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+
+        .logo-text{
+
+            font-family: 'Outfit';
+            font-size: 64px;
+            position: relative;
+
+            color: #4F46E5;
+
+        }
+    }
+
+    .login-form{
+        position: relative;
+        top: 200px;
+        width: 100%;
+        margin-top: 30px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .username-input{
+            width: 325px;
+            height: 40px;
+            border-radius: 5px;
+        }
+
+        .login-button{
+            margin-top: 32px;
+            height: 40px;
+            width: 325px;
+            color: white;
+            background-color: #4F46E5;
+            border-radius: 10px;
+        }
+        
+    }
+}
+
