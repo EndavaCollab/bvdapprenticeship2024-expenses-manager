@@ -1,0 +1,43 @@
+.sidebar{
+    width: 220px;
+    height: 100%;
+    background-color: #4F46E5;
+
+    .content{
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        @mixin font{
+            font-family: 'Outfit';
+            font-size:large;
+            color: #E9F0FF;
+        }
+        @include font;
+        
+        .logo{
+            margin: 5px;
+        }
+
+        .sidebar-button{
+            margin: 5px;
+            width: 90%;
+            background-color: #4F46E5;
+            @include font;
+            font-size:medium;
+            display: flex;
+            align-content: flex-start;
+            
+            &:hover{
+                background-color: #E9F0FF;
+                color: #4F46E5;
+            }
+
+        }
+        .active{
+            background-color: #E9F0FF;
+            color: #4F46E5;
+        }
+    }
+}

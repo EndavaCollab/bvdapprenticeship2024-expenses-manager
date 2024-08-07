@@ -1,0 +1,23 @@
+<mat-sidenav-container class="sidebar">
+    <mat-sidenav>Start</mat-sidenav>
+    <mat-sidenav-content class="content">
+        <img src="../../assets/images/logo.svg" class="logo">
+        <p class="logo">Expenses Manager</p>
+        <a class="sidebar-button" mat-flat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]={exact:true}>
+            <mat-icon>home</mat-icon>
+            Home
+        </a>
+        <a class="sidebar-button" mat-flat-button routerLink="/expenses" routerLinkActive="active" [routerLinkActiveOptions]={exact:true}>
+            <mat-icon>list</mat-icon>
+            Expenses list
+        </a>
+        <a class="sidebar-button" mat-flat-button routerLink="/reports" routerLinkActive="active" [routerLinkActiveOptions]={exact:true}>
+            <mat-icon>pie_chart</mat-icon>
+            Reports
+        </a>
+        <a class="sidebar-button" mat-flat-button routerLink="/login" >
+            <mat-icon>logout</mat-icon>
+            Log Out
+        </a>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
