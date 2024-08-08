@@ -1,77 +1,62 @@
 .b-login {
-    background-image: url("../../assets/images/background.svg");
+    background-image: url("../../assets/images/overlay.svg"), url("../../assets/images/background.svg");
     
-    @mixin login-layout {
-        height: 100%;
-        width: 100%;
-        margin: 0px;
+    inline-size: 100%;
+    block-size: 100%;
+    margin: 0rem;
       
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-    @include login-layout;
-
-    .login-overlay{
-        background-image: url("../../assets/images/overlay.svg");
-
-        position: absolute;
-
-        @include login-layout;
-    }
-
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 
     .logo{
         position: relative;
-        top: 200px;
-        width:100%;
+        top: 20rem;
+        inline-size:100%;
 
         display: flex;
         flex-direction: column;
         align-items: center;
 
         .logo-icon{
-            width: 80px;
-            height: 80px;
+            inline-size: 8rem;
+            block-size: 8rem;
             position: relative;
         }
 
         .logo-text{
-
-            font-family: 'Outfit';
-            font-size: 64px;
+            font-size: 6.4rem;
             position: relative;
 
-            color: #4F46E5;
+            color: var(--primary-color);
 
         }
     }
 
     .login-form{
         position: relative;
-        top: 200px;
-        width: 100%;
-        margin-top: 30px;
+        top: 20rem;
+        inline-size: 100%;
+        margin-top: 3rem;
 
         display: flex;
         flex-direction: column;
         align-items: center;
 
         .username-input{
-            width: 325px;
-            height: 40px;
-            border-radius: 5px;
+            inline-size: 32.5rem;
+            block-size: 4rem;
+            border-radius: 0.5rem;
         }
 
         .login-button{
-            margin-top: 32px;
-            height: 40px;
-            width: 325px;
+            margin-top: 3.2rem;
+            inline-size: 32.5rem;
+            block-size: 4rem;
             color: white;
-            background-color: #4F46E5;
-            border-radius: 10px;
+            background-color: var(--primary-color);
+            border-radius: 1rem;
         }
         
     }
 }
-

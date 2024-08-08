@@ -1,3 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
-html, body { height: 100%; }
-body { margin: 0; font-family: 'Outfit'; }
+html, body { 
+    height: 100%; 
+}
+
+body {
+     margin: 0; 
+     font-family: 'Outfit'; 
+}
+
+html {
+    font-size: 62.5%;
+}
+
+:root{
+    --primary-color: #4F46E5;
+}
