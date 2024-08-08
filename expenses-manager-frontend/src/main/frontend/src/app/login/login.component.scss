@@ -1,0 +1,62 @@
+.b-login {
+    background-image: url("../../assets/images/overlay.svg"), url("../../assets/images/background.svg");
+    
+    inline-size: 100%;
+    block-size: 100%;
+    margin: 0rem;
+      
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    .logo{
+        position: relative;
+        top: 20rem;
+        inline-size:100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .logo-icon{
+            inline-size: 8rem;
+            block-size: 8rem;
+            position: relative;
+        }
+
+        .logo-text{
+            font-size: 6.4rem;
+            position: relative;
+
+            color: var(--primary-color);
+
+        }
+    }
+
+    .login-form{
+        position: relative;
+        top: 20rem;
+        inline-size: 100%;
+        margin-top: 3rem;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .username-input{
+            inline-size: 32.5rem;
+            block-size: 4rem;
+            border-radius: 0.5rem;
+        }
+
+        .login-button{
+            margin-top: 3.2rem;
+            inline-size: 32.5rem;
+            block-size: 4rem;
+            color: white;
+            background-color: var(--primary-color);
+            border-radius: 1rem;
+        }
+        
+    }
+}
