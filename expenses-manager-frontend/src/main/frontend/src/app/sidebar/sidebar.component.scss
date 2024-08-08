@@ -1,31 +1,26 @@
-.sidebar{
-    width: 220px;
-    height: 100%;
-    background-color: #4F46E5;
+.b-sidebar{
+    width: 15rem;
+    block-size: 100%;
+    background-color: var(--primary-color);
 
     .content{
 
         display: flex;
         flex-direction: column;
         align-items: center;
-
-        @mixin font{
-            font-family: 'Outfit';
-            font-size:large;
-            color: #E9F0FF;
-        }
-        @include font;
+        font-size:1.5rem;
+        color: #E9F0FF;
         
-        .logo{
-            margin: 5px;
+        .logo-title, .logo-image{
+            margin: 0.3rem;
         }
 
         .sidebar-button{
-            margin: 5px;
+            margin: 0.4rem;
             width: 90%;
             background-color: #4F46E5;
-            @include font;
-            font-size:medium;
+            font-size:1rem;
+            color: #E9F0FF;
             display: flex;
             align-content: flex-start;
             
