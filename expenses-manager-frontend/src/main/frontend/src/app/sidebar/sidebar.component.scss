@@ -9,7 +9,7 @@
         flex-direction: column;
         align-items: center;
         font-size:1.5rem;
-        color: #E9F0FF;
+        color: var(--secondary-color);
         
         .logo-title, .logo-image{
             margin: 0.3rem;
@@ -20,18 +20,18 @@
             width: 90%;
             background-color: var(--primary-color);
             font-size:1rem;
-            color: #E9F0FF;
+            color: var(--secondary-color);
             display: flex;
             align-content: flex-start;
             
             &:hover{
-                background-color: #E9F0FF;
+                background-color: var(--secondary-color);
                 color: var(--primary-color);
             }
 
         }
         .active{
-            background-color: #E9F0FF;
+            background-color: var(--secondary-color);
             color: var(--primary-color);
         }
     }
