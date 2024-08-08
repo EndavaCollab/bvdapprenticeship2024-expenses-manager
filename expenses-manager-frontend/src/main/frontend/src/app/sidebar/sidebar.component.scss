@@ -18,7 +18,7 @@
         .sidebar-button{
             margin: 0.4rem;
             width: 90%;
-            background-color: #4F46E5;
+            background-color: var(--primary-color);
             font-size:1rem;
             color: #E9F0FF;
             display: flex;
@@ -26,13 +26,13 @@
             
             &:hover{
                 background-color: #E9F0FF;
-                color: #4F46E5;
+                color: var(--primary-color);
             }
 
         }
         .active{
             background-color: #E9F0FF;
-            color: #4F46E5;
+            color: var(--primary-color);
         }
     }
 }
