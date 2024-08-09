@@ -1,12 +1,13 @@
-body{
+html, body {   
     width: 100%;
     height: 100%;
-    margin: 0px;
-    font-family: "Outlet";
+    margin: 0;
+    font-family: "Outlet"; 
+    font-size: 62.5%;
 }
-html, body { height: 100%; }
 
 :root{
     --primary-color: #4F46E5;
     --secondary-color: #E9F0FF;
 }
+

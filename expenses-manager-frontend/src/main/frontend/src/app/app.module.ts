@@ -14,6 +14,8 @@ import { HomeComponent } from './home/home.component';
 import { ExpensesComponent } from './expenses/expenses.component';
 import { ReportsComponent } from './reports/reports.component';
 import { LoginComponent } from './login/login.component';
+import { FormsModule } from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
     declarations: [
@@ -30,7 +32,9 @@ import { LoginComponent } from './login/login.component';
         MatSidenavModule,
         MatButtonModule,
         MatIconModule,
-        AppRoutingModule
+        AppRoutingModule,
+        FormsModule,
+        MatInputModule
     ],
     providers: [],
     bootstrap: [AppComponent]
