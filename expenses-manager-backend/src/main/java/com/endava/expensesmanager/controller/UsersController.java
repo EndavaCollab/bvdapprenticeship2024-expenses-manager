@@ -2,7 +2,6 @@ package com.endava.expensesmanager.controller;
 
 import com.endava.expensesmanager.entity.Users;
 import com.endava.expensesmanager.service.UsersService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +12,12 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UsersController {
 
-    @Autowired
-    private UsersService usersService;
+    private final UsersService usersService;
 
-    // Create
+    public UsersController(UsersService usersService) {
+        this.usersService = usersService;
+    }
+
     @PostMapping
     public ResponseEntity<Users> createUser(@RequestParam String name) {
         Users user = usersService.createUser(name);
