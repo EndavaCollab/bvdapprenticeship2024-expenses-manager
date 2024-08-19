@@ -7,3 +7,14 @@ INSERT INTO category (description, color) VALUES ('Saving', '#ffd700');
 INSERT INTO category (description, color) VALUES ('Clothing', '#ff69b4');
 INSERT INTO category (description, color) VALUES ('Housing', '#20b2aa');
 INSERT INTO category (description, color) VALUES ('Health', '#db7093');
+
+INSERT INTO currency (code) VALUES ('RON');
+INSERT INTO currency (code) VALUES ('MDL');
+INSERT INTO currency (code) VALUES ('EUR');
+INSERT INTO currency (code) VALUES ('USD');
+INSERT INTO currency (code) VALUES ('GBP');
+INSERT INTO currency (code) VALUES ('CAD');
+INSERT INTO currency (code) VALUES ('CHF');
+INSERT INTO currency (code) VALUES ('HUF');
+INSERT INTO currency (code) VALUES ('CZK');
+INSERT INTO currency (code) VALUES ('PLN');
