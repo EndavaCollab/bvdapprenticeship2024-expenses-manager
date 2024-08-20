@@ -1,0 +1,2 @@
+# Only allow DevOps to approve changes to pipelines
+/.github/workflows @en-nader-said @en-vasiliuralucaelena
