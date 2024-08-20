@@ -23,9 +23,13 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      working-directory: ./src/main/frontend
+
 
     - name: Build Angular application
       run: npm run build --prod
+      working-directory: ./src/main/frontend
+
 
     - name: Terraform Output - Get VM IP
       id: get-vm-ip
