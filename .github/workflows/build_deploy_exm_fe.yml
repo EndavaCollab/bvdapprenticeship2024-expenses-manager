@@ -1,0 +1,49 @@
+name: Build and Deploy EXM FE
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Angular application
+      run: npm run build --prod
+
+    - name: Terraform Output - Get VM IP
+      id: get-vm-ip
+      run: echo "::set-output name=vm_ip::$(terraform output -raw public_ip)"
+
+    - name: SSH into VM and install Nginx
+      run: |
+        ssh -o StrictHostKeyChecking=no $TF_VAR_admin_username@${{ steps.get-vm-ip.outputs.vm_ip }} << 'EOF'
+          sudo apt-get update
+          sudo apt-get install nginx -y 
+        EOF
+
+    - name: Copy build files to VM
+      run: |
+        scp -o StrictHostKeyChecking=no -r dist/* $TF_VAR_admin_username@${{ steps.get-vm-ip.outputs.vm_ip }}:/var/www/html/
+
+    - name: Restart Nginx
+      run: |
+        ssh -o StrictHostKeyChecking=no $TF_VAR_admin_username@${{ steps.get-vm-ip.outputs.vm_ip }} << 'EOF'
+          sudo systemctl restart nginx 
+        EOF
