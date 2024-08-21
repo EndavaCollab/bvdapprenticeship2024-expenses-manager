@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - main
-      
+
 permissions:
   id-token: write
   contents: read
@@ -31,7 +31,7 @@ jobs:
       working-directory: expenses-manager-frontend/src/main/frontend
 
     - name: Build Angular application
-      run: npm run build 
+      run: npm run build --configuration production
       working-directory: expenses-manager-frontend/src/main/frontend
 
     - name: Azure CLI Login
@@ -53,7 +53,7 @@ jobs:
 
     - name: SSH into VM and install Nginx
       run: |
-        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} << 'EOF'
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} << EOF
           sudo apt-get update
           sudo apt-get install nginx -y 
         EOF
@@ -64,7 +64,7 @@ jobs:
       
     - name: Restart Nginx
       run: |
-        ssh -i ssh_key -o StrictHostKeyChecking-no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} << 'EOF'
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} << EOF
           sudo systemctl restart nginx 
         EOF
 
