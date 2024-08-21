@@ -11,6 +11,7 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment: deploy  
 
     steps:
     - name: Checkout code
@@ -19,46 +20,49 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '20.16.0'
 
     - name: Install dependencies
       run: npm install
       working-directory: expenses-manager-frontend/src/main/frontend
 
     - name: Build Angular application
-      run: npm run build --prod
+      run: npm run build 
       working-directory: expenses-manager-frontend/src/main/frontend
 
     - name: Azure CLI Login
-      uses: azure/login@v1
+      uses: azure/login@v2 
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: Get VM Public IP
       id: get-vm-ip
       run: |
-        az vm list-ip-addresses --name ${{ secrets.EXM_VM_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP_NAME }} --query "[0].virtualMachine.network.publicIpAddresses[0].ipAddress" -o tsv
-      continue-on-error: true
+        echo "##[set-output name=vm_ip;]$(az vm list-ip-addresses --name ${{ secrets.EXM_VM_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP_NAME }} --query "[0].virtualMachine.network.publicIpAddresses[0].ipAddress" -o tsv)"
+
+    - name: Create SSH private key file
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key
+        chmod 600 ssh_key
 
     - name: SSH into VM and install Nginx
       run: |
-        ssh -o StrictHostKeyChecking=no $admin_username@${{ steps.get-vm-ip.outputs.vm_ip }} << 'EOF'
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} << 'EOF'
           sudo apt-get update
           sudo apt-get install nginx -y 
         EOF
-      env:
-        admin_username: ${{ secrets.ADMIN_USERNAME }}
 
     - name: Copy build files to VM
       run: |
-        scp -o StrictHostKeyChecking=no -r dist/* $admin_username@${{ steps.get-vm-ip.outputs.vm_ip }}:/var/www/html/
-      env:
-        admin_username: ${{ secrets.ADMIN_USERNAME }}
-
+        scp -i ssh_key -o StrictHostKeyChecking=no -r expenses-manager-frontend/src/main/frontend/dist/* ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/var/www/html/
+      
     - name: Restart Nginx
       run: |
-        ssh -o StrictHostKeyChecking=no $admin_username@${{ steps.get-vm-ip.outputs.vm_ip }} << 'EOF'
+        ssh -i ssh_key -o StrictHostKeyChecking-no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} << 'EOF'
           sudo systemctl restart nginx 
         EOF
-      env:
-        admin_username: ${{ secrets.ADMIN_USERNAME }}
+
+    - name: Remove SSH private key file
+      run: rm ssh_key
