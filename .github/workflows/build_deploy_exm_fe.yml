@@ -53,9 +53,11 @@ jobs:
 
     - name: SSH into VM and install Nginx
       run: |
-        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} << EOF
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
           sudo apt-get update
-          sudo apt-get install nginx -y 
+          sudo apt-get install nginx -y
+          sudo systemctl start nginx
+          sudo systemctl enable nginx
         EOF
 
     - name: Copy build files to VM
@@ -64,7 +66,7 @@ jobs:
       
     - name: Restart Nginx
       run: |
-        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} << EOF
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
           sudo systemctl restart nginx 
         EOF
 
