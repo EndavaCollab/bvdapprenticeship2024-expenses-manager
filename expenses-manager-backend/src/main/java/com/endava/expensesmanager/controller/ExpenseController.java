@@ -1,14 +1,10 @@
 package com.endava.expensesmanager.controller;
 
-import com.endava.expensesmanager.entity.Category;
-import com.endava.expensesmanager.entity.Currency;
-import com.endava.expensesmanager.entity.Expense;
-import com.endava.expensesmanager.entity.Users;
+import com.endava.expensesmanager.dto.ExpenseDto;
 import com.endava.expensesmanager.service.ExpenseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,35 +18,31 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ResponseEntity<Expense> createExpense(@RequestParam LocalDateTime date, @RequestParam Category category,
-                                                 @RequestParam Currency currency, @RequestParam int amount,
-                                                 @RequestParam String description, @RequestParam Users users) {
-        Expense expense = expenseService.createExpense(date, category, currency, amount, description, users);
-        return ResponseEntity.ok(expense);
+    public ResponseEntity<ExpenseDto> createExpense(@RequestBody ExpenseDto expense) {
+        ExpenseDto createdExpense = expenseService.createExpense(expense);
+        return ResponseEntity.ok(createdExpense);
     }
 
     @GetMapping
-    public ResponseEntity<List<Expense>> getAllExpenses() {
-        List<Expense> expenses = expenseService.getAllExpenses();
+    public ResponseEntity<List<ExpenseDto>> getAllExpenses() {
+        List<ExpenseDto> expenses = expenseService.getAllExpenses();
         return ResponseEntity.ok(expenses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Expense> getExpenseById(@PathVariable int id) {
-        Optional<Expense> expense = expenseService.getExpenseById(id);
+    public ResponseEntity<ExpenseDto> getExpenseById(@PathVariable int id) {
+        Optional<ExpenseDto> expense = expenseService.getExpenseById(id);
         return expense.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Expense> updateExpense(@PathVariable int id, @RequestParam LocalDateTime date,
-                                                 @RequestParam Category category, @RequestParam Currency currency,
-                                                 @RequestParam int amount, @RequestParam String description) {
-        Expense updatedExpense = expenseService.updateExpense(id, date, category, currency, amount, description);
+    public ResponseEntity<ExpenseDto> updateExpense(@PathVariable int id, @RequestBody ExpenseDto expense) {
+        ExpenseDto updatedExpense = expenseService.updateExpense(id, expense);
         return updatedExpense != null ? ResponseEntity.ok(updatedExpense) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Expense> deleteExpense(@PathVariable int id) {
+    public ResponseEntity<ExpenseDto> deleteExpense(@PathVariable int id) {
         expenseService.deleteExpense(id);
         return ResponseEntity.noContent().build();
     }

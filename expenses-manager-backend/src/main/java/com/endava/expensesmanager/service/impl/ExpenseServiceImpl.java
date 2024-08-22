@@ -1,64 +1,58 @@
 package com.endava.expensesmanager.service.impl;
 
-import com.endava.expensesmanager.entity.Category;
-import com.endava.expensesmanager.entity.Currency;
+import com.endava.expensesmanager.dto.ExpenseDto;
 import com.endava.expensesmanager.entity.Expense;
-import com.endava.expensesmanager.entity.Users;
+import com.endava.expensesmanager.mapper.ExpenseMapper;
 import com.endava.expensesmanager.repository.ExpenseRepository;
 import com.endava.expensesmanager.service.ExpenseService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
+
     private final ExpenseRepository expenseRepository;
+    private final ExpenseMapper expenseMapper;
 
     public ExpenseServiceImpl(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
+        this.expenseMapper = ExpenseMapper.INSTANCE;
     }
 
     @Override
-    public Expense createExpense(LocalDateTime date, Category category, Currency currency,
-                                 int amount, String description, Users users) {
-        Expense expense = new Expense();
-        expense.setDate(date);
-        expense.setCategory(category);
-        expense.setCurrency(currency);
-        expense.setAmount(amount);
-        expense.setDescription(description);
-        expense.setUser(users);
-
-        return expenseRepository.save(expense);
+    public ExpenseDto createExpense(ExpenseDto expenseDto) {
+        Expense createdExpense = expenseMapper.expenseDtoToExpense(expenseDto);
+        createdExpense = expenseRepository.save(createdExpense);
+        return expenseMapper.expenseToExpenseDto(createdExpense);
     }
 
     @Override
-    public List<Expense> getAllExpenses() {
-        return expenseRepository.findAll();
-    }
+    public List<ExpenseDto> getAllExpenses() {
+        List<Expense> expenses = expenseRepository.findAll();
+        List<ExpenseDto> expenseDtos = new ArrayList<>(expenses.size());
 
-    @Override
-    public Optional<Expense> getExpenseById(int id) {
-        return expenseRepository.findById(id);
-    }
-
-    @Override
-    public Expense updateExpense(int id, LocalDateTime date, Category category,
-                                 Currency currency, int amount, String description) {
-        Optional<Expense> optionalExpense = expenseRepository.findById(id);
-        if (optionalExpense.isPresent()) {
-            Expense expense = optionalExpense.get();
-            expense.setDate(date);
-            expense.setCategory(category);
-            expense.setCurrency(currency);
-            expense.setAmount(amount);
-            expense.setDescription(description);
-
-            return expenseRepository.save(expense);
+        for (Expense expense : expenses) {
+            expenseDtos.add(expenseMapper.expenseToExpenseDto(expense));
         }
-        return null;
+
+        return expenseDtos;
+    }
+
+    @Override
+    public Optional<ExpenseDto> getExpenseById(int id) {
+        Optional<Expense> expense = expenseRepository.findById(id);
+        return expense.map(expenseMapper::expenseToExpenseDto);
+    }
+
+    @Override
+    public ExpenseDto updateExpense(int id, ExpenseDto expenseDto) {
+        Expense updatedExpense = expenseMapper.expenseDtoToExpense(expenseDto);
+        updatedExpense = expenseRepository.save(updatedExpense);
+
+        return expenseMapper.expenseToExpenseDto(updatedExpense);
     }
 
     @Override
