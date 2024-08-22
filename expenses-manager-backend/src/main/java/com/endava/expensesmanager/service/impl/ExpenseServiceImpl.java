@@ -7,7 +7,6 @@ import com.endava.expensesmanager.repository.ExpenseRepository;
 import com.endava.expensesmanager.service.ExpenseService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,11 +14,10 @@ import java.util.Optional;
 public class ExpenseServiceImpl implements ExpenseService {
 
     private final ExpenseRepository expenseRepository;
-    private final ExpenseMapper expenseMapper;
+    private static final ExpenseMapper expenseMapper = ExpenseMapper.INSTANCE;
 
     public ExpenseServiceImpl(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
-        this.expenseMapper = ExpenseMapper.INSTANCE;
     }
 
     @Override
@@ -32,13 +30,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<ExpenseDto> getAllExpenses() {
         List<Expense> expenses = expenseRepository.findAll();
-        List<ExpenseDto> expenseDtos = new ArrayList<>(expenses.size());
-
-        for (Expense expense : expenses) {
-            expenseDtos.add(expenseMapper.expenseToExpenseDto(expense));
-        }
-
-        return expenseDtos;
+        return expenses.stream().map(expenseMapper::expenseToExpenseDto).toList();
     }
 
     @Override
