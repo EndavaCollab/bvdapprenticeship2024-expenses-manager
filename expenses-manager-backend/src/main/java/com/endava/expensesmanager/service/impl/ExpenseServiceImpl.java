@@ -30,7 +30,9 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<ExpenseDto> getAllExpenses() {
         List<Expense> expenses = expenseRepository.findAll();
-        return expenses.stream().map(expenseMapper::expenseToExpenseDto).toList();
+        return expenses.stream()
+                        .map(expenseMapper::expenseToExpenseDto)
+                        .toList();
     }
 
     @Override
