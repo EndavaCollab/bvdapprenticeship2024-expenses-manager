@@ -62,12 +62,12 @@ jobs:
 
     - name: Copy build files to VM
       run: |
-        scp -i ssh_key -o StrictHostKeyChecking=no -r expenses-manager-frontend/target/* ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/tmp1/  
+        scp -i ssh_key -o StrictHostKeyChecking=no -r expenses-manager-frontend/target/* ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/tmp/frontend/
 
     - name: Move build files to the correct directory
       run: |
         ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
-          sudo mv /tmp1/* /var/www/html/
+          sudo mv /tmp/frontend/* /var/www/html/
           sudo chown -R www-data:www-data /var/www/html/
         EOF
 
