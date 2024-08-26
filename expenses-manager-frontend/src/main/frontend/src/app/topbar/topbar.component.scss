@@ -1,0 +1,27 @@
+.mat-tab-group{
+    width: 54rem;
+    align-items: center;
+}
+
+.mat-tab-group h1{
+    margin-top: 4.5rem;
+    font-size: 3.5rem;
+}
+
+.mat-tab-group .mat-tab-label {
+    width: 7.81rem;
+    height: 5rem;
+    min-width: unset !important;
+}
+
+.mat-tab-group .mat-tab-label:not(:last-child) {
+    margin-right: 3rem;
+}
+
+.mat-tab-group .mat-ink-bar {
+  background-color: var(--primary-color) !important;
+}
+
+.mat-tab-group .mat-tab-label-active {
+    color: var(--primary-color);
+}

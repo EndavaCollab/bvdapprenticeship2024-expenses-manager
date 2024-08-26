@@ -16,6 +16,8 @@ import { ReportsComponent } from './reports/reports.component';
 import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
+import { TopbarComponent } from './topbar/topbar.component';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
     declarations: [
@@ -24,7 +26,8 @@ import {MatInputModule} from '@angular/material/input';
         HomeComponent,
         ExpensesComponent,
         ReportsComponent,
-        LoginComponent
+        LoginComponent,
+        TopbarComponent
     ],
     imports: [
         BrowserModule,
@@ -34,7 +37,8 @@ import {MatInputModule} from '@angular/material/input';
         MatIconModule,
         AppRoutingModule,
         FormsModule,
-        MatInputModule
+        MatInputModule,
+        MatTabsModule
     ],
     providers: [],
     bootstrap: [AppComponent]
