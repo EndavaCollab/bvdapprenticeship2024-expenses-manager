@@ -1,0 +1,72 @@
+name: Build and Deploy EXM BE
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: deploy
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+
+    - name: Install Maven
+      run: sudo apt-get update && sudo apt-get install maven -y
+
+    - name: Build Backend Application
+      run: mvn clean install
+      working-directory: expenses-manager-backend
+
+    - name: Azure CLI Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Get VM Public IP
+      id: get-vm-ip
+      run: |
+        echo "vm_ip=$(az vm list-ip-addresses --name ${{ secrets.EXM_VM_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP_NAME }} --query "[0].virtualMachine.network.publicIpAddresses[0].ipAddress" -o tsv)" >> $GITHUB_OUTPUT
+
+    - name: Create SSH private key file
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key
+        chmod 600 ssh_key
+
+    - name: Install Java JDK on VM
+      run: |
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
+          sudo apt-get update
+          sudo apt-get install openjdk-11-jdk -y
+        EOF
+
+    - name: Copy Artifact to VM
+      run: |
+        scp -i ssh_key -o StrictHostKeyChecking=no expenses-manager-backend/target/*.jar ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/home/admin/
+
+    - name: Run Backend Application
+      run: |
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
+          nohup java -jar /home/admin/expenses-manager-backend.jar &
+        EOF
+
+    - name: Remove SSH private key file
+      run: rm ssh_key
