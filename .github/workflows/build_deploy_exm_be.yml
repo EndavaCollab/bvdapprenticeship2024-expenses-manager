@@ -60,7 +60,7 @@ jobs:
 
     - name: Copy Artifact to VM
       run: |
-        scp -i ssh_key -o StrictHostKeyChecking=no expenses-manager-backend/target/*.jar ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/home/admin/
+        scp -i ssh_key -o StrictHostKeyChecking=no expenses-manager-backend/target/*.jar ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/home/admin/expenses-manager-backend.jar
 
     - name: Run Backend Application
       run: |
