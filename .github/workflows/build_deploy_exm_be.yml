@@ -54,8 +54,14 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key
         chmod 600 ssh_key
 
-    - name: Verify /home/admin directory
-      run: ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} "ls -ld /home/admin || mkdir -p /home/admin"
+   
+    - name: Verify /home/admin directory and create if missing
+      run: |
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
+        sudo mkdir -p /home/admin
+        sudo chown ${{ secrets.ADMIN_USERNAME }}:${{ secrets.ADMIN_USERNAME }} /home/admin
+        EOF
+      
 
     - name: Install Java JDK on VM
       run: |
