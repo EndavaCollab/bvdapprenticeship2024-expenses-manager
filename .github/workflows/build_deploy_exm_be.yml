@@ -53,6 +53,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: backend-build
+        path: ./backend-build
 
 
     - name: Azure CLI Login
