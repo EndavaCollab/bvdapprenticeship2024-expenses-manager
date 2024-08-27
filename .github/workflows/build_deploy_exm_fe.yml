@@ -52,6 +52,8 @@ jobs:
           sudo apt-get install nginx -y
           sudo systemctl start nginx
           sudo systemctl enable nginx
+          rm -r /tmp/frontend
+          mkdir /tmp/frontend
         EOF
 
     - name: Copy build files to VM
