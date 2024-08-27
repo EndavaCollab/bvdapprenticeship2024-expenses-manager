@@ -34,6 +34,9 @@ jobs:
       run: mvn clean install
       working-directory: expenses-manager-backend
 
+    - name: List Target Directory
+      run: ls expenses-manager-backend/target
+
     - name: Azure CLI Login
       uses: azure/login@v2
       with:
@@ -55,16 +58,16 @@ jobs:
       run: |
         ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
           sudo apt-get update
-          sudo apt-get install openjdk-11-jdk -y
+          sudo apt-get install openjdk-17-jdk -y
         EOF
 
     - name: Copy Artifact to VM
       run: |
-        scp -i ssh_key -o StrictHostKeyChecking=no expenses-manager-backend/target/*.jar ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/home/admin/expenses-manager-backend.jar
+        scp -i ssh_key -o StrictHostKeyChecking=no expenses-manager-backend/target/*.jar ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/home/admin/
 
     - name: Run Backend Application
       run: |
-        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
+        ssh -i ssh_key -o StrictHostKeyChecking-no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
           nohup java -jar /home/admin/expenses-manager-backend.jar &
         EOF
 
