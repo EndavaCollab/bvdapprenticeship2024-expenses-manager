@@ -1,6 +1,5 @@
 package com.endava.expensesmanager.controller;
 
-import com.endava.expensesmanager.dto.UserDto;
 import com.endava.expensesmanager.entity.Users;
 import com.endava.expensesmanager.service.UsersService;
 import org.springframework.http.ResponseEntity;
@@ -47,11 +46,5 @@ public class UsersController {
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         usersService.deleteUser(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<UserDto> loginUser(@RequestParam String name) {
-        UserDto user = usersService.loginUser(name);
-        return ResponseEntity.ok(user);
     }
 }

@@ -1,6 +1,5 @@
 package com.endava.expensesmanager.service.impl;
 
-import com.endava.expensesmanager.dto.UserDto;
 import com.endava.expensesmanager.entity.Users;
 import com.endava.expensesmanager.repository.UsersRepository;
 import com.endava.expensesmanager.service.UsersService;
@@ -52,17 +51,5 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public void deleteUser(int id) {
         usersRepository.deleteById(id);
-    }
-
-    @Override
-    public UserDto loginUser(String name) {
-        Users user = usersRepository.findByName(name)
-                .orElseGet(() -> createUser(name));
-
-        return UserDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .created(user.getCreated())
-                .build();
     }
 }
