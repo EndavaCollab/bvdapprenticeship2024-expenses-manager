@@ -1,0 +1,60 @@
+<h1><b><fa-icon [icon]="['fas', 'money-bill']"></fa-icon> Add expense</b></h1>
+
+<form class="expense-form">
+  <div class="col-md-12 mb-3 d-flex align-items-center">
+    <label class="form-label">Date</label>
+    <div class="input-group">
+      <div class="date-icon">
+        <span class="input-group-text icons" (click)="focusDateInput()"><i class="glyphicon glyphicon-calendar"></i></span>
+      </div>
+      <input type="date" class="form-control input-date" onfocus="this.showPicker()" tabindex="-1" id="dateInput" aria-label="date-input">
+    </div>
+  </div>
+  <div class="col-md-12 mb-3 d-flex align-items-center">
+    <label class="form-label">Category</label>
+    <select class="input-category" tabindex="-1" aria-label="category-input">
+      <option value="food-restaurants">Food & Restaurants</option>
+      <option value="car">Car</option>
+      <option value="subscriptions">Subscriptions</option>
+      <option value="entertainment">Entertainment</option>
+      <option value="education">Education</option>
+      <option value="clothing">Clothing</option>
+      <option value="health">Health</option>
+    </select>
+  </div>
+  <div class="col-md-12 mb-3 d-flex align-items-center">
+    <label class="form-label">Currency</label>
+    <div class="input-group">
+      <div class="currency-icon">
+        <span class="input-group-text icons" *ngIf="selectedCurrency==='USD'" (click)="focusCurrencyInput()"><fa-icon [icon]="['fas', 'dollar-sign']"></fa-icon></span>
+        <span class="input-group-text icons" *ngIf="selectedCurrency==='EUR'" (click)="focusCurrencyInput()"><fa-icon [icon]="['fas', 'euro-sign']"></fa-icon></span>
+        <span class="input-group-text icons" *ngIf="selectedCurrency==='RON'" (click)="focusCurrencyInput()"></span>
+      </div>
+      <select class="input-currency" tabindex="-1" [(ngModel)]="selectedCurrency" [ngModelOptions]="{standalone: true}" id="currencyInput" aria-label="currency-input">
+        <option value="RON">RON</option>
+        <option value="EUR">Euro</option>
+        <option value="USD">US Dolar</option>
+      </select>
+    </div>
+  </div>
+  <div class="col-md-12 mb-3 d-flex align-items-center">
+    <label class="form-label">Amount</label>
+    <div class="input-group">
+      <div class="currency-icon">
+        <span class="input-group-text icons" *ngIf="selectedCurrency==='USD'" (click)="focusAmountInput()"><fa-icon [icon]="['fas', 'dollar-sign']"></fa-icon></span>
+        <span class="input-group-text icons" *ngIf="selectedCurrency==='EUR'" (click)="focusAmountInput()"><fa-icon [icon]="['fas', 'euro-sign']"></fa-icon></span>
+        <span class="input-group-text icons" *ngIf="selectedCurrency==='RON'" (click)="focusAmountInput()"></span>
+      </div>
+      <input type="number" class="input-amount" tabindex="-1" id="amountInput" aria-label="amount-input">
+    </div>
+  </div>
+  <div class="col-md-12 mb-3 d-flex align-items-center">
+    <label class="form-label">Description</label>
+    <textarea class="input-description" tabindex="-1" aria-label="description-input"></textarea>
+  </div>
+</form>
+
+<div class="buttons">
+  <button mat-button class="cancel-button" tabindex="-1" aria-label="cancel-button">Cancel</button>
+  <button mat-button class="add-expense-button" tabindex="-1" aria-label="add-expense-button">Add expense</button>
+</div>
