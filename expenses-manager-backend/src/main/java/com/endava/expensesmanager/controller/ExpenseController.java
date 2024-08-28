@@ -42,8 +42,14 @@ public class ExpenseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ExpenseDto> deleteExpense(@PathVariable int id) {
+    public ResponseEntity<Void> deleteExpense(@PathVariable int id) {
         expenseService.deleteExpense(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ExpenseDto>> getExpensesByUserId(@PathVariable int userId) {
+        List<ExpenseDto> expenses = expenseService.getExpensesByUserId(userId);
+        return ResponseEntity.ok(expenses);
     }
 }

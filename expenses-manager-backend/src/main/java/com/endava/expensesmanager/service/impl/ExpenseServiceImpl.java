@@ -31,8 +31,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<ExpenseDto> getAllExpenses() {
         List<Expense> expenses = expenseRepository.findAll();
         return expenses.stream()
-                        .map(expenseMapper::expenseToExpenseDto)
-                        .toList();
+                .map(expenseMapper::expenseToExpenseDto)
+                .toList();
     }
 
     @Override
@@ -52,5 +52,12 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public void deleteExpense(int id) {
         expenseRepository.deleteById(id);
+    }
+    @Override
+    public List<ExpenseDto> getExpensesByUserId(int userId) {
+        List<Expense> expenses = expenseRepository.findByUserId(userId);
+        return expenses.stream()
+                .map(expenseMapper::expenseToExpenseDto)
+                .toList();
     }
 }
