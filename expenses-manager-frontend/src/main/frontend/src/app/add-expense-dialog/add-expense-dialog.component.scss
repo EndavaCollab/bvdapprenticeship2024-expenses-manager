@@ -16,6 +16,7 @@
     border: 0.1rem solid var(--input-border-color);
     transition: border-color 0s;
     box-shadow: none;
+    font-size: 1.4rem;
   }
 
   .icons{
@@ -38,7 +39,6 @@
     position: relative;
     z-index: 1;
     inline-size: 100%;
-    block-size: 3.2rem;
   }
 
   .input-category{
