@@ -17,6 +17,8 @@ import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -34,7 +36,8 @@ import {MatInputModule} from '@angular/material/input';
         MatIconModule,
         AppRoutingModule,
         FormsModule,
-        MatInputModule
+        MatInputModule,
+        HttpClientModule
     ],
     providers: [],
     bootstrap: [AppComponent]

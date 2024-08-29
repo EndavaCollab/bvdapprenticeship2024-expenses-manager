@@ -5,8 +5,8 @@
     </div>
 
     <form class="login-form">
-        <input class="username-input" type="text" placeholder="Enter User Name here" aria-label="username-input"/>
+        <input class="username-input" type="text" placeholder="Enter User Name here" aria-label="username-input" [(ngModel)]="name" [ngModelOptions]="{standalone: true}"/>
 
-        <button mat-button class="login-button" type="submit" aria-label="login-button">Login</button>
+        <a mat-button class="login-button" type="submit" aria-label="login-button" (click)="loginUser()" >Login</a>
     </form>
 </div>
