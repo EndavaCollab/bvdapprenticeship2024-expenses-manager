@@ -48,8 +48,7 @@
             block-size: 4rem;
             border-radius: 1rem;
             outline: none;
-            border: solid var(--input-border-color);
-            border-width: 0.2rem;
+            border: 0.2rem solid var(--input-border-color);
         }
 
         .login-button{

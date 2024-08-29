@@ -15,6 +15,8 @@ export class HomeComponent implements OnInit {
   }
 
   openDialog(): void{
-    const dialogRef = this.dialog.open(AddExpenseDialogComponent);
+    const dialogRef = this.dialog.open(AddExpenseDialogComponent, {
+      width: '45rem',
+    });
   }
 }

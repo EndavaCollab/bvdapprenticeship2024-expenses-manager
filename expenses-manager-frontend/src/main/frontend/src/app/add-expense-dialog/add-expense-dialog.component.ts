@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-expense-dialog',
@@ -7,23 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AddExpenseDialogComponent implements OnInit {
 
-  constructor() { }
+  constructor(private dialogRef: MatDialogRef<AddExpenseDialogComponent>) { }
 
   ngOnInit(): void {
   }
   
   selectedCurrency="RON";
+  categories: string[] = ["Food & Restaurants", "Car", "Subscriptions", "Entertainment", "Education", "Clothing", "Health"];
+  currencies: string[] = ["RON", "Euro", "US Dolar"];
 
-  focusDateInput(){
-    document.getElementById("dateInput")?.focus();
-  }
-
-  focusCurrencyInput(){
-    document.getElementById("currencyInput")?.focus();
-  }
-
-  focusAmountInput(){
-    document.getElementById("amountInput")?.focus();
+  closeDialog(): void{
+    this.dialogRef.close();
   }
 
 }
