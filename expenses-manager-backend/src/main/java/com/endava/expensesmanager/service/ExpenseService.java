@@ -15,4 +15,6 @@ public interface ExpenseService {
     ExpenseDto updateExpense(int id, ExpenseDto expenseDto);
 
     void deleteExpense(int id);
+
+    List<ExpenseDto> getExpensesByUserId(int userId);
 }
