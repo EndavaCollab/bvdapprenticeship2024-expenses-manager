@@ -90,7 +90,7 @@ jobs:
 
     - name: Run Backend Application
       run: |
-        ssh -i ssh_key -o StrictHostKeyChecking-no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
           nohup java -jar /home/admin/expenses-manager-backend.jar &
         EOF
 
