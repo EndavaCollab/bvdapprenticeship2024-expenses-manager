@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
@@ -36,6 +33,7 @@ jobs:
       working-directory: expenses-manager-backend
 
     - name: Upload build artifacts
+      if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
       uses: actions/upload-artifact@v2
       with:
         name: backend-build
@@ -46,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment: deploy
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     steps:
     - name: Download build artifacts
@@ -54,7 +52,6 @@ jobs:
       with:
         name: backend-build
         path: ./backend-build
-
 
     - name: Azure CLI Login
       uses: azure/login@v2
@@ -73,14 +70,12 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key
         chmod 600 ssh_key
 
-   
     - name: Verify /home/admin directory and create if missing
       run: |
         ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
         sudo mkdir -p /home/admin
         sudo chown ${{ secrets.ADMIN_USERNAME }}:${{ secrets.ADMIN_USERNAME }} /home/admin
         EOF
-      
 
     - name: Install Java JDK on VM
       run: |
@@ -95,7 +90,7 @@ jobs:
 
     - name: Run Backend Application
       run: |
-        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
+        ssh -i ssh_key -o StrictHostKeyChecking-no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
           nohup java -jar /home/admin/expenses-manager-backend.jar &
         EOF
 
