@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
@@ -26,10 +23,13 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y maven
 
     - name: Build Angular application using Maven
-      run: mvn clean install
+      run: |
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        mvn clean install
       working-directory: expenses-manager-frontend
 
     - name: Upload build artifacts
+      if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
       uses: actions/upload-artifact@v2
       with:
         name: frontend-build
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment: deploy
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     steps:
     - name: Download build artifacts
@@ -66,7 +66,7 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key
         chmod 600 ssh_key
 
-    - name: SSH into VM and install Nginx
+    - name: SSH into VM, move build files, and restart Nginx
       run: | 
         ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
           sudo apt-get update
@@ -77,22 +77,8 @@ jobs:
           mkdir /tmp/frontend
           sudo rm -r /var/www/html
           sudo mkdir /var/www/html
-        EOF
-
-    - name: Copy build files to VM
-      run: |
-        scp -i ssh_key -o StrictHostKeyChecking=no -r frontend-build/* ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/tmp/frontend/
-
-    - name: Move build files to the correct directory
-      run: |
-        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
           sudo mv /tmp/frontend/* /var/www/html/
           sudo chown -R www-data:www-data /var/www/html/
-        EOF
-    
-    - name: Restart Nginx
-      run: |
-        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
           sudo systemctl restart nginx 
         EOF
 
