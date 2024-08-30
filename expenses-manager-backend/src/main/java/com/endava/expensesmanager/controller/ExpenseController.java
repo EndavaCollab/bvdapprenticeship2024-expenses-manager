@@ -5,6 +5,7 @@ import com.endava.expensesmanager.service.ExpenseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,8 +49,8 @@ public class ExpenseController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ExpenseDto>> getExpensesByUserId(@PathVariable int userId) {
-        List<ExpenseDto> expenses = expenseService.getExpensesByUserId(userId);
+    public ResponseEntity<List<ExpenseDto>> getExpensesByUserId(@PathVariable int userId, @RequestParam(required = false) LocalDateTime startDate, @RequestParam(required = false) LocalDateTime endDate) {
+        List<ExpenseDto> expenses = expenseService.getExpensesByUserId(userId, startDate, endDate);
         return ResponseEntity.ok(expenses);
     }
 }

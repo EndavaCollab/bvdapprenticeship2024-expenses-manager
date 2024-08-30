@@ -5,8 +5,11 @@ import com.endava.expensesmanager.entity.Expense;
 import com.endava.expensesmanager.mapper.ExpenseMapper;
 import com.endava.expensesmanager.repository.ExpenseRepository;
 import com.endava.expensesmanager.service.ExpenseService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,11 +56,44 @@ public class ExpenseServiceImpl implements ExpenseService {
     public void deleteExpense(int id) {
         expenseRepository.deleteById(id);
     }
+
     @Override
-    public List<ExpenseDto> getExpensesByUserId(int userId) {
-        List<Expense> expenses = expenseRepository.findByUserId(userId);
-        return expenses.stream()
+    public List<ExpenseDto> getExpensesByUserId(int userId, LocalDateTime startDate, LocalDateTime endDate) {
+        if (!validateDates(startDate, endDate)) {
+            throw new BadRequestException();
+        }
+        if (startDate == null) {
+            return expenseRepository.findByUserId(userId).stream()
+                    .map(expenseMapper::expenseToExpenseDto)
+                    .toList();
+        }
+        if (endDate == null) {
+            endDate = LocalDateTime.now();
+        }
+        return expenseRepository.findAllByUserIdAndDateBetween(userId, startDate, endDate).stream()
                 .map(expenseMapper::expenseToExpenseDto)
                 .toList();
+
+    }
+
+    private boolean validateDates(LocalDateTime startDate, LocalDateTime endDate) {
+        if (startDate == null && endDate == null) {
+            return true;
+        }
+        if (startDate != null && endDate != null) {
+            return startDate.isBefore(endDate);
+        }
+        if (startDate != null) {
+            return startDate.isBefore(LocalDateTime.now());
+        }
+        return false;
+    }
+
+    @ResponseStatus (value = HttpStatus.BAD_REQUEST)
+    private static class BadRequestException extends RuntimeException {
+
+        private BadRequestException() {
+            super("bad request");
+        }
     }
 }
