@@ -2,12 +2,11 @@ package com.endava.expensesmanager.service.impl;
 
 import com.endava.expensesmanager.dto.ExpenseDto;
 import com.endava.expensesmanager.entity.Expense;
+import com.endava.expensesmanager.exception.BadRequestException;
 import com.endava.expensesmanager.mapper.ExpenseMapper;
 import com.endava.expensesmanager.repository.ExpenseRepository;
 import com.endava.expensesmanager.service.ExpenseService;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -89,11 +88,5 @@ public class ExpenseServiceImpl implements ExpenseService {
         return false;
     }
 
-    @ResponseStatus (value = HttpStatus.BAD_REQUEST)
-    private static class BadRequestException extends RuntimeException {
 
-        private BadRequestException() {
-            super("bad request");
-        }
-    }
 }
