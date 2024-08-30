@@ -1,0 +1,22 @@
+<div class="dashboard-container">
+    <div class="chart-container">
+      <ngx-charts-pie-chart
+        [view]="[300, 300]"
+        [results]="data"
+        [legend]="false"
+        [doughnut]="true"
+        [labels]="false"
+        [scheme]="colorScheme">
+      </ngx-charts-pie-chart>
+      <div class="legend-container">
+        <ul>
+          <li><span class="legend-color" style="background-color: #46B1D9;"></span> Food & Restaurants</li>
+          <li><span class="legend-color" style="background-color: #5844E3;"></span> Car</li>
+          <li><span class="legend-color" style="background-color: #E047AB;"></span> Subscriptions</li>
+          <li><span class="legend-color" style="background-color: #F78486;"></span> Entertainment</li>
+          <li><span class="legend-color" style="background-color: #A1D12E;"></span> Coffee</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  

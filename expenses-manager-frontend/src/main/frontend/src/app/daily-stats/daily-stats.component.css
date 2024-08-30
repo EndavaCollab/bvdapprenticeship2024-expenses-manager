@@ -1,0 +1,93 @@
+.main-container {
+    display: flex;
+}
+
+.content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.total-amount {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.total-amount h1 {
+    margin: 0;
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.period-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.period-tabs a {
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+    cursor: pointer;
+}
+
+.period-tabs a.active {
+    border-bottom: 2px solid #673ab7; /* Exemplu pentru tab activ */
+}
+
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+    height: 100vh;
+}
+
+.chart-container {
+    display: flex;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+ngx-charts-pie-chart {
+    margin-right: 20px;
+}
+
+.legend-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.legend-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.legend-container li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    margin-right: 8px;
+    border-radius: 50%;
+}
