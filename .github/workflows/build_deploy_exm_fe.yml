@@ -27,8 +27,7 @@ jobs:
 
     - name: Build Angular application using Maven
       run: |
-        export BE_BASE_URL=http://backend-url-here
-        mvn clean install
+         mvn clean install -DBE_BASE_URL=http://ip:8080
       working-directory: expenses-manager-frontend
 
     - name: Upload build artifacts
