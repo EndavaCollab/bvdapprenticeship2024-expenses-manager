@@ -2,12 +2,11 @@
 
   <!--
     <mat-form-field appearance="fill">
-    <mat-label>Select Date</mat-label>
-    <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" placeholder="Choose a date">
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
+      <mat-label>Select Date</mat-label>
+      <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" placeholder="Choose a date">
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
   -->
-
 
   <div class="chart-container">
     <ngx-charts-pie-chart
@@ -18,13 +17,13 @@
       [labels]="false"
       [scheme]="colorScheme">
     </ngx-charts-pie-chart>
+
     <div class="legend-container">
       <ul>
-        <li><span class="legend-color" style="background-color: #46B1D9;"></span> Food & Restaurants</li>
-        <li><span class="legend-color" style="background-color: #5844E3;"></span> Car</li>
-        <li><span class="legend-color" style="background-color: #E047AB;"></span> Subscriptions</li>
-        <li><span class="legend-color" style="background-color: #F78486;"></span> Entertainment</li>
-        <li><span class="legend-color" style="background-color: #A1D12E;"></span> Coffee</li>
+        <li *ngFor="let category of categories">
+          <span class="legend-color" [ngStyle]="{'background-color': category.colorCode}"></span>
+          {{ category.name }}
+        </li>
       </ul>
     </div>
   </div>
