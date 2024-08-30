@@ -1,4 +1,4 @@
 export const environment = {
-    baseUrl: 'http://localhost:8080/',
+    baseUrl: '${process.env.BE_BASE_URL}',
     production: true
 };
