@@ -24,7 +24,7 @@ jobs:
 
     - name: Build Angular application using Maven
       run: |
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        export BE_BASE_URL=http://backend-url-here
         mvn clean install
       working-directory: expenses-manager-frontend
 
