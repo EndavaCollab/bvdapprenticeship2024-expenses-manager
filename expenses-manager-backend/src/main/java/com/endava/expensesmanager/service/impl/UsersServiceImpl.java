@@ -39,6 +39,9 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
+    public Optional<Users> getUserByName(String name) { return usersRepository.findByName(name); }
+
+    @Override
     public Users updateUser(int id, String name) {
         Optional<Users> optionalUser = usersRepository.findById(id);
         if (optionalUser.isPresent()) {
