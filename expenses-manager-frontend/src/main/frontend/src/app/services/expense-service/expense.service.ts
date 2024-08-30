@@ -5,12 +5,12 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class ExpenseService {
 
   private apiUrl= environment.baseUrl;
-  constructor(private http: HttpClient) {
-  }
-  public login(name: any){
-    return this.http.post(`${this.apiUrl}users/login?name=${name}`, name);
+  constructor(private http: HttpClient) { }
+
+  public createExpense(expense: any){
+    return this.http.post(`${this.apiUrl}expense`, expense);
   }
 }
