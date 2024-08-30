@@ -8,7 +8,7 @@
     <version>1.0-SNAPSHOT</version>
     <name>expenses-manager-parent</name>
 
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
