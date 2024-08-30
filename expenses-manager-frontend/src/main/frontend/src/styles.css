@@ -15,5 +15,13 @@ html, body {
     --secondary-color: #E9F0FF;
     --input-border-color: #646a77;
     --input-selected-border-color: #007bff;
-}
 
+    --food-restaurant-color: #46B1D9;
+    --car-color: #5844E3;
+    --subscriptions-color: #E047AB;
+    --entertainment-color: #F78486;
+    --coffee-color: #A1D12E;
+
+    --background-color: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
