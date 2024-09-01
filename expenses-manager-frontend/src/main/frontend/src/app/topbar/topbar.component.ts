@@ -1,4 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
+import { AddExpenseDialogComponent } from '../add-expense-dialog/add-expense-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-topbar',
@@ -10,7 +13,7 @@ export class TopbarComponent implements OnInit {
   tabs = ['Day', 'Week', 'Month', 'Year', 'Custom'];
   data = 'No value';
 
-  constructor() { }
+  constructor(public router: Router, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.onTabChange(0);
@@ -35,5 +38,11 @@ export class TopbarComponent implements OnInit {
         this.data = '$0';
         break;
     }
+  }
+
+  openDialog(): void{
+    this.dialog.open(AddExpenseDialogComponent, {
+      width: '45rem',
+    });
   }
 }

@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AddExpenseDialogComponent } from '../add-expense-dialog/add-expense-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-home',
@@ -9,14 +7,9 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private dialog: MatDialog) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
 
-  openDialog(): void{
-    const dialogRef = this.dialog.open(AddExpenseDialogComponent, {
-      width: '45rem',
-    });
-  }
 }
