@@ -16,8 +16,19 @@ import { ReportsComponent } from './reports/reports.component';
 import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
-import { TopbarComponent } from './topbar/topbar.component';
-import { MatTabsModule } from '@angular/material/tabs';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatSelectModule} from '@angular/material/select';
+
+import { AddExpenseDialogComponent } from './add-expense-dialog/add-expense-dialog.component';
+import { MatNativeDateModule } from '@angular/material/core';
+
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faDollar, faDollarSign, faEuroSign, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+
+import { HttpClientModule } from '@angular/common/http';
+import {MatTabsModule} from "@angular/material/tabs";
+import {TopbarComponent} from "./topbar/topbar.component";
 
 @NgModule({
     declarations: [
@@ -27,6 +38,7 @@ import { MatTabsModule } from '@angular/material/tabs';
         ExpensesComponent,
         ReportsComponent,
         LoginComponent,
+        AddExpenseDialogComponent,
         TopbarComponent
     ],
     imports: [
@@ -38,10 +50,23 @@ import { MatTabsModule } from '@angular/material/tabs';
         AppRoutingModule,
         FormsModule,
         MatInputModule,
+        HttpClientModule,
+        MatDialogModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSelectModule,
+        FontAwesomeModule,
         MatTabsModule
     ],
     providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {
+    constructor(library: FaIconLibrary) {
+        library.addIcons(
+          faMoneyBill,
+          faDollarSign,
+          faEuroSign
+        );
+      }
 }
