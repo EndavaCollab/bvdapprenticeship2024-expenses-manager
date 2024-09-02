@@ -46,7 +46,9 @@
         .username-input{
             inline-size: 32.5rem;
             block-size: 4rem;
-            border-radius: 0.5rem;
+            border-radius: 1rem;
+            outline: none;
+            border: 0.2rem solid var(--input-border-color);
         }
 
         .login-button{

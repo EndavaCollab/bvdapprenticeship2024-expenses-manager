@@ -1,0 +1,20 @@
+.b-home{
+    block-size: 100%;
+
+    .content{
+        inline-size: 100%;
+        margin-top: 10rem;
+        float: right;
+        .add-expense-button{
+            inline-size: 8rem;
+            block-size: 8rem;
+            background-color: var(--primary-color);
+            display: block;
+            margin: auto;
+            border-radius: 100%;
+            color: white;
+            font-size: 6rem;
+        }
+    }
+    
+}

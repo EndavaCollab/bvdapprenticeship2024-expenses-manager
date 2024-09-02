@@ -1,13 +1,19 @@
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+
 html, body {   
-    width: 100%;
-    height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
     margin: 0;
-    font-family: "Outlet"; 
+    font-family: "Outfit", sans-serif !important; 
     font-size: 62.5%;
 }
 
 :root{
     --primary-color: #4F46E5;
     --secondary-color: #E9F0FF;
+    --input-border-color: #646a77;
+    --input-selected-border-color: #007bff;
 }
 
