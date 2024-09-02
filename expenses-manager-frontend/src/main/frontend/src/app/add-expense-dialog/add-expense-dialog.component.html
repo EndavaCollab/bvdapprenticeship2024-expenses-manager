@@ -1,0 +1,63 @@
+<h1><fa-icon [icon]="['fas', 'money-bill']"></fa-icon> Add expense</h1>
+
+<form class="expense-form">
+
+  <!--date input div-->
+  <div class="col-md-12 mb-3 d-flex align-items-center">
+    <label class="form-label">Date</label>
+    <div class="input-group">
+      <div class="date-icon">
+        <span class="icons"><i class="glyphicon glyphicon-calendar"></i></span>
+      </div>
+      <input type="date" class="form-control input-date" onclick="this.showPicker()" id="dateInput" aria-label="date-input">
+    </div>
+  </div>
+
+  <!--category input div-->
+  <div class="col-md-12 mb-3 d-flex align-items-center">
+    <label class="form-label">Category</label>
+    <select class="input-category"  aria-label="category-input">
+      <option *ngFor="let category of categories" [value]="category">{{category}}</option>
+    </select>
+  </div>
+
+  <!--currency input div-->
+  <div class="col-md-12 mb-3 d-flex align-items-center">
+    <label class="form-label">Currency</label>
+    <div class="input-group">
+      <div class="currency-icon">
+        <span class="icons" *ngIf="selectedCurrency==='US Dolar'"><fa-icon [icon]="['fas', 'dollar-sign']"></fa-icon></span>
+        <span class="icons" *ngIf="selectedCurrency==='Euro'"><fa-icon [icon]="['fas', 'euro-sign']"></fa-icon></span>
+        <span class="icons" *ngIf="selectedCurrency==='RON'"></span>
+      </div>
+      <select class="input-currency" [(ngModel)]="selectedCurrency" [ngModelOptions]="{standalone: true}" id="currencyInput" aria-label="currency-input">
+        <option *ngFor="let currency of currencies" [value]="currency">{{currency}}</option>
+      </select>
+    </div>
+  </div>
+
+  <!--amount input div-->
+  <div class="col-md-12 mb-3 d-flex align-items-center">
+    <label class="form-label">Amount</label>
+    <div class="input-group">
+      <div class="currency-icon">
+        <span class="icons" *ngIf="selectedCurrency==='US Dolar'"><fa-icon [icon]="['fas', 'dollar-sign']"></fa-icon></span>
+        <span class="icons" *ngIf="selectedCurrency==='Euro'"><fa-icon [icon]="['fas', 'euro-sign']"></fa-icon></span>
+        <span class="icons" *ngIf="selectedCurrency==='RON'"></span>
+      </div>
+      <input type="number" class="input-amount" id="amountInput" aria-label="amount-input">
+    </div>
+  </div>
+
+  <!--description input div-->
+  <div class="col-md-12 mb-3 d-flex align-items-center">
+    <label class="form-label">Description</label>
+    <textarea class="input-description" aria-label="description-input"></textarea>
+  </div>
+</form>
+
+<!--buttons div-->
+<div class="buttons">
+  <button class="cancel-button" aria-label="cancel-button" (click)="closeDialog()">Cancel</button>
+  <button class="add-expense-button" aria-label="add-expense-button">Add expense</button>
+</div>
