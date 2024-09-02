@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'expenses-manager-backend/**'
+      - '.github/workflows/build_deploy_exm_be.yml'
   pull_request:
     branches:
       - main
+    paths:
+      - 'expenses-manager-backend/**'
+      - '.github/workflows/build_deploy_exm_be.yml'
   workflow_dispatch:
 
 permissions:
@@ -15,7 +21,6 @@ permissions:
 
 jobs:
   build:
-    name: Build Backend Application
     runs-on: ubuntu-latest
 
     steps:
