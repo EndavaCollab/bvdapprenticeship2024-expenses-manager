@@ -21,7 +21,6 @@ permissions:
 
 jobs:
   build:
-    name: Build Backend Application
     runs-on: ubuntu-latest
 
     steps:
