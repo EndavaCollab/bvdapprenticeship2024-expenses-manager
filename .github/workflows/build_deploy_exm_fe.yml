@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'expenses-manager-frontend/**'
+      - '.github/workflows/build_deploy_exm_fe.yml'
   pull_request:
     branches:
       - main
+    paths:
+      - 'expenses-manager-frontend/**'
+      - '.github/workflows/build_deploy_exm_fe.yml'
   workflow_dispatch:
 
 permissions:
