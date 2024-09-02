@@ -14,6 +14,8 @@ interface Category {
 })
 export class DailyStatsComponent implements OnInit {
 
+  currentDate = new Date();
+
   categories: Category[] = [
     { id: 1, name: 'Food & Restaurants', colorCode: '#46B1D9' },
     { id: 2, name: 'Car', colorCode: '#5844E3' },
@@ -35,7 +37,30 @@ export class DailyStatsComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  getRandomValue(): number { //for every category
+  getRandomValue(): number {
     return Math.floor(Math.random() * 100); 
+  }
+
+  onDateChange(event: any): void {
+    if (event.value) {
+      this.currentDate = event.value;
+      this.fetchDataForSelectedDate(this.currentDate);
+    }
+  }
+
+  previousDay(): void {
+    this.currentDate.setDate(this.currentDate.getDate() - 1);
+    this.currentDate = new Date(this.currentDate); 
+    this.fetchDataForSelectedDate(this.currentDate);
+  }
+
+  nextDay(): void {
+    this.currentDate.setDate(this.currentDate.getDate() + 1);
+    this.currentDate = new Date(this.currentDate); 
+    this.fetchDataForSelectedDate(this.currentDate);
+  }
+
+  fetchDataForSelectedDate(date: Date): void {
+    console.log('Fetching data for:', date);
   }
 }

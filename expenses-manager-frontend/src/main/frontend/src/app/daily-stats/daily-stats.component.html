@@ -1,12 +1,21 @@
 <div class="dashboard-container">
 
-  <!--
-    <mat-form-field appearance="fill">
-      <mat-label>Select Date</mat-label>
-      <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" placeholder="Choose a date">
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-  -->
+  <div class="date-picker-container">
+    <button mat-icon-button (click)="previousDay()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <button mat-button (click)="picker.open()">
+      {{ currentDate | date: 'EEEE - d MMMM y' }}
+    </button>
+
+    <button mat-icon-button (click)="nextDay()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+    <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" style="display: none;">
+    <mat-datepicker #picker></mat-datepicker>
+  </div>
 
   <div class="chart-container">
     <ngx-charts-pie-chart
