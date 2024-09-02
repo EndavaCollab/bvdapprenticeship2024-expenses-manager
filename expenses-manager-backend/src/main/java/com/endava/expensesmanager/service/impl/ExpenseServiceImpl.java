@@ -59,7 +59,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<ExpenseDto> getExpensesByUserId(int userId, LocalDateTime startDate, LocalDateTime endDate) {
         if (!validateDates(startDate, endDate)) {
-            throw new BadRequestException();
+            throw new BadRequestException("Invalid date range");
         }
         if (startDate == null) {
             return expenseRepository.findByUserId(userId).stream()
