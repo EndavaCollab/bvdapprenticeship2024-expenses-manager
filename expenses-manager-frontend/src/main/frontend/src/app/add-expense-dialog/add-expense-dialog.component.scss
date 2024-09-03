@@ -1,0 +1,105 @@
+h1 {
+    font-family: 'Outfit', sans-serif;
+}
+
+.expense-form{
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+
+  .form-label{
+    font-weight: normal;
+    inline-size: 30%;
+    text-align: right;
+    padding-right: 1rem;
+  }
+
+  @mixin inputs{
+    block-size: 3.2rem;
+    background-color: white;
+    border: 0.1rem solid var(--input-border-color);
+    transition: border-color 0s;
+    box-shadow: none;
+    font-size: 1.4rem;
+  }
+
+  .icons{
+    position: absolute;
+    left: 1rem;
+    transform: translateY(-50%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .input-group{
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-date, .input-currency, .input-amount{
+    @include inputs();
+    padding-left: 2.5rem;
+    position: relative;
+    z-index: 1;
+    inline-size: 100%;
+  }
+
+  .input-category{
+    @include inputs();
+    border-radius: 1rem;
+  }
+
+  .input-description{
+    @include inputs();
+    block-size: 9.6rem;
+    border-radius: 1rem;
+  }
+
+  .input-group:focus-within .icons, .input-group:focus-within .input-date,
+  .input-group:focus-within .input-currency, .input-group:focus-within .input-amount,
+  .input-category:focus, .input-description:focus{
+      border-color: var(--input-selected-border-color);
+      border-width: 0.2rem;
+      outline: none;
+      transition: border-color 0s;
+  }
+
+  .input-date::-webkit-calendar-picker-indicator{
+      display: none;
+      -webkit-appearance: none;
+  }
+
+  .input-group, .input-date, .input-category, .input-currency, .input-amount, .input-description{
+    inline-size: 65%;
+    flex-grow: 1;
+  }
+
+  .input-date, .input-currency, .input-amount{
+    border-radius: 1rem !important;
+  }
+}
+
+.buttons{
+  float: right;
+
+  .cancel-button{
+      block-size: 3.5rem;
+      margin: 0.5rem;
+      color: var(--primary-color);
+      background-color: white;
+      outline: none;
+      border: 0.1rem solid var(--primary-color);
+      border-radius: 1rem;
+  }
+
+  .add-expense-button{
+      block-size: 3.5rem;
+      margin: 0.5rem;
+      color: white;
+      background-color: var(--primary-color);
+      outline: none;
+      border: 0.1rem solid var(--primary-color);
+      border-radius: 1rem;
+  }
+}
