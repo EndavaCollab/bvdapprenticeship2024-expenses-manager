@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../services/user.service';
+import { UserService } from '../services/user-service/user.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   loginUser() {
     this.userService.login(this.name).subscribe({
       next: (response) => {
-          this.router.navigate(['/']); 
+          this.router.navigate(['/home']); 
       }, error: (error) => {
         console.error('Eroare la autentificare:', error);
       }

@@ -1,5 +1,5 @@
 .mat-tab-group{
-    width: 55rem;
+    inline-size: 55rem;
     align-items: center;
 }
 
@@ -9,9 +9,9 @@
 }
 
 .mat-tab-group .mat-tab-label {
-    width: 7rem;
-    height: 5rem;
-    min-width: unset !important;
+    inline-size: 7rem;
+    block-size: 5rem;
+    min-inline-size: 0rem !important;
 }
 
 .mat-tab-group .mat-tab-label:not(:last-child) {
@@ -19,7 +19,7 @@
 }
 
 .mat-tab-group .mat-ink-bar {
-  background-color: var(--primary-color) !important;
+    background-color: var(--primary-color) !important;
 }
 
 .mat-tab-group .mat-tab-label-active {

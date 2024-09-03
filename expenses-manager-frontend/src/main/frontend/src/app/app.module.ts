@@ -29,6 +29,7 @@ import { faDollar, faDollarSign, faEuroSign, faMoneyBill } from '@fortawesome/fr
 import { HttpClientModule } from '@angular/common/http';
 import {MatTabsModule} from "@angular/material/tabs";
 import {TopbarComponent} from "./topbar/topbar.component";
+import { DatePipe } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -58,7 +59,7 @@ import {TopbarComponent} from "./topbar/topbar.component";
         FontAwesomeModule,
         MatTabsModule
     ],
-    providers: [],
+    providers: [DatePipe],
     bootstrap: [AppComponent]
 })
 export class AppModule {
