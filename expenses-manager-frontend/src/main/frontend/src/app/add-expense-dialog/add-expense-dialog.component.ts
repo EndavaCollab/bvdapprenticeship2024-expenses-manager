@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ExpenseService } from '../services/expense-service/expense.service';
-import { User, UserService } from '../services/user-service/user.service';
-import { Category, CategoryService } from '../services/category-service/category.service';
-import { firstValueFrom } from 'rxjs';
+import { CategoryService } from '../services/category-service/category.service';
 import { CurrencyService } from '../services/currency-service/currency.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { LocalService } from '../services/local-service/local.service';
+import { UserService } from '../services/user-service/user.service';
+import { ExpenseService } from '../services/expense-service/expense.service';
+import { Category, Currency } from '../models';
 
 @Component({
   selector: 'app-add-expense-dialog',
@@ -12,24 +14,33 @@ import { CurrencyService } from '../services/currency-service/currency.service';
   styleUrls: ['./add-expense-dialog.component.scss']
 })
 export class AddExpenseDialogComponent implements OnInit {
+  expenseForm!: FormGroup;
+  currentDate = new Date;
+  submitted=false;
 
-  constructor(private userService: UserService,
-    private expenseService: ExpenseService, 
+  constructor( private localService: LocalService,
+    private userService: UserService,
+    private expenseService: ExpenseService,
     private categoryService: CategoryService,
     private currencyService: CurrencyService,
     private dialogRef: MatDialogRef<AddExpenseDialogComponent>,
+    private formBuilder: FormBuilder,
   ) {}
 
-  categories: string[] = [];
-  currencies: string[] = [];
-
-  selectedCurrency="";
-  selectedCategory="";
-  selectedDate="";
-  selectedAmount=0;
-  description="";
+  categories: Category[] = [];
+  currencies: Currency[] = [];
 
   ngOnInit(): void {
+    this.expenseForm=this.formBuilder.group({
+      description: [''],
+      date: [null, Validators.required],
+      amount: [null, [Validators.required, Validators.min(0.01)]],
+      categoryId: [null, Validators.required],
+      currencyId: [null, Validators.required],
+      userId:[null, Validators.required],
+    })
+    this.setUserID();
+
     this.categoryService.getAllCategories().subscribe({
       next: (dbCategories) => {
         this.categories = dbCategories;
@@ -47,42 +58,44 @@ export class AddExpenseDialogComponent implements OnInit {
         console.error('Error fetching currencies:', error);
       }
     })
-    
   }
 
   closeDialog(): void{
     this.dialogRef.close();
   }
 
-  private expense = {
-    description: this.description,
-    date: this.selectedDate,
-    amount: this.selectedAmount,
-    categoryId: 0,
-    currencyId: 0,
-    userId:0 ,
-  };
-
-  private async setExpense(){
-    this.expense.description=this.description;
-    this.expense.date=this.selectedDate+"T00:00:00";
-    this.expense.amount=this.selectedAmount;
-    const category = await firstValueFrom(this.categoryService.getSelectedCategory(this.selectedCategory));
-    this.expense.categoryId = category.id;
-    const currency = await firstValueFrom(this.currencyService.getSelectedCurrency(this.selectedCurrency));
-    this.expense.currencyId = currency.id;
-    const user = await firstValueFrom(this.userService.getLoggedUser());
-    this.expense.userId = user.id;
-  }
-
-  async log(){
-    await this.setExpense();
-    this.expenseService.createExpense(this.expense).subscribe({
-      next: (response) => {
-        this.dialogRef.close();
-      }, error: (error) => {
-        console.error('Eroare la crearea unui expense:', error);
+  private setUserID(): void {
+    this.userService.getLoggedUser().subscribe({
+      next: (user) => {
+        this.expenseForm.patchValue({ userId: user.id }); // Setează userID în formular
+      },
+      error: (error) => {
+        console.error('Error fetching user:', error);
       }
     });
+  }
+
+  getCurrencyCode(): string | null {
+    const selectedCurrencyId = this.expenseForm.get('currencyId')?.value;
+    const currency = this.currencies.find(curr => curr.id == selectedCurrencyId);
+    return currency ? currency.code : null;
+  }
+
+  onSubmit(){
+    this.submitted = true;
+    if (this.expenseForm.valid){
+      this.expenseForm.patchValue({date: this.expenseForm.get("date")?.value+"T00:00:00"});
+      this.expenseService.createExpense(this.expenseForm.value).subscribe({
+        next: (response) => {
+          this.dialogRef.close();
+        },
+        error: (error) => {
+          console.error('Error creating expense:', error);
+        }
+      });
+    }
+    else{
+      console.log("Validation errors");
+    }
   }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CurrencyService {
-    List<String> getAllCurrencies();
+    List<Currency> getAllCurrencies();
 
     Optional<Currency> getCurrencyByCode(String code);
 }

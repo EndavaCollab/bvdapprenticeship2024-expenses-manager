@@ -17,11 +17,8 @@ public class CurrencyServiceImpl implements CurrencyService {
 
 
     @Override
-    public List<String> getAllCurrencies() {
-        return currencyRepository.findAll()
-                .stream()
-                .map(Currency::getCode)
-                .collect(Collectors.toList());
+    public List<Currency> getAllCurrencies() {
+        return currencyRepository.findAll();
     }
 
     @Override
