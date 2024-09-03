@@ -16,11 +16,8 @@ public class CategoryServiceImpl implements CategoryService{
     public CategoryServiceImpl(CategoryRepository categoryRepository) {this.categoryRepository = categoryRepository;}
 
     @Override
-    public List<String> getAllCategoryDescriptions() {
-        return categoryRepository.findAll()
-                .stream()
-                .map(Category::getDescription)
-                .collect(Collectors.toList());
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 
     @Override

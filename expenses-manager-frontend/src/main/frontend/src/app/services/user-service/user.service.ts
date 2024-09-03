@@ -2,12 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
-
-export interface User {
-  id: number;
-  name: string;
-  created: Date;
-}
+import { User } from 'src/app/models';
+import { LocalService } from '../local-service/local.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,22 +11,14 @@ export interface User {
 export class UserService {
 
   private apiUrl= environment.baseUrl;
-  private name="";
-  constructor(private http: HttpClient) {
-  }
-  public setName(name: string){
-    this.name=name;
-  }
-
-  public getName(){
-    return this.name;
+  constructor(private localService: LocalService, private http: HttpClient) {
   }
 
   public getLoggedUser(): Observable<User>{
-    return this.http.get<User>(`${this.apiUrl}users/name/${this.name}`);
+    return this.http.get<User>(`${this.apiUrl}/users/byName?name=${this.localService.getData("name")}`);
   }
 
-  public login(){
-    return this.http.post(`${this.apiUrl}users/login?name=${this.name}`, this.name);
+  public login(name: any){
+    return this.http.post(`${this.apiUrl}/users/login?name=${name}`, name);
   }
 }

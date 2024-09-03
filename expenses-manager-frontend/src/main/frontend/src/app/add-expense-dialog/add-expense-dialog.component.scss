@@ -21,6 +21,7 @@ h1 {
     transition: border-color 0s;
     box-shadow: none;
     font-size: 1.4rem;
+    margin: 0rem !important;
   }
 
   .icons{
@@ -52,7 +53,8 @@ h1 {
 
   .input-description{
     @include inputs();
-    block-size: 9.6rem;
+    min-block-size: 9.6rem;
+    max-block-size: 20rem;
     border-radius: 1rem;
   }
 
@@ -78,28 +80,36 @@ h1 {
   .input-date, .input-currency, .input-amount{
     border-radius: 1rem !important;
   }
-}
 
-.buttons{
-  float: right;
+  .buttons{
+    display: flex;
+    justify-content: flex-end;
+  
+    .cancel-button{
+        block-size: 3.5rem;
+        margin: 0.5rem;
+        color: var(--primary-color);
+        background-color: white;
+        outline: none;
+        border: 0.1rem solid var(--primary-color);
+        border-radius: 1rem;
+    }
+  
+    .add-expense-button{
+        block-size: 3.5rem;
+        margin: 0.5rem;
+        color: white;
+        background-color: var(--primary-color);
+        outline: none;
+        border: 0.1rem solid var(--primary-color);
+        border-radius: 1rem;
+    }
 
-  .cancel-button{
-      block-size: 3.5rem;
-      margin: 0.5rem;
-      color: var(--primary-color);
-      background-color: white;
-      outline: none;
-      border: 0.1rem solid var(--primary-color);
-      border-radius: 1rem;
   }
 
-  .add-expense-button{
-      block-size: 3.5rem;
-      margin: 0.5rem;
-      color: white;
-      background-color: var(--primary-color);
-      outline: none;
-      border: 0.1rem solid var(--primary-color);
-      border-radius: 1rem;
+  .errors{
+    margin-left: 30%;
+    margin-bottom: 0.5rem;
+    color: red;
   }
 }

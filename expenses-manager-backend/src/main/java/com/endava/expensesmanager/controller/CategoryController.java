@@ -19,8 +19,8 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService) {this.categoryService = categoryService;}
 
     @GetMapping
-    public ResponseEntity<List<String>> getAllCategoryDescriptions() {
-        List<String> categoryDescriptions = categoryService.getAllCategoryDescriptions();
+    public ResponseEntity<List<Category>> getAllCategories() {
+        List<Category> categoryDescriptions = categoryService.getAllCategories();
         return ResponseEntity.ok(categoryDescriptions);
     }
 

@@ -31,14 +31,14 @@ public class UsersController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Users> getUserById(@PathVariable int id) {
         Optional<Users> user = usersService.getUserById(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/name/{name}")
-    public ResponseEntity<Users> getUserIdByName(@PathVariable String name) {
+    @GetMapping("/byName")
+    public ResponseEntity<Users> getUserByName(@RequestParam String name) {
         Optional<Users> user = usersService.getUserByName(name);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

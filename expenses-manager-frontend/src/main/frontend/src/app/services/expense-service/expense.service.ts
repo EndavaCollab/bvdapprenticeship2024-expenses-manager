@@ -11,6 +11,6 @@ export class ExpenseService {
   constructor(private http: HttpClient) { }
 
   public createExpense(expense: any){
-    return this.http.post(`${this.apiUrl}expense`, expense);
+    return this.http.post(`${this.apiUrl}/expense`, expense);
   }
 }
