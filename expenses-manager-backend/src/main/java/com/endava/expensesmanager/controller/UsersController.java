@@ -38,8 +38,8 @@ public class UsersController {
     }
 
     @GetMapping("/by-name")
-    public ResponseEntity<Users> getUserByName(@RequestParam String name) {
-        Optional<Users> user = usersService.getUserByName(name);
+    public ResponseEntity<UserDto> getUserByName(@RequestParam String name) {
+        Optional<UserDto> user = usersService.getUserByName(name);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 

@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CurrencyServiceImpl implements CurrencyService {
-    public final CurrencyRepository currencyRepository;
-    private static final CurrencyMapper currencyMapper = CurrencyMapper.INSTANCE;
+    private final CurrencyRepository currencyRepository;
+    private final CurrencyMapper currencyMapper = CurrencyMapper.INSTANCE;
 
     public CurrencyServiceImpl(CurrencyRepository currencyRepository) {this.currencyRepository = currencyRepository;}
 

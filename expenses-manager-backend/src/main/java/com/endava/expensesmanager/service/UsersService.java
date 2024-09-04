@@ -15,7 +15,7 @@ public interface UsersService {
 
     Optional<Users> getUserById(int id);
 
-    Optional<Users> getUserByName(String name);
+    Optional<UserDto> getUserByName(String name);
 
     Users updateUser(int id, String name);
 
