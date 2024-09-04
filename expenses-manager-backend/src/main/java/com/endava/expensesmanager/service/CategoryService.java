@@ -1,12 +1,12 @@
 package com.endava.expensesmanager.service;
 
-import com.endava.expensesmanager.entity.Category;
+import com.endava.expensesmanager.dto.CategoryDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
-    List<Category> getAllCategories();
+    List<CategoryDto> getAllCategories();
 
-    Optional<Category> getCategoryByDescription(String description);
+    Optional<CategoryDto> getCategoryById(int id);
 }

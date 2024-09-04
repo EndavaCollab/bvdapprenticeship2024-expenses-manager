@@ -1,12 +1,12 @@
 package com.endava.expensesmanager.service;
 
-import com.endava.expensesmanager.entity.Currency;
+import com.endava.expensesmanager.dto.CurrencyDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CurrencyService {
-    List<Currency> getAllCurrencies();
+    List<CurrencyDto> getAllCurrencies();
 
-    Optional<Currency> getCurrencyByCode(String code);
+    Optional<CurrencyDto> getCurrencyById(int id);
 }

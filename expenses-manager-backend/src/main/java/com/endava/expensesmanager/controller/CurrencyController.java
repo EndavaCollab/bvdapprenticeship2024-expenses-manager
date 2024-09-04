@@ -1,6 +1,6 @@
 package com.endava.expensesmanager.controller;
 
-import com.endava.expensesmanager.entity.Currency;
+import com.endava.expensesmanager.dto.CurrencyDto;
 import com.endava.expensesmanager.service.CurrencyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,14 +19,14 @@ public class CurrencyController {
     public CurrencyController (CurrencyService currencyService) {this.currencyService=currencyService;}
 
     @GetMapping
-    public ResponseEntity<List<Currency>> getAllCurrencies(){
-        List<Currency> currencies = currencyService.getAllCurrencies();
+    public ResponseEntity<List<CurrencyDto>> getAllCurrencies(){
+        List<CurrencyDto> currencies = currencyService.getAllCurrencies();
         return ResponseEntity.ok(currencies);
     }
 
-    @GetMapping("/{code}")
-    public ResponseEntity<Currency> getCurrencyByCode(@PathVariable String code){
-        Optional<Currency> currency = currencyService.getCurrencyByCode(code);
+    @GetMapping("/{id}")
+    public ResponseEntity<CurrencyDto> getCurrencyById(@PathVariable int id){
+        Optional<CurrencyDto> currency = currencyService.getCurrencyById(id);
         return currency.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
