@@ -2,6 +2,8 @@ package com.endava.expensesmanager.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,7 +21,7 @@ public class Expense{
     private LocalDateTime date;
 
     @Column(name = "amount", nullable = false, unique = false)
-    private int amount;
+    private BigDecimal amount;
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")

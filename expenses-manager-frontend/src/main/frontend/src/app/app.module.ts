@@ -27,6 +27,9 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
 import { faDollar, faDollarSign, faEuroSign, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 
 import { HttpClientModule } from '@angular/common/http';
+import {MatTabsModule} from "@angular/material/tabs";
+import {TopbarComponent} from "./topbar/topbar.component";
+import { DatePipe } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -36,7 +39,8 @@ import { HttpClientModule } from '@angular/common/http';
         ExpensesComponent,
         ReportsComponent,
         LoginComponent,
-        AddExpenseDialogComponent
+        AddExpenseDialogComponent,
+        TopbarComponent
     ],
     imports: [
         BrowserModule,
@@ -52,9 +56,10 @@ import { HttpClientModule } from '@angular/common/http';
         MatDatepickerModule,
         MatNativeDateModule,
         MatSelectModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        MatTabsModule
     ],
-    providers: [],
+    providers: [DatePipe],
     bootstrap: [AppComponent]
 })
 export class AppModule {
