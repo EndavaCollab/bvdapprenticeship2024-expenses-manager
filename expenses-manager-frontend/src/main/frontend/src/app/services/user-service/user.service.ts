@@ -15,7 +15,7 @@ export class UserService {
   }
 
   public getLoggedUser(): Observable<User>{
-    return this.http.get<User>(`${this.apiUrl}/users/byName?name=${this.localService.getData("name")}`);
+    return this.http.get<User>(`${this.apiUrl}/users/by-name?name=${this.localService.getData("name")}`);
   }
 
   public login(name: any){

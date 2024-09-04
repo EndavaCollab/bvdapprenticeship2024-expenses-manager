@@ -37,7 +37,7 @@ public class UsersController {
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/byName")
+    @GetMapping("/by-name")
     public ResponseEntity<Users> getUserByName(@RequestParam String name) {
         Optional<Users> user = usersService.getUserByName(name);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());

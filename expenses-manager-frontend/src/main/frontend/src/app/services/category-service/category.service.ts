@@ -15,8 +15,4 @@ export class CategoryService {
   public getAllCategories(): Observable<Category[]>{
     return this.http.get<Category[]>(`${this.apiUrl}/categories`);
   }
-
-  public getSelectedCategory(category: string): Observable<Category>{
-    return this.http.get<Category>(`${this.apiUrl}/categories/${category}`);
-  }
 }

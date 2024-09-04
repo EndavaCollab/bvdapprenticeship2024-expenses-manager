@@ -15,8 +15,4 @@ export class CurrencyService {
   public getAllCurrencies(): Observable<Currency[]>{
     return this.http.get<Currency[]>(`${this.apiUrl}/currencies`)
   }
-
-  public getSelectedCurrency(currency: string): Observable<Currency>{
-    return this.http.get<Currency>(`${this.apiUrl}/currencies/${currency}`);
-  }
 }
