@@ -8,6 +8,7 @@ import com.endava.expensesmanager.repository.ExpenseRepository;
 import com.endava.expensesmanager.service.ExpenseService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -88,5 +89,12 @@ public class ExpenseServiceImpl implements ExpenseService {
         return false;
     }
 
+    @Override
+    public BigDecimal getTotalAmountByDateBetween(int userId, LocalDateTime startDate, LocalDateTime endDate) {
+        List<ExpenseDto> expenses = getExpensesByUserId(userId, startDate, endDate);
 
+        return expenses.stream()
+                .map(ExpenseDto::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

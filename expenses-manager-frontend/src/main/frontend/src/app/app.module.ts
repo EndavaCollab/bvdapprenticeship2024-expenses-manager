@@ -28,6 +28,9 @@ import { faDollarSign, faEuroSign, faMoneyBill } from '@fortawesome/free-solid-s
 
 import { HttpClientModule } from '@angular/common/http';
 import { faCalendar } from '@fortawesome/free-regular-svg-icons';
+import {MatTabsModule} from "@angular/material/tabs";
+import {TopbarComponent} from "./topbar/topbar.component";
+import { DatePipe } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -37,7 +40,8 @@ import { faCalendar } from '@fortawesome/free-regular-svg-icons';
         ExpensesComponent,
         ReportsComponent,
         LoginComponent,
-        AddExpenseDialogComponent
+        AddExpenseDialogComponent,
+        TopbarComponent
     ],
     imports: [
         BrowserModule,
@@ -54,9 +58,10 @@ import { faCalendar } from '@fortawesome/free-regular-svg-icons';
         MatNativeDateModule,
         MatSelectModule,
         FontAwesomeModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatTabsModule
     ],
-    providers: [],
+    providers: [DatePipe],
     bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
     this.userService.login(this.name).subscribe({
       next: (response) => {
         this.localService.saveData("name", this.name);
-        this.router.navigate(['/']); 
+        this.router.navigate(['/home']); 
       }, error: (error) => {
         console.error('Eroare la autentificare:', error);
       }

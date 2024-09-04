@@ -1,0 +1,46 @@
+.mat-tab-group{
+    inline-size: 55rem;
+    align-items: center;
+}
+
+.mat-tab-group h1{
+    margin-top: 3.5rem;
+    font-size: 3.5rem;
+}
+
+.mat-tab-group .mat-tab-label {
+    inline-size: 7rem;
+    block-size: 5rem;
+    min-inline-size: 0rem !important;
+}
+
+.mat-tab-group .mat-tab-label:not(:last-child) {
+    margin-right: 5rem;
+}
+
+.mat-tab-group .mat-ink-bar {
+    background-color: var(--primary-color) !important;
+}
+
+.mat-tab-group .mat-tab-label-active {
+    color: var(--primary-color);
+}
+
+.b-home{
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    .add-expense-button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-inline-size: 0rem;
+        inline-size: 5rem;
+        aspect-ratio: 1;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 100%;
+        font-size: 4rem;
+        font-weight: lighter;
+    }
+}
