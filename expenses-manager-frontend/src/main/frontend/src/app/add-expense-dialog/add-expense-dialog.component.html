@@ -1,63 +1,73 @@
 <h1><fa-icon [icon]="['fas', 'money-bill']"></fa-icon> Add expense</h1>
 
-<form class="expense-form">
+<form [formGroup]="expenseForm" class="expense-form" (ngSubmit)="onSubmit()">
 
   <!--date input div-->
+  <div class="errors" *ngIf="submitted && expenseForm.get('date')?.hasError('required')">
+    Date is required.
+  </div>
   <div class="col-md-12 mb-3 d-flex align-items-center">
     <label class="form-label">Date</label>
     <div class="input-group">
       <div class="date-icon">
-        <span class="icons"><i class="glyphicon glyphicon-calendar"></i></span>
+        <span class="icons"><fa-icon [icon]="['far', 'calendar']"></fa-icon></span>
       </div>
-      <input type="date" class="form-control input-date" onclick="this.showPicker()" id="dateInput" aria-label="date-input">
+      <input type="date" class="form-control input-date" formControlName="date" onclick="this.showPicker()" id="dateInput" aria-label="date-input" [max]="currentDate | date:'yyyy-MM-dd'">
     </div>
   </div>
 
   <!--category input div-->
+  <div class="errors" *ngIf="submitted && expenseForm.get('categoryId')?.hasError('required')">
+    Category is required.
+  </div>
   <div class="col-md-12 mb-3 d-flex align-items-center">
     <label class="form-label">Category</label>
-    <select class="input-category"  aria-label="category-input">
-      <option *ngFor="let category of categories" [value]="category">{{category}}</option>
+    <select class="input-category" formControlName="categoryId" aria-label="category-input">
+      <option *ngFor="let category of categories" [value]="category.id">{{category.description}}</option>
     </select>
   </div>
 
   <!--currency input div-->
+  <div class="errors" *ngIf="submitted && expenseForm.get('currencyId')?.hasError('required')">
+    Currency is required.
+  </div>
   <div class="col-md-12 mb-3 d-flex align-items-center">
     <label class="form-label">Currency</label>
     <div class="input-group">
       <div class="currency-icon">
-        <span class="icons" *ngIf="selectedCurrency==='US Dolar'"><fa-icon [icon]="['fas', 'dollar-sign']"></fa-icon></span>
-        <span class="icons" *ngIf="selectedCurrency==='Euro'"><fa-icon [icon]="['fas', 'euro-sign']"></fa-icon></span>
-        <span class="icons" *ngIf="selectedCurrency==='RON'"></span>
+        <span class="icons" *ngIf="getCurrencyCode() === 'USD'"><fa-icon [icon]="['fas', 'dollar-sign']"></fa-icon></span>
+        <span class="icons" *ngIf="getCurrencyCode() === 'EUR'"><fa-icon [icon]="['fas', 'euro-sign']"></fa-icon></span>
       </div>
-      <select class="input-currency" [(ngModel)]="selectedCurrency" [ngModelOptions]="{standalone: true}" id="currencyInput" aria-label="currency-input">
-        <option *ngFor="let currency of currencies" [value]="currency">{{currency}}</option>
+      <select class="input-currency" formControlName="currencyId" id="currencyInput" aria-label="currency-input">
+        <option *ngFor="let currency of currencies" [value]="currency.id">{{currency.code}}</option>
       </select>
     </div>
   </div>
 
   <!--amount input div-->
+  <div class="errors" *ngIf="submitted && (expenseForm.get('amount')?.hasError('min') || expenseForm.get('amount')?.hasError('required'))">
+    Amount must be greater than 0.
+  </div>
   <div class="col-md-12 mb-3 d-flex align-items-center">
     <label class="form-label">Amount</label>
     <div class="input-group">
       <div class="currency-icon">
-        <span class="icons" *ngIf="selectedCurrency==='US Dolar'"><fa-icon [icon]="['fas', 'dollar-sign']"></fa-icon></span>
-        <span class="icons" *ngIf="selectedCurrency==='Euro'"><fa-icon [icon]="['fas', 'euro-sign']"></fa-icon></span>
-        <span class="icons" *ngIf="selectedCurrency==='RON'"></span>
+        <span class="icons" *ngIf="getCurrencyCode() === 'USD'"><fa-icon [icon]="['fas', 'dollar-sign']"></fa-icon></span>
+        <span class="icons" *ngIf="getCurrencyCode() === 'EUR'"><fa-icon [icon]="['fas', 'euro-sign']"></fa-icon></span>
       </div>
-      <input type="number" class="input-amount" id="amountInput" aria-label="amount-input">
+      <input type="number" class="input-amount" formControlName="amount" id="amountInput" aria-label="amount-input">
     </div>
   </div>
 
   <!--description input div-->
   <div class="col-md-12 mb-3 d-flex align-items-center">
     <label class="form-label">Description</label>
-    <textarea class="input-description" aria-label="description-input"></textarea>
+    <textarea class="input-description" formControlName="description" aria-label="description-input"></textarea>
+  </div>
+
+  <!--buttons div-->
+  <div class="buttons">
+    <button class="cancel-button" aria-label="cancel-button" (click)="closeDialog()" type="button">Cancel</button>
+    <button class="add-expense-button" aria-label="add-expense-button" type="submit">Add expense</button>
   </div>
 </form>
-
-<!--buttons div-->
-<div class="buttons">
-  <button class="cancel-button" aria-label="cancel-button" (click)="closeDialog()">Cancel</button>
-  <button class="add-expense-button" aria-label="add-expense-button">Add expense</button>
-</div>

@@ -1,17 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ExpenseService } from './expense.service';
+import { LocalService } from './local.service';
 
-describe('ExpenseService', () => {
-  let service: ExpenseService;
+describe('LocalService', () => {
+  let service: LocalService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ExpenseService);
+    service = TestBed.inject(LocalService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
 });

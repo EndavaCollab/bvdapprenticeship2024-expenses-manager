@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user-service/user.service';
 import { Router } from '@angular/router';
+import { LocalService } from '../services/local-service/local.service';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   name: string='';
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private localService: LocalService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -18,7 +19,8 @@ export class LoginComponent implements OnInit {
   loginUser() {
     this.userService.login(this.name).subscribe({
       next: (response) => {
-          this.router.navigate(['/home']); 
+        this.localService.saveData("name", this.name);
+        this.router.navigate(['/home']); 
       }, error: (error) => {
         console.error('Eroare la autentificare:', error);
       }

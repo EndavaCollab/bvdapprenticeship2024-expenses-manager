@@ -9,7 +9,12 @@ import { DatePipe } from '@angular/common';
 export class ExpenseService {
 
   private apiUrl= environment.baseUrl;
+
   constructor(private http: HttpClient, private datePipe: DatePipe) { }
+
+  public createExpense(expense: any){
+    return this.http.post(`${this.apiUrl}/expense`, expense);
+  }
 
   public getTotalAmountBetweenDates(userId: number, startDate?: Date, endDate?: Date){
     let params = new HttpParams()

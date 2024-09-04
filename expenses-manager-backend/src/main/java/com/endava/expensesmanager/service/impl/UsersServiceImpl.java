@@ -2,6 +2,7 @@ package com.endava.expensesmanager.service.impl;
 
 import com.endava.expensesmanager.dto.UserDto;
 import com.endava.expensesmanager.entity.Users;
+import com.endava.expensesmanager.mapper.UserMapper;
 import com.endava.expensesmanager.repository.UsersRepository;
 import com.endava.expensesmanager.service.UsersService;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class UsersServiceImpl implements UsersService {
 
     private final UsersRepository usersRepository;
+    private final UserMapper userMapper = UserMapper.INSTANCE;
 
     // Constructor Injection
     public UsersServiceImpl(UsersRepository usersRepository) {
@@ -36,6 +38,12 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public Optional<Users> getUserById(int id) {
         return usersRepository.findById(id);
+    }
+
+    @Override
+    public Optional<UserDto> getUserByName(String name) { 
+        Optional<Users> user = usersRepository.findByName(name);
+        return user.map(userMapper::usersToUserDto);
     }
 
     @Override

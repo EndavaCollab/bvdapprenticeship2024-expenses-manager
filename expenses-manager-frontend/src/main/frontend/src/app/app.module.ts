@@ -14,7 +14,7 @@ import { HomeComponent } from './home/home.component';
 import { ExpensesComponent } from './expenses/expenses.component';
 import { ReportsComponent } from './reports/reports.component';
 import { LoginComponent } from './login/login.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -24,9 +24,10 @@ import { AddExpenseDialogComponent } from './add-expense-dialog/add-expense-dial
 import { MatNativeDateModule } from '@angular/material/core';
 
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faDollar, faDollarSign, faEuroSign, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import { faDollarSign, faEuroSign, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 
 import { HttpClientModule } from '@angular/common/http';
+import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import {MatTabsModule} from "@angular/material/tabs";
 import {TopbarComponent} from "./topbar/topbar.component";
 import { DatePipe } from '@angular/common';
@@ -57,6 +58,7 @@ import { DatePipe } from '@angular/common';
         MatNativeDateModule,
         MatSelectModule,
         FontAwesomeModule,
+        ReactiveFormsModule,
         MatTabsModule
     ],
     providers: [DatePipe],
@@ -67,7 +69,8 @@ export class AppModule {
         library.addIcons(
           faMoneyBill,
           faDollarSign,
-          faEuroSign
+          faEuroSign,
+          faCalendar
         );
       }
 }

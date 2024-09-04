@@ -17,7 +17,7 @@ import java.util.Optional;
 public class ExpenseServiceImpl implements ExpenseService {
 
     private final ExpenseRepository expenseRepository;
-    private static final ExpenseMapper expenseMapper = ExpenseMapper.INSTANCE;
+    private final ExpenseMapper expenseMapper = ExpenseMapper.INSTANCE;
 
     public ExpenseServiceImpl(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
