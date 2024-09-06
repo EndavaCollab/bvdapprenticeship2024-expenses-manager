@@ -21,4 +21,6 @@ public interface ExpenseService {
     List<ExpenseDto> getExpensesByUserId(int userId, LocalDateTime startDate, LocalDateTime endDate);
 
     BigDecimal getTotalAmountByDateBetween(int userId, LocalDateTime startDate, LocalDateTime endDate);
+
+    List<ExpenseDto> getExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int page, int size, String property, boolean ascending, Integer categoryId, Integer currencyId);
 }
