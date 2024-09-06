@@ -1,6 +1,7 @@
 package com.endava.expensesmanager.service;
 
 import com.endava.expensesmanager.dto.ExpenseDto;
+import com.endava.expensesmanager.enums.PropertyEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,5 +23,5 @@ public interface ExpenseService {
 
     BigDecimal getTotalAmountByDateBetween(int userId, LocalDateTime startDate, LocalDateTime endDate);
 
-    List<ExpenseDto> getExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int page, int size, String property, boolean ascending, Integer categoryId, Integer currencyId);
+    List<ExpenseDto> getExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int page, int size, PropertyEnum property, boolean ascending, Integer categoryId, Integer currencyId);
 }

@@ -2,6 +2,7 @@ package com.endava.expensesmanager.service.impl;
 
 import com.endava.expensesmanager.dto.ExpenseDto;
 import com.endava.expensesmanager.entity.Expense;
+import com.endava.expensesmanager.enums.PropertyEnum;
 import com.endava.expensesmanager.exception.BadRequestException;
 import com.endava.expensesmanager.mapper.ExpenseMapper;
 import com.endava.expensesmanager.repository.ExpenseRepository;
@@ -99,12 +100,9 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public List<ExpenseDto> getExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int page, int size, String property, boolean ascending, Integer categoryId, Integer currencyId) {
-        PageRequest pageRequest;
-        if (ascending)
-            pageRequest=PageRequest.of(page, size, Sort.by(property).ascending());
-        else
-            pageRequest=PageRequest.of(page, size, Sort.by(property).descending());
+    public List<ExpenseDto> getExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int page, int size, PropertyEnum property, boolean ascending, Integer categoryId, Integer currencyId) {
+        PageRequest pageRequest = ascending ? PageRequest.of(page, size, Sort.by(String.valueOf(property).toLowerCase()).ascending())
+                : PageRequest.of(page, size, Sort.by(String.valueOf(property).toLowerCase()).descending());
         List<Expense> expenses = expenseRepository.findAllExpensesOnPage(userId, startDate, endDate, categoryId, currencyId, pageRequest);
         return expenses.stream()
                 .map(expenseMapper::expenseToExpenseDto)
