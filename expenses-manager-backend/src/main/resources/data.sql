@@ -1,12 +1,13 @@
-INSERT INTO category (description, color) VALUES ('Food & Restaurants', '#ff6347');
-INSERT INTO category (description, color) VALUES ('Car', '#1e90ff');
-INSERT INTO category (description, color) VALUES ('Subscriptions', '#8a2be2');
-INSERT INTO category (description, color) VALUES ('Entertainment', '#ff4500');
-INSERT INTO category (description, color) VALUES ('Education', '#3cb371');
-INSERT INTO category (description, color) VALUES ('Saving', '#ffd700');
-INSERT INTO category (description, color) VALUES ('Clothing', '#ff69b4');
-INSERT INTO category (description, color) VALUES ('Housing', '#20b2aa');
-INSERT INTO category (description, color) VALUES ('Health', '#db7093');
+INSERT INTO category (description, color) VALUES ('Food & Restaurants', '#4F46E5');
+INSERT INTO category (description, color) VALUES ('Car', '#1EB3DB');
+INSERT INTO category (description, color) VALUES ('Subscriptions', '#E83FAB');
+INSERT INTO category (description, color) VALUES ('Entertainment', '#FF8084');
+INSERT INTO category (description, color) VALUES ('Coffee', '#9FD11F');
+INSERT INTO category (description, color) VALUES ('Education', '#FFD700');
+INSERT INTO category (description, color) VALUES ('Saving', '#FFA500');
+INSERT INTO category (description, color) VALUES ('Clothing', '#FF69B4');
+INSERT INTO category (description, color) VALUES ('Housing', '#8B4513');
+INSERT INTO category (description, color) VALUES ('Health', '#FF6347');
 
 INSERT INTO currency (code) VALUES ('RON');
 INSERT INTO currency (code) VALUES ('MDL');

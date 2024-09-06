@@ -1,0 +1,45 @@
+.mat-list{
+    inline-size: 35rem;
+}
+
+.mat-list-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    block-size: 6.5rem;
+}
+
+.icon-image{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.mat-list h2{
+    font-family: 'Outfit', sans-serif !important;
+}
+
+.mat-subheader{
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--primary-text-color) !important;
+    margin-top: 0rem !important;
+}
+
+.category{
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 1.5rem;
+}
+
+.price-tag{
+    font-size: 2rem;
+    color: var(--text-danger-color);
+    align-self: flex-end;
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+

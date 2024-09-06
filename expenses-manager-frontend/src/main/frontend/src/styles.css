@@ -15,5 +15,7 @@ html, body {
     --secondary-color: #E9F0FF;
     --input-border-color: #646a77;
     --input-selected-border-color: #007bff;
+    --primary-text-color: #2A2C35;
+    --text-danger-color: #B41226;
 }
 

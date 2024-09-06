@@ -31,6 +31,7 @@ import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import {MatTabsModule} from "@angular/material/tabs";
 import {TopbarComponent} from "./topbar/topbar.component";
 import { DatePipe } from '@angular/common';
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
     declarations: [
@@ -59,7 +60,8 @@ import { DatePipe } from '@angular/common';
         MatSelectModule,
         FontAwesomeModule,
         ReactiveFormsModule,
-        MatTabsModule
+        MatTabsModule,
+        MatListModule
     ],
     providers: [DatePipe],
     bootstrap: [AppComponent]
@@ -67,10 +69,10 @@ import { DatePipe } from '@angular/common';
 export class AppModule {
     constructor(library: FaIconLibrary) {
         library.addIcons(
-          faMoneyBill,
-          faDollarSign,
-          faEuroSign,
-          faCalendar
+            faMoneyBill,
+            faDollarSign,
+            faEuroSign,
+            faCalendar
         );
-      }
+    }
 }
