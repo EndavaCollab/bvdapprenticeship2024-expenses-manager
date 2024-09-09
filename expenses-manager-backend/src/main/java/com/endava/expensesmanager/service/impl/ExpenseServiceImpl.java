@@ -102,7 +102,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     public List<ExpenseDto> getExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int page, int size, PropertyEnum property, boolean ascending, Integer categoryId, Integer currencyId) {
         PageRequest pageRequest = ascending ? PageRequest.of(page, size, Sort.by(String.valueOf(property).toLowerCase()).ascending())
-                : PageRequest.of(page, size, Sort.by(String.valueOf(property).toLowerCase()).descending());
+                : PageRequest.of(page, size, Sort.by(property.fieldName).descending());
         List<Expense> expenses = expenseRepository.findAllExpensesOnPage(userId, startDate, endDate, categoryId, currencyId, pageRequest);
         return expenses.stream()
                 .map(expenseMapper::expenseToExpenseDto)
