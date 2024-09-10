@@ -1,6 +1,7 @@
 package com.endava.expensesmanager.controller;
 
 import com.endava.expensesmanager.dto.ExpenseDto;
+import com.endava.expensesmanager.enums.PropertyEnum;
 import com.endava.expensesmanager.service.ExpenseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,5 +60,19 @@ public class ExpenseController {
     public ResponseEntity<BigDecimal> getTotalAmountByDateBetween(@RequestParam int userId, @RequestParam(required = false) LocalDateTime startDate, @RequestParam(required = false) LocalDateTime endDate) {
         BigDecimal total = expenseService.getTotalAmountByDateBetween(userId, startDate, endDate);
         return ResponseEntity.ok(total);
+    }
+
+    @GetMapping("/user/{userId}/")
+    public ResponseEntity<List<ExpenseDto>> getExpensesPage(@PathVariable int userId,
+                                                            @RequestParam(required = false) LocalDateTime startDate,
+                                                            @RequestParam(required = false) LocalDateTime endDate,
+                                                            @RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "10")int size,
+                                                            @RequestParam(defaultValue = "DATE") PropertyEnum sortBy,
+                                                            @RequestParam(required = false) boolean ascending,
+                                                            @RequestParam(required = false) Integer categoryId,
+                                                            @RequestParam(required = false) Integer currencyId){
+        List<ExpenseDto> expenses = expenseService.getExpensesPage(userId, startDate, endDate, page, size, sortBy, ascending, categoryId, currencyId);
+        return ResponseEntity.ok(expenses);
     }
 }

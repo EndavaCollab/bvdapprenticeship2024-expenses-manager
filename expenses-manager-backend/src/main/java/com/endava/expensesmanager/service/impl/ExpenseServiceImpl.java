@@ -2,10 +2,13 @@ package com.endava.expensesmanager.service.impl;
 
 import com.endava.expensesmanager.dto.ExpenseDto;
 import com.endava.expensesmanager.entity.Expense;
+import com.endava.expensesmanager.enums.PropertyEnum;
 import com.endava.expensesmanager.exception.BadRequestException;
 import com.endava.expensesmanager.mapper.ExpenseMapper;
 import com.endava.expensesmanager.repository.ExpenseRepository;
 import com.endava.expensesmanager.service.ExpenseService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -73,7 +76,6 @@ public class ExpenseServiceImpl implements ExpenseService {
         return expenseRepository.findAllByUserIdAndDateBetween(userId, startDate, endDate).stream()
                 .map(expenseMapper::expenseToExpenseDto)
                 .toList();
-
     }
 
     private boolean validateDates(LocalDateTime startDate, LocalDateTime endDate) {
@@ -97,4 +99,14 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .map(ExpenseDto::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    public List<ExpenseDto> getExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int page, int size, PropertyEnum property, boolean ascending, Integer categoryId, Integer currencyId) {
+        PageRequest pageRequest = ascending ? PageRequest.of(page, size, Sort.by(String.valueOf(property).toLowerCase()).ascending())
+                : PageRequest.of(page, size, Sort.by(property.fieldName).descending());
+        List<Expense> expenses = expenseRepository.findAllExpensesOnPage(userId, startDate, endDate, categoryId, currencyId, pageRequest);
+        return expenses.stream()
+                .map(expenseMapper::expenseToExpenseDto)
+                .toList();
+    }
+
 }
