@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { DatePipe } from '@angular/common';
+import { Expense } from 'src/app/models';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,10 @@ export class ExpenseService {
 
   public createExpense(expense: any){
     return this.http.post(`${this.apiUrl}/expense`, expense);
+  }
+
+  public getExpensesByUserId(userId: any){
+    return this.http.get<Expense[]>(`${this.apiUrl}/expense/user/${userId}`);
   }
 
   public getTotalAmountBetweenDates(userId: number, startDate?: Date, endDate?: Date){
