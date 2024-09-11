@@ -1,0 +1,128 @@
+.expense-table{
+    inline-size: 80rem;
+    margin-left: 1.4rem;
+    font-family: var(--font-family);
+    box-shadow: none;
+
+    .column{
+        padding: 1.6rem;
+        color: var(--font-color);
+        font-size: 1.4rem;
+        font-weight: 600;
+    }
+
+    .description {
+        padding: 1.6rem;
+        font-weight: 100;
+      }
+      
+    .description-content {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .actions-button{
+        border: none;
+        background: none;
+    }
+
+    .category-text{
+        inline-size: fit-content;
+        border-radius: 0.5rem;
+        padding:0.3rem;
+        font-weight: 100;
+    }
+
+    ::ng-deep .mat-sort-header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    ::ng-deep .mat-sort-header-arrow {
+        margin-left: 1rem !important;
+        color: var(--font-color);
+    }
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center; 
+
+      .filter-button {
+        padding: 0;
+      }
+    }
+}
+
+.paginator{
+    inline-size: 80rem;
+    block-size: 4rem;
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+
+    .paginator-button{
+        inline-size: 3.2rem;
+        block-size: 3.2rem;
+        margin: 0.4rem;
+        background: none;
+        font-family: var(--font-family);
+        font-weight: 600;
+
+        &.active{
+            border-radius: 1rem;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        &:not(.active) {
+            border: none;
+        }
+    }
+
+}
+
+.datepicker-wrapper {
+    margin-top: 5.6rem;
+    margin-left: 1.4rem;
+    position: relative;
+
+    .datepicker-buttons{
+        inline-size: 80rem;
+        display: flex;
+        justify-content: space-between;
+
+        .date-buttons{
+            display: inline-flex;
+            align-items: center;
+            background: none;
+            font-family: var(--font-family);
+            font-weight: 600;
+            border: none;
+            background: none;
+        }
+
+        .date-picker-button{
+            position: relative;
+        }
+
+        .hidden-datepicker-input {
+            position: absolute;
+            opacity: 0;
+            inline-size: 0rem;
+            block-size: 0rem;
+            bottom: -0.2rem;
+            left: 0.5rem;
+          }
+    }
+}
+  
+::ng-deep .mat-calendar-period-button {
+    display: none !important;
+  }
+
+  

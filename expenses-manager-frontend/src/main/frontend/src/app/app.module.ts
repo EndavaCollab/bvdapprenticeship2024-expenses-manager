@@ -19,6 +19,9 @@ import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatSelectModule} from '@angular/material/select';
+import {MatTableModule} from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort';
+
 
 import { AddExpenseDialogComponent } from './add-expense-dialog/add-expense-dialog.component';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -31,6 +34,7 @@ import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import {MatTabsModule} from "@angular/material/tabs";
 import {TopbarComponent} from "./topbar/topbar.component";
 import { DatePipe } from '@angular/common';
+import { ExpenseTableComponent } from './expense-table/expense-table.component';
 
 @NgModule({
     declarations: [
@@ -41,7 +45,8 @@ import { DatePipe } from '@angular/common';
         ReportsComponent,
         LoginComponent,
         AddExpenseDialogComponent,
-        TopbarComponent
+        TopbarComponent,
+        ExpenseTableComponent
     ],
     imports: [
         BrowserModule,
@@ -59,7 +64,9 @@ import { DatePipe } from '@angular/common';
         MatSelectModule,
         FontAwesomeModule,
         ReactiveFormsModule,
-        MatTabsModule
+        MatTabsModule,
+        MatTableModule,
+        MatSortModule,
     ],
     providers: [DatePipe],
     bootstrap: [AppComponent]

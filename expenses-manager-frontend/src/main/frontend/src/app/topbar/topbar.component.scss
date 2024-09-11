@@ -1,11 +1,11 @@
 .mat-tab-group{
-    inline-size: 55rem;
-    align-items: center;
+    inline-size: auto;
 }
 
 .mat-tab-group h1{
     margin-top: 3.5rem;
     font-size: 3.5rem;
+    text-align: center;
 }
 
 .mat-tab-group .mat-tab-label {
@@ -43,4 +43,5 @@
         font-size: 4rem;
         font-weight: lighter;
     }
+
 }
