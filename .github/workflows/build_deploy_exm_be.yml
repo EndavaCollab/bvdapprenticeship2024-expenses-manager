@@ -37,7 +37,8 @@ jobs:
       run: sudo apt-get update && sudo apt-get install maven -y
 
     - name: Build Backend Application
-      run: mvn clean install
+      run: |
+         mvn clean install -DBE_BASE_URL=${{ secrets.BE_BASE_URL }} -DDB_URL=${{ secrets.DB_URL }} -DDB_USERNAME=${{ secrets.DB_USERNAME }} -DDB_PASSWORD=${{ secrets.DB_PASSWORD }}
       working-directory: expenses-manager-backend
 
     - name: Upload build artifacts
