@@ -36,15 +36,16 @@ jobs:
     - name: Install Maven
       run: sudo apt-get update && sudo apt-get install maven -y
 
-    - name: Build Backend Application
+    - name: Run Backend Application
       run: |
-        mvn clean install
-      env:
-        BE_BASE_URL: ${{ secrets.BE_BASE_URL }}
-        DB_URL: ${{ secrets.DB_URL }}
-        DB_USERNAME: ${{ secrets.DB_USERNAME }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      working-directory: expenses-manager-backend
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
+          export DB_URL=${{ secrets.DB_URL }}
+          export DB_USERNAME=${{ secrets.DB_USERNAME }}
+          export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          export BE_BASE_URL=${{ secrets.BE_BASE_URL }}
+          nohup java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=dev &
+        EOF
+    
     
 
     - name: Upload build artifacts
