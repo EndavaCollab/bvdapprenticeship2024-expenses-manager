@@ -38,13 +38,14 @@ jobs:
 
     - name: Build Backend Application
       run: |
-         mvn clean install
-         env: 
-          BE_BASE_URL: ${{ secrets.BE_BASE_URL }}
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        mvn clean install
+      env:
+        BE_BASE_URL: ${{ secrets.BE_BASE_URL }}
+        DB_URL: ${{ secrets.DB_URL }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       working-directory: expenses-manager-backend
+    
 
     - name: Upload build artifacts
       if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
