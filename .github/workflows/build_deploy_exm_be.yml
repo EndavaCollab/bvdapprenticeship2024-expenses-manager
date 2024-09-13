@@ -108,7 +108,7 @@ jobs:
            echo 'export DATABASE_USERNAME="${{ secrets.DB_USERNAME }}"' >> run_backend.sh
            echo 'export DATABASE_PASSWORD="${{ secrets.DB_PASSWORD }}"' >> run_backend.sh
            echo 'java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod' >> run_backend.sh
-           nohup bash ./run_backend.sh &
+           nohup bash ./run_backend.sh > output.out 2>&1 &
          content
      
 
