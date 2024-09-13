@@ -104,12 +104,11 @@ jobs:
     - name: Run Backend Application
       run: |
          ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<content
-           nohup bash << finish &
-           export DATABASE_URL="${{ secrets.DB_URL }}"
-           export DATABASE_USERNAME="${{ secrets.DB_USERNAME }}"
-           export DATABASE_PASSWORD="${{ secrets.DB_PASSWORD }}"
-           java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod
-           finish 
+           echo 'export DATABASE_URL="${{ secrets.DB_URL }}"' > run_backend.sh
+           echo 'export DATABASE_USERNAME="${{ secrets.DB_USERNAME }}"' >> run_backend.sh
+           echo 'export DATABASE_PASSWORD="${{ secrets.DB_PASSWORD }}"' >> run_backend.sh
+           echo 'java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod' >> run_backend.sh
+           nohup bash ./run_backend.sh &
          content
      
 
