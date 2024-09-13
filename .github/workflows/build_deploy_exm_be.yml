@@ -36,17 +36,15 @@ jobs:
     - name: Install Maven
       run: sudo apt-get update && sudo apt-get install maven -y
 
-    - name: Run Backend Application
+    - name: Build Backend Application
       run: |
-        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
-          export DB_URL=${{ secrets.DB_URL }}
-          export DB_USERNAME=${{ secrets.DB_USERNAME }}
-          export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          export BE_BASE_URL=${{ secrets.BE_BASE_URL }}
-          nohup java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=dev &
-        EOF
-    
-    
+        mvn clean install
+      env:
+        BE_BASE_URL: ${{ secrets.BE_BASE_URL }}
+        DB_URL: ${{ secrets.DB_URL }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      working-directory: expenses-manager-backend
 
     - name: Upload build artifacts
       if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
@@ -107,7 +105,11 @@ jobs:
     - name: Run Backend Application
       run: |
         ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
-          nohup java -jar /home/admin/expenses-manager-backend.jar &
+          export DB_URL=${{ secrets.DB_URL }}
+          export DB_USERNAME=${{ secrets.DB_USERNAME }}
+          export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          export BE_BASE_URL=${{ secrets.BE_BASE_URL }}
+          nohup java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=dev &
         EOF
 
     - name: Remove SSH private key file
