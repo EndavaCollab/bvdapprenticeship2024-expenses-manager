@@ -40,10 +40,9 @@ jobs:
       run: |
         mvn clean install
       env:
-        BE_BASE_URL: ${{ secrets.BE_BASE_URL }}
-        DB_URL: ${{ secrets.DB_URL }}
-        DB_USERNAME: ${{ secrets.DB_USERNAME }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DATABASE_URL: ${{ secrets.DB_URL }}
+        DATABASE_USERNAME: ${{ secrets.DB_USERNAME }}
+        DATABASE_PASSWORD: ${{ secrets.DB_PASSWORD }}
       working-directory: expenses-manager-backend
 
     - name: Upload build artifacts
@@ -108,8 +107,7 @@ jobs:
           export DB_URL=${{ secrets.DB_URL }}
           export DB_USERNAME=${{ secrets.DB_USERNAME }}
           export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          export BE_BASE_URL=${{ secrets.BE_BASE_URL }}
-          nohup java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=dev &
+          nohup java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod &
         EOF
 
     - name: Remove SSH private key file
