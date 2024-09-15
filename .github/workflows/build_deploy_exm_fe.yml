@@ -26,7 +26,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Download and install Maven
       run: sudo apt-get update && sudo apt-get install -y maven
@@ -38,7 +38,7 @@ jobs:
 
     - name: Upload build artifacts
       if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: frontend-build
         path: expenses-manager-frontend/target/frontend
