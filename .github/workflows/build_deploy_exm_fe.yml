@@ -33,7 +33,7 @@ jobs:
 
     - name: Build Angular application using Maven
       run: |
-         mvn clean install -DBE_BASE_URL=http://ip:8080
+         mvn clean install -DBE_BASE_URL=${{ secrets.BE_BASE_URL }}
       working-directory: expenses-manager-frontend
 
     - name: Upload build artifacts
