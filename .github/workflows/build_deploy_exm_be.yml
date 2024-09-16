@@ -37,12 +37,13 @@ jobs:
       run: sudo apt-get update && sudo apt-get install maven -y
 
     - name: Build Backend Application
-      run: mvn clean install
+      run: |
+        mvn clean install
       working-directory: expenses-manager-backend
 
     - name: Upload build artifacts
       if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: backend-build
         path: expenses-manager-backend/target/*.jar
@@ -56,7 +57,7 @@ jobs:
 
     steps:
     - name: Download build artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: backend-build
         path: ./backend-build
@@ -98,9 +99,14 @@ jobs:
 
     - name: Run Backend Application
       run: |
-        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
-          nohup java -jar /home/admin/expenses-manager-backend.jar &
-        EOF
+         ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<content
+           echo 'export DATABASE_URL="${{ secrets.DB_URL }}"' > run_backend.sh
+           echo 'export DATABASE_USERNAME="${{ secrets.DB_USERNAME }}"' >> run_backend.sh
+           echo 'export DATABASE_PASSWORD="${{ secrets.DB_PASSWORD }}"' >> run_backend.sh
+           echo 'java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod' >> run_backend.sh
+           nohup bash ./run_backend.sh > output.out 2>&1 &
+         content
+     
 
     - name: Remove SSH private key file
       run: rm ssh_key
