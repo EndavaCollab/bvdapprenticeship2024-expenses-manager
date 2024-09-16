@@ -39,7 +39,6 @@ export class ExpenseTableComponent implements OnInit {
     this.expenseService.getExpensesByUserId(localStorage.getItem("userId")).subscribe({
       next: (response) => {
         this.expenses = response;
-        console.log(response);
       },
       error: (error) => {
         console.error('Error getting expenses:', error);
@@ -110,7 +109,6 @@ export class ExpenseTableComponent implements OnInit {
     return pages;
   }
 
-  // Funcția apelată când se schimbă data
   setDay(event: MatDatepickerInputEvent<Date>, datepicker: MatDatepicker<Moment>) {
     const selectedDate = _moment(event.value);
     this.date.setValue(selectedDate);
