@@ -39,10 +39,6 @@ jobs:
     - name: Build Backend Application
       run: |
         mvn clean install
-      env:
-        DATABASE_URL: ${{ secrets.DB_URL }}
-        DATABASE_USERNAME: ${{ secrets.DB_USERNAME }}
-        DATABASE_PASSWORD: ${{ secrets.DB_PASSWORD }}
       working-directory: expenses-manager-backend
 
     - name: Upload build artifacts
