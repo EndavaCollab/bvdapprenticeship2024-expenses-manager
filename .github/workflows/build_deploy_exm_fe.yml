@@ -1,5 +1,3 @@
-name: Build and Deploy EXM FE
-
 on:
   push:
     branches:
@@ -44,7 +42,6 @@ jobs:
         path: expenses-manager-frontend/target/frontend
 
   deploy:
-    name: Deploy to VM
     runs-on: ubuntu-latest
     needs: build
     environment: deploy
@@ -67,18 +64,16 @@ jobs:
     - name: Get VM Public IP
       id: get-vm-ip
       run: |
-        echo "vm_ip=$(az vm list-ip-addresses --name ${{ secrets.EXM_VM_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP_NAME }} --query "[0].virtualMachine.network.publicIpAddresses[0].ipAddress" -o tsv)" >> $GITHUB_OUTPUT
+        echo "vm_ip=$(az vm list-ip-addresses --name ${{ secrets.EXM_VM_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP_NAME }} --query '[0].virtualMachine.network.publicIpAddresses[0].ipAddress' -o tsv)" >> $GITHUB_OUTPUT
 
     - name: Create SSH private key file
       run: |
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key
         chmod 600 ssh_key
 
-
     - name: Copy build files to VM
       run: |
         scp -i ssh_key -o StrictHostKeyChecking=no -r frontend-build/* ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/tmp/frontend/
-
 
     - name: SSH into VM, move build files, and restart Nginx
       run: | 
@@ -93,7 +88,6 @@ jobs:
         sudo mv /tmp/frontend/* /var/www/html/
         
         sudo chown -R www-data:www-data /var/www/html/
-
         sudo rm -rf /tmp/frontend/*
         
         sudo systemctl restart nginx 
