@@ -74,20 +74,27 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key
         chmod 600 ssh_key
 
+
+    - name: Copy build files to VM
+      run: |
+        scp -i ssh_key -o StrictHostKeyChecking=no -r frontend-build/* ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/tmp/frontend/
+
+
     - name: SSH into VM, move build files, and restart Nginx
       run: | 
         ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
-          sudo apt-get update
-          sudo apt-get install nginx -y
-          sudo systemctl start nginx
-          sudo systemctl enable nginx
-          rm -r /tmp/frontend
-          mkdir /tmp/frontend
-          sudo rm -r /var/www/html
-          sudo mkdir /var/www/html
-          sudo mv /tmp/frontend/* /var/www/html/
-          sudo chown -R www-data:www-data /var/www/html/
-          sudo systemctl restart nginx 
+        sudo apt-get update
+        sudo apt-get install nginx -y
+        sudo systemctl start nginx
+        sudo systemctl enable nginx
+        
+        sudo rm -rf /var/www/html
+        sudo mkdir -p /var/www/html
+        sudo mv /tmp/frontend/* /var/www/html/
+        
+        sudo chown -R www-data:www-data /var/www/html/
+        
+        sudo systemctl restart nginx 
         EOF
 
     - name: Remove SSH private key file
