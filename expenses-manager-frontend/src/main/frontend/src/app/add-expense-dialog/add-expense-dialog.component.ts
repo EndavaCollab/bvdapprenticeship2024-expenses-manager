@@ -83,6 +83,7 @@ export class AddExpenseDialogComponent implements OnInit {
 
   onSubmit(){
     this.submitted = true;
+    console.log(this.expenseForm.value);
     if (this.expenseForm.valid){
       this.expenseForm.patchValue({date: this.expenseForm.get("date")?.value+"T00:00:00"});
       this.expenseService.createExpense(this.expenseForm.value).subscribe({

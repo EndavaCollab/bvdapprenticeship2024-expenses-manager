@@ -1,15 +1,39 @@
 <div class="datepicker-wrapper">
-  <div class="datepicker-buttons">
+  <div class="datepicker-buttons" *ngIf="selectedTab=='Day'">
+    <button class="date-buttons" (click)="goToPreviousDay()">&lt;</button>
+    <button class="date-buttons date-picker-button" (click)="openDatepicker(dayDatepicker)">
+      <input matInput [matDatepicker]="dayDatepicker" class="hidden-datepicker-input" (dateChange)="setDay($event, dayDatepicker)">
+      {{ displayDay() }} <mat-icon>expand_more</mat-icon>
+    </button>
+    <button class="date-buttons" (click)="goToNextDay()">&gt;</button>
+  </div>
+
+  <div class="datepicker-buttons" *ngIf="selectedTab=='Month'">
     <button class="date-buttons" (click)="goToPreviousMonth()">&lt;</button>
-    <button class="date-buttons date-picker-button" (click)="openDatepicker(datepicker)">
-      <input matInput [matDatepicker]="datepicker" class="hidden-datepicker-input">
+    <button class="date-buttons date-picker-button" (click)="openDatepicker(monthDatepicker)">
+      <input matInput [matDatepicker]="monthDatepicker" class="hidden-datepicker-input">
       {{ displayMonthAndYear() }} <mat-icon>expand_more</mat-icon>
     </button>
     <button class="date-buttons" (click)="goToNextMonth()">&gt;</button>
   </div>
-  <mat-datepicker #datepicker
+
+  <div class="datepicker-buttons" *ngIf="selectedTab=='Year'">
+    <button class="date-buttons" (click)="goToPreviousYear()">&lt;</button>
+    <button class="date-buttons date-picker-button" (click)="openDatepicker(yearDatepicker)">
+      <input matInput [matDatepicker]="yearDatepicker" class="hidden-datepicker-input">
+      {{ displayYear() }} <mat-icon>expand_more</mat-icon>
+    </button>
+    <button class="date-buttons" (click)="goToNextYear()">&gt;</button>
+  </div>
+
+  <mat-datepicker #dayDatepicker></mat-datepicker>
+  <mat-datepicker #monthDatepicker
                   startView="multi-year"
-                  (monthSelected)="setMonthAndYear($event, datepicker)">
+                  (monthSelected)="setMonthAndYear($event, monthDatepicker)">
+  </mat-datepicker>
+  <mat-datepicker #yearDatepicker
+                  startView="multi-year"
+                  (yearSelected)="setYear($event, yearDatepicker)">
   </mat-datepicker>
 </div>
 
@@ -22,7 +46,7 @@
   
   <ng-container matColumnDef="date">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="column"> Date </th>
-    <td mat-cell class="column" *matCellDef="let element"> {{element.date[2] | number : '2.0-0'}}/{{element.date[1] | number : '2.0-0'}}/{{element.date[0]}} </td>
+    <td mat-cell class="column" *matCellDef="let element"> {{element.date | date: 'dd/MM/yyyy'}} </td>
   </ng-container>
   
   <ng-container matColumnDef="amount">

@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Expense, Category, Currency } from '../models';
 import { ExpenseService } from '../services/expense-service/expense.service';
 import { CategoryService } from '../services/category-service/category.service';
 import { CurrencyService } from '../services/currency-service/currency.service';
 import { FormControl } from '@angular/forms';
-import { MatDatepicker } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 import * as _moment from 'moment';
 import { Moment } from 'moment';
@@ -27,6 +27,8 @@ export class ExpenseTableComponent implements OnInit {
 
   date = new FormControl(_moment());
 
+  @Input() selectedTab="";
+
   constructor(
     private expenseService: ExpenseService,
     private categoryService: CategoryService,
@@ -37,6 +39,7 @@ export class ExpenseTableComponent implements OnInit {
     this.expenseService.getExpensesByUserId(localStorage.getItem("userId")).subscribe({
       next: (response) => {
         this.expenses = response;
+        console.log(response);
       },
       error: (error) => {
         console.error('Error getting expenses:', error);
@@ -107,6 +110,13 @@ export class ExpenseTableComponent implements OnInit {
     return pages;
   }
 
+  // Funcția apelată când se schimbă data
+  setDay(event: MatDatepickerInputEvent<Date>, datepicker: MatDatepicker<Moment>) {
+    const selectedDate = _moment(event.value);
+    this.date.setValue(selectedDate);
+    datepicker.close();
+  }
+
   setMonthAndYear(normalizedMonthAndYear: Date, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.date.value.clone() as Moment;
     const newMonthAndYear = _moment(normalizedMonthAndYear);
@@ -119,13 +129,43 @@ export class ExpenseTableComponent implements OnInit {
     }
   }
 
+  setYear(normalizedYear: Date, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.date.value.clone() as Moment;
+    const newYear = _moment(normalizedYear);
+    
+    if (ctrlValue) {
+      const updatedDate = ctrlValue.year(newYear.year());
+      this.date.setValue(updatedDate);
+      
+      datepicker.close();
+    }
+  }
+
   openDatepicker(datepicker: MatDatepicker<moment.Moment>) {
     datepicker.open();
+  }
+
+  displayDay(): string {
+    const selectedDate = this.date.value;
+    return selectedDate ? selectedDate.format('DD MMMM YYYY') : 'Select Day';
   }
 
   displayMonthAndYear(): string {
     const selectedDate = this.date.value;
     return selectedDate ? selectedDate.format('MMMM YYYY') : 'Select Month/Year';
+  }
+
+  displayYear(): string {
+    const selectedDate = this.date.value;
+    return selectedDate ? selectedDate.format('YYYY') : 'Select Year';
+  }
+
+  goToPreviousDay(): void{
+    this.date.value.subtract(1, 'day');
+  }
+
+  goToNextDay(): void{
+    this.date.value.add(1, 'day');
   }
 
   goToPreviousMonth(): void{
@@ -134,6 +174,14 @@ export class ExpenseTableComponent implements OnInit {
 
   goToNextMonth(): void{
     this.date.value.add(1, 'month');
+  }
+
+  goToPreviousYear(): void{
+    this.date.value.subtract(1, 'year');
+  }
+
+  goToNextYear(): void{
+    this.date.value.add(1, 'year');
   }
 
   getCategoryDescription(categoryId: number): string {
