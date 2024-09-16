@@ -93,6 +93,8 @@ jobs:
         sudo mv /tmp/frontend/* /var/www/html/
         
         sudo chown -R www-data:www-data /var/www/html/
+
+         sudo rm -rf /tmp/frontend/*
         
         sudo systemctl restart nginx 
         EOF
