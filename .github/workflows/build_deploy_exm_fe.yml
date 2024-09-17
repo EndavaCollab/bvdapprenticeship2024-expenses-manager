@@ -71,6 +71,14 @@ jobs:
       with:
         name: frontend-build 
         path: ./frontend-build
+
+    - name: Azure CLI Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         
     - name: Get VM Public IP
       id: get-vm-ip
