@@ -9,12 +9,14 @@ html, body {
     font-size: 62.5%;
 }
 
-:root{
+:root {
     --primary-color: #4F46E5;
     --secondary-color: #E9F0FF;
     --input-border-color: #646a77;
     --input-selected-border-color: #007bff;
     --font-color: #2a2c35;
     --font-family: "Outfit", sans-serif !important; 
+    --light-background-color: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
 }
 

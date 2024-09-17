@@ -1,0 +1,39 @@
+<div class="dashboard-container">
+
+  <div class="date-picker-container">
+    <button mat-icon-button (click)="previousDay()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <button mat-button (click)="picker.open()">
+      {{ currentDate | date: 'EEEE - d MMMM y' }}
+    </button>
+
+    <button mat-icon-button (click)="nextDay()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+    <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" style="display: none;">
+    <mat-datepicker #picker></mat-datepicker>
+  </div>
+
+  <div class="chart-container">
+    <ngx-charts-pie-chart
+      [view]="[300, 300]"
+      [results]="data"
+      [legend]="false"
+      [doughnut]="true"
+      [labels]="false"
+      [scheme]="colorScheme">
+    </ngx-charts-pie-chart>
+
+    <div class="legend-container">
+      <ul>
+        <li *ngFor="let category of categories">
+          <span class="legend-color" [ngStyle]="{'background-color': category.colorCode}"></span>
+          {{ category.name }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
