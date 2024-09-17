@@ -31,9 +31,15 @@ jobs:
     - name: Download and install Maven
       run: sudo apt-get update && sudo apt-get install -y maven
 
+    - name: Get VM Public IP
+      id: get-vm-ip
+      run: |
+        echo "vm_ip=$(az vm list-ip-addresses --name ${{ secrets.EXM_VM_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP_NAME }} --query "[0].virtualMachine.network.publicIpAddresses[0].ipAddress" -o tsv)" >> $GITHUB_OUTPUT
+      if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+
     - name: Build Angular application using Maven
       run: |
-         mvn clean install -DBE_BASE_URL=${{ secrets.BE_BASE_URL }}
+         mvn clean install -DBE_BASE_URL=${{ steps.get-vm-ip.outputs.vm_ip }}:8080
       working-directory: expenses-manager-frontend
 
     - name: Upload build artifacts
