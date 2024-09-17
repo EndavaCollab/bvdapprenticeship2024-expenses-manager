@@ -2,11 +2,10 @@
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
 
-html, body {   
+html, body {
     inline-size: 100%;
     block-size: 100%;
     margin: 0;
-    font-family: "Outfit", sans-serif !important; 
     font-size: 62.5%;
 }
 
@@ -15,7 +14,8 @@ html, body {
     --secondary-color: #E9F0FF;
     --input-border-color: #646a77;
     --input-selected-border-color: #007bff;
-    --primary-text-color: #2A2C35;
     --text-danger-color: #B41226;
+    --font-color: #2a2c35;
+    --font-family: "Outfit", sans-serif !important;
 }
 

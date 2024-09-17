@@ -6,7 +6,7 @@ export interface User {
 
 export interface Expense {
     description: string;
-    date: string;
+    date: Date;
     amount: number;
     categoryId: number;
     currencyId: number;
