@@ -1,0 +1,138 @@
+.datepicker-wrapper {
+    inline-size: 80rem;
+    block-size: 4rem;
+    margin-top: 5.6rem;
+    margin-left: 1.4rem;
+    box-shadow: 0rem 0rem 2rem rgba(0, 0, 0, 0.2);
+    position: relative;
+
+    .datepicker-buttons{
+        display: flex;
+        justify-content: space-between;
+        height: 100%;
+
+        .date-buttons{
+            display: inline-flex;
+            align-items: center;
+            background: none;
+            font-family: var(--font-family);
+            font-weight: 600;
+            border: none;
+            background: none;
+        }
+
+        .date-picker-button{
+            position: relative;
+        }
+
+        .hidden-datepicker-input {
+            position: absolute;
+            opacity: 0;
+            inline-size: 0rem;
+            block-size: 0rem;
+            bottom: 1.2rem;
+            left: 0.5rem;
+          }
+    }
+}
+  
+::ng-deep .mat-calendar-period-button {
+    display: none !important;
+  }
+
+.expense-table{
+    inline-size: 80rem;
+    margin-left: 1.4rem;
+    margin-top: 1.6rem;
+    margin-right: 5rem;
+    font-family: var(--font-family);
+    box-shadow: 0rem 0rem 2rem rgba(0, 0, 0, 0.2);
+
+    .column{
+        padding: 1.6rem;
+        color: var(--font-color);
+        font-size: 1.4rem;
+        font-weight: 600;
+    }
+
+    .description {
+        padding: 1.6rem;
+        font-weight: 100;
+      }
+      
+    .description-content {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .actions-button{
+        border: none;
+        background: none;
+    }
+
+    .category-text{
+        inline-size: fit-content;
+        border-radius: 0.5rem;
+        padding:0.3rem;
+        font-weight: 100;
+    }
+
+    ::ng-deep .mat-sort-header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    ::ng-deep .mat-sort-header-arrow {
+        margin-left: 1rem !important;
+        color: var(--font-color);
+    }
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center; 
+
+      .filter-button {
+        padding: 0;
+      }
+    }
+}
+
+.paginator{
+    inline-size: 80rem;
+    block-size: 4rem;
+    margin-top: 1.6rem;
+    margin-left: 1.4rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    
+    box-shadow: 0rem 0rem 2rem rgba(0, 0, 0, 0.2);
+
+    .paginator-button{
+        inline-size: 3.2rem;
+        block-size: 3.2rem;
+        margin: 0.4rem;
+        background: none;
+        font-family: var(--font-family);
+        font-weight: 600;
+
+        &.active{
+            border-radius: 1rem;
+            border: solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        &:not(.active) {
+            border: none;
+        }
+    }
+
+}
+
+
+  
