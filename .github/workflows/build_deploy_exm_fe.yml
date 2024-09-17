@@ -23,6 +23,7 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
+    environment: deploy
 
     steps:
     - name: Checkout code
