@@ -106,6 +106,5 @@ jobs:
           nohup 'java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod' > output.out 2>&1 &
         EOF
 
-
     - name: Remove SSH private key file
       run: rm ssh_key
