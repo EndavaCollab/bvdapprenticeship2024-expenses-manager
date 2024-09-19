@@ -99,14 +99,12 @@ jobs:
 
     - name: Run Backend Application
       run: |
-         ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<content
-           echo 'export DATABASE_URL="${{ secrets.DB_URL }}"' > run_backend.sh
-           echo 'export DATABASE_USERNAME="${{ secrets.DB_USERNAME }}"' >> run_backend.sh
-           echo 'export DATABASE_PASSWORD="${{ secrets.DB_PASSWORD }}"' >> run_backend.sh
-           echo 'java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod' >> run_backend.sh
-           nohup bash ./run_backend.sh > output.out 2>&1 &
-         content
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
+          export DATABASE_URL="${{ secrets.DB_URL }}"
+          export DATABASE_USERNAME="${{ secrets.DB_USERNAME }}"
+          export DATABASE_PASSWORD="${{ secrets.DB_PASSWORD }}"
+          nohup 'java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod' > output.out 2>&1 &
+        EOF
      
-
     - name: Remove SSH private key file
       run: rm ssh_key
