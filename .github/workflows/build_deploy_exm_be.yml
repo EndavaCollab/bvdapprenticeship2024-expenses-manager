@@ -103,7 +103,7 @@ jobs:
           export DATABASE_URL="${{ secrets.DB_URL }}"
           export DATABASE_USERNAME="${{ secrets.DB_USERNAME }}"
           export DATABASE_PASSWORD="${{ secrets.DB_PASSWORD }}"
-          nohup 'java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod' > output.out 2>&1 &
+          nohup java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod > output.out 2>&1 &
         EOF
 
     - name: Remove SSH private key file
