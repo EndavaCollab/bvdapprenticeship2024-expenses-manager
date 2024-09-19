@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CategoryService } from '../services/category-service/category.service';
 import { CurrencyService } from '../services/currency-service/currency.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -25,6 +25,7 @@ export class AddExpenseDialogComponent implements OnInit {
     private currencyService: CurrencyService,
     private dialogRef: MatDialogRef<AddExpenseDialogComponent>,
     private formBuilder: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) {}
 
   categories: Category[] = [];
@@ -87,6 +88,7 @@ export class AddExpenseDialogComponent implements OnInit {
       this.expenseForm.patchValue({date: this.expenseForm.get("date")?.value+"T00:00:00"});
       this.expenseService.createExpense(this.expenseForm.value).subscribe({
         next: (response) => {
+          this.data.onExpenseAdded();
           this.dialogRef.close();
         },
         error: (error) => {
