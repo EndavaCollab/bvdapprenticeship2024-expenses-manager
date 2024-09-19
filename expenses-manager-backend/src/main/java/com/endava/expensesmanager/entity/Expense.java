@@ -8,21 +8,19 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "expenses") // Adăugați o tabelă explicită, dacă este necesar
-public class Expense {
-
+public class Expense{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
-    @Column(name = "description", nullable = true)
+    @Column(name = "description", nullable = true, unique = false)
     private String description;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "date", nullable = false, unique = false)
     private LocalDateTime date;
 
-    @Column(name = "amount", nullable = false)
+    @Column(name = "amount", nullable = false, unique = false)
     private BigDecimal amount;
 
     @ManyToOne
@@ -36,5 +34,4 @@ public class Expense {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private Users user;
-
 }

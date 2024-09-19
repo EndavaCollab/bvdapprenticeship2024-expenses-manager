@@ -31,12 +31,17 @@ public class CurrencyConversionServiceImpl implements CurrencyConversionService 
         conversionRates.put("RON", ronRates);
     }
 
+
     @Override
     public BigDecimal convert(BigDecimal amount, String fromCurrency, String toCurrency) {
-        if (fromCurrency.equals(toCurrency)) {
+
+        if (toCurrency == null || toCurrency.trim().isEmpty()) {
             return amount;
         }
 
+        if (fromCurrency.equals(toCurrency)) {
+            return amount;
+        }
 
         Map<String, Double> rates = conversionRates.get(fromCurrency);
         if (rates == null || !rates.containsKey(toCurrency)) {
@@ -46,4 +51,5 @@ public class CurrencyConversionServiceImpl implements CurrencyConversionService 
         Double conversionRate = rates.get(toCurrency);
         return amount.multiply(BigDecimal.valueOf(conversionRate));
     }
+
 }

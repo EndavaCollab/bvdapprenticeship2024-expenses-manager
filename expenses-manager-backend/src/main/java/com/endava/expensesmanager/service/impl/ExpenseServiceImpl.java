@@ -62,21 +62,31 @@ public class ExpenseServiceImpl implements ExpenseService {
         expenseRepository.deleteById(id);
     }
 
+
     @Override
     public List<ExpenseDto> getExpensesByUserId(int userId, LocalDateTime startDate, LocalDateTime endDate, String currency) {
+
         if (!validateDates(startDate, endDate)) {
             throw new BadRequestException("Invalid date range");
         }
 
-        if (endDate == null) {
-            endDate = LocalDateTime.now();
+        List<Expense> expenses;
+        if (startDate == null && endDate == null) {
+            expenses = expenseRepository.findByUserId(userId);
+        } else {
+
+            if (endDate == null) {
+                endDate = LocalDateTime.now();
+            }
+            expenses = expenseRepository.findAllByUserIdAndDateBetween(userId, startDate, endDate);
         }
 
-        List<Expense> expenses = expenseRepository.findAllByUserIdAndDateBetween(userId, startDate, endDate);
+
         return expenses.stream()
                 .map(expense -> convertToDtoWithCurrency(expense, currency))
                 .toList();
     }
+
 
     @Override
     public BigDecimal getTotalAmountByDateBetween(int userId, LocalDateTime startDate, LocalDateTime endDate, String currency) {
