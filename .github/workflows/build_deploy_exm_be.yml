@@ -97,10 +97,17 @@ jobs:
       run: |
        scp -i ssh_key -o StrictHostKeyChecking=no backend-build/*.jar ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/home/admin/expenses-manager-backend.jar
 
+    - name: Kill previous backend process (if any)
+      run: |
+       if lsof -i :8080; then
+        sudo fuser -k 8080/tcp || true
+       else
+        echo "No process running on port 8080"
+       fi
+       
     - name: Run Backend Application
       run: |
        nohup 'java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod --spring.datasource.url=${{ secrets.DB_URL }} --spring.datasource.username=${{ secrets.DB_USERNAME }} --spring.datasource.password=${{ secrets.DB_PASSWORD }}' > output.out 2>&1 &
-
 
     - name: Remove SSH private key file
       run: rm ssh_key
