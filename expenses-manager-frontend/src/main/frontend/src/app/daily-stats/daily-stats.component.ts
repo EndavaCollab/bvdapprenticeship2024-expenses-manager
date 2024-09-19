@@ -55,10 +55,14 @@ export class DailyStatsComponent implements OnInit {
   }
 
   nextDay(): void {
-    this.currentDate.setDate(this.currentDate.getDate() + 1);
-    this.currentDate = new Date(this.currentDate); 
-    this.fetchDataForSelectedDate(this.currentDate);
-  }
+    const tomorrow = new Date(this.currentDate);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    if (tomorrow <= new Date()) {
+        this.currentDate = tomorrow;
+        this.fetchDataForSelectedDate(this.currentDate);
+    }
+}
+
 
   fetchDataForSelectedDate(date: Date): void {
     console.log('Fetching data for:', date);
