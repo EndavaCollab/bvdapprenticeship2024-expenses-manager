@@ -1,14 +1,14 @@
 <mat-list>
+  <mat-divider></mat-divider>
+  <div *ngFor="let date of filteredExpenses | keyvalue">
+    <h2 mat-subheader>{{ date.key }}</h2>
     <mat-divider></mat-divider>
-    <div *ngFor="let day of days">
-        <h2 mat-subheader>{{ day.date }}</h2>
-        <mat-divider></mat-divider>
-        <mat-list-item *ngFor="let item of day.items">
-          <img src="../../assets/icons/{{ item.icon }}.svg" class="icon-image" alt="icon">
-          <h2 class="category">{{ item.category }}</h2>
-          <h2 class="price-tag">{{ item.price }}</h2>
-          <mat-divider></mat-divider>
-        </mat-list-item>
-      </div>
+    <mat-list-item *ngFor="let item of date.value | keyvalue">
+      <img src="../../assets/icons/{{ item.key }}.svg" class="icon-image" alt="icon">
+      <h2 class="category">{{ item.key }}</h2>
+      <h2 class="price-tag">{{currency + item.value}}</h2>
       <mat-divider></mat-divider>
- </mat-list>
+    </mat-list-item>
+  </div>
+  <mat-divider></mat-divider>
+</mat-list>

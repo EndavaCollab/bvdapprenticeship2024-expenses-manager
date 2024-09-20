@@ -36,6 +36,7 @@ import {TopbarComponent} from "./topbar/topbar.component";
 import { DatePipe } from '@angular/common';
 import { ExpenseTableComponent } from './expense-table/expense-table.component';
 import {MatListModule} from "@angular/material/list";
+import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
 
 @NgModule({
     declarations: [
@@ -47,7 +48,8 @@ import {MatListModule} from "@angular/material/list";
         LoginComponent,
         AddExpenseDialogComponent,
         TopbarComponent,
-        ExpenseTableComponent
+        ExpenseTableComponent,
+        RightSidebarComponent
     ],
     imports: [
         BrowserModule,

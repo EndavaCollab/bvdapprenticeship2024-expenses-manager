@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AddExpenseDialogComponent } from '../add-expense-dialog/add-expense-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ExpenseService } from '../services/expense-service/expense.service';
+import { ReloadService } from '../services/reload-service/reload.service';
 
 @Component({
   selector: 'app-topbar',
@@ -17,7 +18,11 @@ export class TopbarComponent implements OnInit {
   userId: number = Number(localStorage.getItem('userId'));
   selectedTab: number = 0;
 
-  constructor(public router: Router, private dialog: MatDialog, private expenseService: ExpenseService) { }
+  constructor(
+    public router: Router, private dialog: MatDialog, 
+    private expenseService: ExpenseService, 
+    private reloadService: ReloadService
+  ) {}
 
   ngOnInit(): void {
     this.onTabChange(0);
@@ -64,6 +69,8 @@ export class TopbarComponent implements OnInit {
         this.getTotalAmount(this.userId);
         break;
     }
+
+    this.reloadService.changeTab(selectedTab);
   }
 
   openDialog(): void{
@@ -72,6 +79,7 @@ export class TopbarComponent implements OnInit {
       data: {
         onExpenseAdded: () => {
           this.onTabChange(this.selectedTab);
+          this.reloadService.reloadExpenses();
         }
       }
     });
