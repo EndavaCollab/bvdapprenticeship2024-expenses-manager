@@ -21,6 +21,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 import { AddExpenseDialogComponent } from './add-expense-dialog/add-expense-dialog.component';
@@ -67,6 +68,7 @@ import { ExpenseTableComponent } from './expense-table/expense-table.component';
         MatTabsModule,
         MatTableModule,
         MatSortModule,
+        MatMenuModule
     ],
     providers: [DatePipe],
     bootstrap: [AppComponent]

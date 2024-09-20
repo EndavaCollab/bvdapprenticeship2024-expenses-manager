@@ -17,8 +17,49 @@ export class ExpenseService {
     return this.http.post(`${this.apiUrl}/expense`, expense);
   }
 
-  public getExpensesByUserId(userId: any){
-    return this.http.get<Expense[]>(`${this.apiUrl}/expense/user/${userId}`);
+  public getExpensesPage(userId: any, startDate?: Date, endDate?: Date, page?:any, size?:any, sortBy?: any, ascending?: any, categoryFilter?:any, currencyFilter?:any){
+    let params = new HttpParams();
+    if (startDate)
+      params = params.set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
+    if (endDate)
+      params = params.set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
+    if (size)
+      params = params.set('size', size);
+    if (ascending!=undefined){
+      params = params.set('sortBy', sortBy)
+                     .set('ascending', ascending);
+   }
+   if(currencyFilter){
+    params = params.set('currencyId', currencyFilter);
+   }
+
+   if(categoryFilter){
+    params = params.set('categoryId', categoryFilter);
+   }
+
+   if(page){
+    params = params.set('page', page-1);
+   }
+   return this.http.get<Expense[]>(`${this.apiUrl}/expense/user/${userId}/`, {params});
+  }
+
+  public countPages(userId: any, startDate?: Date, endDate?: Date, size?:any, categoryFilter?:any, currencyFilter?:any){
+    let params = new HttpParams();
+    params = params.set('userId', userId);
+    if (startDate)
+      params = params.set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
+    if (endDate)
+      params = params.set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
+    if (size)
+      params = params.set('size', size);
+    if(currencyFilter){
+      params = params.set('currencyId', currencyFilter);
+     }
+  
+     if(categoryFilter){
+      params = params.set('categoryId', categoryFilter);
+     }
+     return this.http.get<number>(`${this.apiUrl}/expense/user/pages`, {params});
   }
 
   public getTotalAmountBetweenDates(userId: number, startDate?: Date, endDate?: Date){
@@ -28,14 +69,5 @@ export class ExpenseService {
                 .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
   
     return this.http.get<number>(`${this.apiUrl}/expense/user/total`, {params});
-  }
-
-  public getFilteredExpenses(userId: any, startDate?: Date, endDate?: Date)
-  {
-    let params = new HttpParams()
-                .set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
-                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
-
-    return this.http.get<Expense[]>(`${this.apiUrl}/expense/user/${userId}`, {params})
   }
 }

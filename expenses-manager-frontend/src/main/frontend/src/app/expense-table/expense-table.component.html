@@ -37,7 +37,7 @@
   </mat-datepicker>
 </div>
 
-<table mat-table [dataSource]="expenses" matSort class="mat-elevation-z8 expense-table">
+<table mat-table [dataSource]="expenses" matSort (matSortChange)="sortData($event)" class="mat-elevation-z8 expense-table">
   
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef class="column"> Actions </th>
@@ -57,9 +57,14 @@
   <ng-container matColumnDef="currency">
     <th mat-header-cell *matHeaderCellDef class="column">
       <div class="filter-header"> Currency 
-        <button mat-icon-button class="filter-button">
+        <button mat-icon-button class="filter-button" [matMenuTriggerFor]="currencyMenu">
           <img src="../../assets/images/filter.svg">
         </button>
+        <mat-menu #currencyMenu="matMenu">
+          <ng-container *ngFor="let currency of currencies">
+            <button mat-menu-item (click)="filterByCurrency(currency)">{{currency.code}} </button>
+          </ng-container>
+        </mat-menu>
       </div>
     </th>
     <td mat-cell class="column" *matCellDef="let element"> {{getCurrencyCode(element.currencyId)}} </td>
@@ -68,9 +73,15 @@
   <ng-container matColumnDef="category">
     <th mat-header-cell *matHeaderCellDef class="column">
       <div class="filter-header"> Category
-        <button mat-icon-button class="filter-button">
+        <button mat-icon-button class="filter-button" [matMenuTriggerFor]="categoryMenu">
           <img src="../../assets/images/filter.svg">
         </button>
+        <mat-menu #categoryMenu="matMenu">
+          <ng-container *ngFor="let category of categories">
+            <button class="category-button" [ngStyle]="{'color': category.color, 
+            'background-color': hexToRgba(category.color)}" mat-menu-item (click)="filterByCategory(category)">{{category.description}} </button>
+          </ng-container>
+        </mat-menu>
       </div>
     </th>
     <td mat-cell class="column" *matCellDef="let element">
@@ -106,7 +117,7 @@
   </button>
 
   <!-- Puncte "..." înainte, dacă suntem pe pagina 5 sau mai departe -->
-  <button class="paginator-button" *ngIf="currentPage > 3">
+  <button class="paginator-button" *ngIf="(currentPage > 3) && (maxPages > 5)">
     ...
   </button>
 
@@ -118,12 +129,12 @@
   </ng-container>
 
   <!-- Puncte "..." după, dacă suntem pe pagina 6 sau mai înainte și sunt mai multe pagini -->
-  <button class="paginator-button" *ngIf="currentPage < maxPages - 2">
+  <button class="paginator-button" *ngIf="(currentPage < maxPages - 2) && (maxPages > 5)">
     ...
   </button>
 
   <!-- Ultima pagină -->
-  <button class="paginator-button" (click)="goToPage(maxPages)" [class.active]="currentPage === maxPages">
+  <button class="paginator-button" (click)="goToPage(maxPages)" [class.active]="currentPage === maxPages"*ngIf="maxPages > 5">
     {{ maxPages }}
   </button>
 

@@ -9,6 +9,7 @@ import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepi
 import * as _moment from 'moment';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-expense-table',
@@ -22,8 +23,13 @@ export class ExpenseTableComponent implements OnInit {
   categories: Category[] = [];
   currencies: Currency[] = [];
 
+  sortBy?: string;
+  ascending?: boolean;
+  currencyId?: number;
+  categoryId?: number;
   currentPage: number = 1;
-  maxPages: number = 10;
+  pageSize: number=3;
+  maxPages!: number;
 
   date = new FormControl(_moment());
 
@@ -83,7 +89,14 @@ onTabChange(){
   ) { }
 
   ngOnInit(): void {
-    this.expenseService.getFilteredExpenses(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+    this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+
+    this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe({
       next: (response) => {
         this.expenses = response;
       },
@@ -91,7 +104,7 @@ onTabChange(){
         console.error('Error getting expenses:', error);
       }
     });
-
+    
     this.categoryService.getAllCategories().subscribe({
       next: (dbCategories) => {
         this.categories = dbCategories;
@@ -109,25 +122,54 @@ onTabChange(){
         console.error('Error fetching currencies:', error);
       }
     });
-
-
   }
 
   goToPage(page: number): void {
+    this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+    
     if (page !== this.currentPage && page >= 1 && page <= this.maxPages) {
       this.currentPage = page;
+
+      this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe((data: any) => {
+      this.expenses = data;
+    });
     }
   }
 
   goToPreviousPage(): void {
+    this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe((data: any) => {
+      this.expenses = data;
+    });
     }
   }
 
   goToNextPage(): void {
+    this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+
     if (this.currentPage < this.maxPages) {
       this.currentPage++;
+      this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe((data: any) => {
+      this.expenses = data;
+    });
     }
   }
 
@@ -196,17 +238,32 @@ onTabChange(){
     this.startDate.setFullYear(this.date.value.year());
     this.endDate.setFullYear(this.date.value.year());
     if (selectedTime=="month" || selectedTime=="day")
-    {
-      this.startDate.setMonth(this.date.value.month());
-      this.endDate.setMonth(this.date.value.month());
-
-      if (selectedTime=="day"){
-        this.startDate.setDate(this.date.value.date());
-        this.endDate.setDate(this.date.value.date());
+      {
+        this.startDate.setMonth(this.date.value.month());
+        this.endDate.setDate(1); // ca să nu treacă la luna următoare când folosim funcția setMonth
+        this.endDate.setMonth(this.date.value.month());
+  
+        if (selectedTime=="day"){
+          this.startDate.setDate(this.date.value.date());
+          this.endDate.setDate(this.date.value.date());
+        }
+        else{
+          const nextMonth = this.startDate.getMonth() + 1;
+          const nextYear = nextMonth === 12 ? this.startDate.getFullYear() + 1 : this.startDate.getFullYear();
+          const firstDayOfNextMonth = new Date(nextYear, nextMonth % 12, 1);
+          const lastDayOfMonth = new Date(firstDayOfNextMonth.getTime() - 1);
+          this.endDate.setDate(lastDayOfMonth.getDate());
+        }
       }
-    }
 
-    this.expenseService.getFilteredExpenses(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+      this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+
+    this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe({
       next: (response) => {
         this.expenses = response;
       },
@@ -286,5 +343,47 @@ onTabChange(){
     const green = parseInt(hexColor.substring(2, 4), 16);
     const blue = parseInt(hexColor.substring(4, 6), 16);
     return `rgba(${red}, ${green}, ${blue}, 0.2)`;
+  }
+
+  sortData(sortState:Sort){
+      this.sortBy=sortState.active.toUpperCase();
+      this.ascending=sortState.direction === 'asc' ? true : (sortState.direction === 'desc' ? false : undefined);
+      this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+      .subscribe((data: any) => {
+        this.expenses = data;
+      });
+  }
+
+  filterByCurrency(filter:Currency){
+    this.currencyId=filter.id;
+    this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+
+      this.currentPage = 1;
+
+    this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe((data: any) => {
+      this.expenses = data;
+    });
+  }
+
+  filterByCategory(filter:Category){
+    this.categoryId=filter.id;
+
+    this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+      
+    this.currentPage = 1
+
+    this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe((data: any) => {
+      this.expenses = data;
+    });
   }
 }
