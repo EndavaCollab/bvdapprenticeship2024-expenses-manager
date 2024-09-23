@@ -100,10 +100,10 @@ jobs:
     - name: Kill previous backend process (if any)
       run: |
         ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
-          if lsof -i :8080; then
-            sudo fuser -k 8080/tcp || true
+          if lsof -i :${{ vars.EXM_BE_PORT }}; then
+            sudo fuser -k ${{ vars.EXM_BE_PORT }}/tcp || true
           else
-            echo "No process running on port 8080"
+            echo "No process running on port ${{ vars.EXM_BE_PORT }}"
           fi
         EOF
        
