@@ -27,7 +27,54 @@ export class ExpenseTableComponent implements OnInit {
 
   date = new FormControl(_moment());
 
-  @Input() selectedTab="";
+  private _selectedTab = ''; // Variabilă internă pentru stocarea valorii
+
+  startDate!: Date;
+  endDate!: Date;
+
+  // Setter-ul este apelat automat când se schimbă valoarea din exterior
+  @Input()
+  set selectedTab(value: string) {
+    if (value !== this._selectedTab) { // Verificăm dacă valoarea s-a schimbat
+      this._selectedTab = value;  // Setăm noua valoare
+      this.onTabChange(); // Apelează funcția când valoarea se modifică
+    }
+  }
+
+  // Getter-ul permite accesarea valorii din interiorul componentei
+  get selectedTab(): string {
+    return this._selectedTab;
+  }
+
+  onTabChange() {
+    const momentDate = this.date.value;
+    switch (this._selectedTab) {
+      case 'Day':
+        this.startDate = new Date(momentDate.year(), momentDate.month(), momentDate.date(), 0, 0, 0);
+        this.endDate = new Date(momentDate.year(), momentDate.month(), momentDate.date(), 23, 59, 59);
+        break;
+
+      case 'Week':
+        break;
+
+      case 'Month':
+        this.startDate = new Date(momentDate.year(), momentDate.month(), 1, 0, 0, 0);
+        const nextMonth = this.startDate.getMonth() + 1;
+        const nextYear = nextMonth === 12 ? this.startDate.getFullYear() + 1 : this.startDate.getFullYear();
+        const firstDayOfNextMonth = new Date(nextYear, nextMonth % 12, 1);
+        const lastDayOfMonth = new Date(firstDayOfNextMonth.getTime() - 1);
+        this.endDate = new Date(momentDate.year(), momentDate.month(), lastDayOfMonth.getDate(), 23, 59, 59);
+        break;
+
+      case 'Year':
+        this.startDate = new Date(momentDate.year(), 0, 1, 0, 0, 0);
+        this.endDate = new Date(momentDate.year(), 11, 31, 23, 59, 59);
+        break;
+
+      case 'Custom':
+        break;
+    }
+  }
 
   constructor(
     private expenseService: ExpenseService,
@@ -36,7 +83,7 @@ export class ExpenseTableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.expenseService.getExpensesByUserId(localStorage.getItem("userId")).subscribe({
+    this.expenseService.getFilteredExpenses(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
       next: (response) => {
         this.expenses = response;
       },
@@ -53,7 +100,7 @@ export class ExpenseTableComponent implements OnInit {
         console.error('Error fetching categories:', error);
       }
     });
-    
+
     this.currencyService.getAllCurrencies().subscribe({
       next: (dbCurrencies) => {
         this.currencies = dbCurrencies;
@@ -62,6 +109,8 @@ export class ExpenseTableComponent implements OnInit {
         console.error('Error fetching currencies:', error);
       }
     });
+
+
   }
 
   goToPage(page: number): void {
@@ -85,23 +134,23 @@ export class ExpenseTableComponent implements OnInit {
   getMiddlePages(): number[] {
     const pages: number[] = [];
 
-    if (this.maxPages<=5)
+    if (this.maxPages <= 5)
       for (let i = 2; i <= this.maxPages; i++) {
         pages.push(i);
       }
     else
-      if (this.currentPage<=2){
+      if (this.currentPage <= 2) {
         for (let i = 2; i <= 3; i++) {
           pages.push(i);
         }
       }
-      else if (this.currentPage>=this.maxPages-1){
-        for (let i = this.maxPages-2; i <= this.maxPages-1; i++) {
+      else if (this.currentPage >= this.maxPages - 1) {
+        for (let i = this.maxPages - 2; i <= this.maxPages - 1; i++) {
           pages.push(i);
         }
       }
-      else{
-        for (let i = this.currentPage-1; i <= this.currentPage+1; i++) {
+      else {
+        for (let i = this.currentPage - 1; i <= this.currentPage + 1; i++) {
           pages.push(i);
         }
       }
@@ -112,17 +161,20 @@ export class ExpenseTableComponent implements OnInit {
   setDay(event: MatDatepickerInputEvent<Date>, datepicker: MatDatepicker<Moment>) {
     const selectedDate = _moment(event.value);
     this.date.setValue(selectedDate);
+    this.updateTable("day");
+
     datepicker.close();
   }
 
   setMonthAndYear(normalizedMonthAndYear: Date, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.date.value.clone() as Moment;
     const newMonthAndYear = _moment(normalizedMonthAndYear);
-    
+
     if (ctrlValue) {
       const updatedDate = ctrlValue.year(newMonthAndYear.year()).month(newMonthAndYear.month());
       this.date.setValue(updatedDate);
-      
+      this.updateTable("month");
+
       datepicker.close();
     }
   }
@@ -130,13 +182,45 @@ export class ExpenseTableComponent implements OnInit {
   setYear(normalizedYear: Date, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.date.value.clone() as Moment;
     const newYear = _moment(normalizedYear);
-    
+
     if (ctrlValue) {
       const updatedDate = ctrlValue.year(newYear.year());
       this.date.setValue(updatedDate);
-      
+      this.updateTable("year");
+
       datepicker.close();
     }
+  }
+
+  updateTable(selectedTime: string) {
+    this.startDate.setFullYear(this.date.value.year());
+    this.endDate.setFullYear(this.date.value.year());
+    if (selectedTime == "month" || selectedTime == "day") {
+      this.startDate.setMonth(this.date.value.month());
+      this.endDate.setDate(1); // ca să nu treacă la luna următoare când folosim funcția setMonth
+      this.endDate.setMonth(this.date.value.month());
+
+      if (selectedTime == "day") {
+        this.startDate.setDate(this.date.value.date());
+        this.endDate.setDate(this.date.value.date());
+      }
+      else {
+        const nextMonth = this.startDate.getMonth() + 1;
+        const nextYear = nextMonth === 12 ? this.startDate.getFullYear() + 1 : this.startDate.getFullYear();
+        const firstDayOfNextMonth = new Date(nextYear, nextMonth % 12, 1);
+        const lastDayOfMonth = new Date(firstDayOfNextMonth.getTime() - 1);
+        this.endDate.setDate(lastDayOfMonth.getDate());
+      }
+    }
+
+    this.expenseService.getFilteredExpenses(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+      next: (response) => {
+        this.expenses = response;
+      },
+      error: (error) => {
+        console.error('Error getting expenses:', error);
+      }
+    });
   }
 
   openDatepicker(datepicker: MatDatepicker<moment.Moment>) {
@@ -158,28 +242,34 @@ export class ExpenseTableComponent implements OnInit {
     return selectedDate ? selectedDate.format('YYYY') : 'Select Year';
   }
 
-  goToPreviousDay(): void{
+  goToPreviousDay(): void {
     this.date.value.subtract(1, 'day');
+    this.updateTable("day");
   }
 
-  goToNextDay(): void{
+  goToNextDay(): void {
     this.date.value.add(1, 'day');
+    this.updateTable("day");
   }
 
-  goToPreviousMonth(): void{
+  goToPreviousMonth(): void {
     this.date.value.subtract(1, 'month');
+    this.updateTable("month");
   }
 
-  goToNextMonth(): void{
+  goToNextMonth(): void {
     this.date.value.add(1, 'month');
+    this.updateTable("month");
   }
 
-  goToPreviousYear(): void{
+  goToPreviousYear(): void {
     this.date.value.subtract(1, 'year');
+    this.updateTable("year");
   }
 
-  goToNextYear(): void{
+  goToNextYear(): void {
     this.date.value.add(1, 'year');
+    this.updateTable("year");
   }
 
   getCategoryDescription(categoryId: number): string {

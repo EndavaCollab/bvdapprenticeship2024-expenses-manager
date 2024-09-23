@@ -29,4 +29,13 @@ export class ExpenseService {
   
     return this.http.get<number>(`${this.apiUrl}/expense/user/total`, {params});
   }
+
+  public getFilteredExpenses(userId: any, startDate?: Date, endDate?: Date)
+  {
+    let params = new HttpParams()
+                .set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
+                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
+
+    return this.http.get<Expense[]>(`${this.apiUrl}/expense/user/${userId}`, {params})
+  }
 }
