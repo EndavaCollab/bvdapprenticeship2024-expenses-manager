@@ -13,7 +13,7 @@
       <mat-icon>chevron_right</mat-icon>
     </button>
 
-    <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" style="display: none;">
+    <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" [max]="maxDate" style="display: none;">
     <mat-datepicker #picker></mat-datepicker>
   </div>
 
@@ -30,8 +30,8 @@
     <div class="legend-container">
       <ul>
         <li *ngFor="let category of categories">
-          <span class="legend-color" [ngStyle]="{'background-color': category.colorCode}"></span>
-          {{ category.name }}
+          <span class="legend-color" [ngStyle]="{'background-color': category.color}"></span>
+          {{ category.description }}
         </li>
       </ul>
     </div>

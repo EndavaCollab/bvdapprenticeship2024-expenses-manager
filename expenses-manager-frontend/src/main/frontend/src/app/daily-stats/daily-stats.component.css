@@ -44,25 +44,6 @@ ngx-charts-pie-chart {
     border-radius: 50%;
 }
 
-.legend-color:nth-child(1) {
-    background-color: var(--food-restaurant-color);
-}
-
-.legend-color:nth-child(2) {
-    background-color: var(--car-color);
-}
-
-.legend-color:nth-child(3) {
-    background-color: var(--subscriptions-color);
-}
-
-.legend-color:nth-child(4) {
-    background-color: var(--entertainment-color);
-}
-
-.legend-color:nth-child(5) {
-    background-color: var(--coffee-color);
-}
 
 .mat-form-field {
     margin-bottom: 1.25rem;
