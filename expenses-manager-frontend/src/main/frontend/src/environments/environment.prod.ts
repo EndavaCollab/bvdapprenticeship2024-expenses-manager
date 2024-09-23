@@ -1,4 +1,4 @@
 export const environment = {
-    baseUrl: 'http://%{BE_BASE_URL}',
+    baseUrl: '%{BE_BASE_URL}',
     production: true
 };
