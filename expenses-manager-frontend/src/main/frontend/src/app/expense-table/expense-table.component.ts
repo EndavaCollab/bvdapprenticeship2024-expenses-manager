@@ -28,8 +28,9 @@ export class ExpenseTableComponent implements OnInit {
   currencyId?: number;
   categoryId?: number;
   currentPage: number = 1;
-  pageSize: number=3;
+  pageSize: number=5;
   maxPages!: number;
+  userId!:string;
 
   date = new FormControl(_moment());
 
@@ -89,13 +90,14 @@ onTabChange(){
   ) { }
 
   ngOnInit(): void {
-    this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    this.userId=localStorage.getItem("userId") as string;
+    this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
     .subscribe({
       next: (response) => {
         this.maxPages = response;
       }});
 
-    this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
     .subscribe({
       next: (response) => {
         this.expenses = response;
@@ -125,7 +127,7 @@ onTabChange(){
   }
 
   goToPage(page: number): void {
-    this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
     .subscribe({
       next: (response) => {
         this.maxPages = response;
@@ -134,7 +136,7 @@ onTabChange(){
     if (page !== this.currentPage && page >= 1 && page <= this.maxPages) {
       this.currentPage = page;
 
-      this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+      this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
     .subscribe((data: any) => {
       this.expenses = data;
     });
@@ -142,7 +144,7 @@ onTabChange(){
   }
 
   goToPreviousPage(): void {
-    this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
     .subscribe({
       next: (response) => {
         this.maxPages = response;
@@ -150,7 +152,7 @@ onTabChange(){
 
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+      this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
     .subscribe((data: any) => {
       this.expenses = data;
     });
@@ -158,7 +160,7 @@ onTabChange(){
   }
 
   goToNextPage(): void {
-    this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
     .subscribe({
       next: (response) => {
         this.maxPages = response;
@@ -166,7 +168,7 @@ onTabChange(){
 
     if (this.currentPage < this.maxPages) {
       this.currentPage++;
-      this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+      this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
     .subscribe((data: any) => {
       this.expenses = data;
     });
@@ -201,6 +203,7 @@ onTabChange(){
   }
 
   setDay(event: MatDatepickerInputEvent<Date>, datepicker: MatDatepicker<Moment>) {
+    this.currentPage = 1;
     const selectedDate = _moment(event.value);
     this.date.setValue(selectedDate);
     this.updateTable("day");
@@ -213,6 +216,7 @@ onTabChange(){
     const newMonthAndYear = _moment(normalizedMonthAndYear);
     
     if (ctrlValue) {
+      this.currentPage = 1;
       const updatedDate = ctrlValue.year(newMonthAndYear.year()).month(newMonthAndYear.month());
       this.date.setValue(updatedDate);
       this.updateTable("month");
@@ -226,6 +230,7 @@ onTabChange(){
     const newYear = _moment(normalizedYear);
     
     if (ctrlValue) {
+      this.currentPage = 1;
       const updatedDate = ctrlValue.year(newYear.year());
       this.date.setValue(updatedDate);
       this.updateTable("year");
@@ -256,13 +261,13 @@ onTabChange(){
         }
       }
 
-      this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+      this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
     .subscribe({
       next: (response) => {
         this.maxPages = response;
       }});
 
-    this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
     .subscribe({
       next: (response) => {
         this.expenses = response;
@@ -293,31 +298,37 @@ onTabChange(){
   }
 
   goToPreviousDay(): void{
+    this.currentPage = 1;
     this.date.value.subtract(1, 'day');
     this.updateTable("day");
   }
 
   goToNextDay(): void{
+    this.currentPage = 1;
     this.date.value.add(1, 'day');
     this.updateTable("day");
   }
 
   goToPreviousMonth(): void{
+    this.currentPage = 1;
     this.date.value.subtract(1, 'month');
     this.updateTable("month");
   }
 
   goToNextMonth(): void{
+    this.currentPage = 1;
     this.date.value.add(1, 'month');
     this.updateTable("month");
   }
 
   goToPreviousYear(): void{
+    this.currentPage = 1;
     this.date.value.subtract(1, 'year');
     this.updateTable("year");
   }
 
   goToNextYear(): void{
+    this.currentPage = 1;
     this.date.value.add(1, 'year');
     this.updateTable("year");
   }
@@ -348,7 +359,7 @@ onTabChange(){
   sortData(sortState:Sort){
       this.sortBy=sortState.active.toUpperCase();
       this.ascending=sortState.direction === 'asc' ? true : (sortState.direction === 'desc' ? false : undefined);
-      this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+      this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
       .subscribe((data: any) => {
         this.expenses = data;
       });
@@ -356,7 +367,7 @@ onTabChange(){
 
   filterByCurrency(filter:Currency){
     this.currencyId=filter.id;
-    this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
     .subscribe({
       next: (response) => {
         this.maxPages = response;
@@ -364,7 +375,7 @@ onTabChange(){
 
       this.currentPage = 1;
 
-    this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
     .subscribe((data: any) => {
       this.expenses = data;
     });
@@ -373,7 +384,7 @@ onTabChange(){
   filterByCategory(filter:Category){
     this.categoryId=filter.id;
 
-    this.expenseService.countPages(localStorage.getItem("userId"), this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
     .subscribe({
       next: (response) => {
         this.maxPages = response;
@@ -381,7 +392,7 @@ onTabChange(){
       
     this.currentPage = 1
 
-    this.expenseService.getExpensesPage(localStorage.getItem("userId"), this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
     .subscribe((data: any) => {
       this.expenses = data;
     });

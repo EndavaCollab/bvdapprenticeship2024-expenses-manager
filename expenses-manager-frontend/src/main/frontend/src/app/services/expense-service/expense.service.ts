@@ -17,47 +17,59 @@ export class ExpenseService {
     return this.http.post(`${this.apiUrl}/expense`, expense);
   }
 
-  public getExpensesPage(userId: any, startDate?: Date, endDate?: Date, page?:any, size?:any, sortBy?: any, ascending?: any, categoryFilter?:any, currencyFilter?:any){
+  public getExpensesPage(
+    userId: string,
+    startDate?: Date,
+    endDate?: Date,
+    page: number = 1,
+    size: number = 5,
+    sortBy?: string,
+    ascending?: boolean,
+    categoryFilter?: number,
+    currencyFilter?: number
+    ){
     let params = new HttpParams();
+    params = params.set('page', (page-1).toString())
+                   .set('size', size.toString());
     if (startDate)
       params = params.set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
     if (endDate)
       params = params.set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
-    if (size)
-      params = params.set('size', size);
     if (ascending!=undefined){
-      params = params.set('sortBy', sortBy)
-                     .set('ascending', ascending);
+      params = params.set('sortBy', sortBy as string)
+                     .set('ascending', ascending.toString());
    }
    if(currencyFilter){
-    params = params.set('currencyId', currencyFilter);
+    params = params.set('currencyId', currencyFilter.toString());
    }
 
    if(categoryFilter){
-    params = params.set('categoryId', categoryFilter);
-   }
-
-   if(page){
-    params = params.set('page', page-1);
+    params = params.set('categoryId', categoryFilter.toString());
    }
    return this.http.get<Expense[]>(`${this.apiUrl}/expense/user/${userId}/`, {params});
   }
 
-  public countPages(userId: any, startDate?: Date, endDate?: Date, size?:any, categoryFilter?:any, currencyFilter?:any){
+  public countPages(
+    userId: string,
+    startDate?: Date,
+    endDate?: Date,
+    size: number = 5,
+    categoryFilter?: number,
+    currencyFilter?: number
+    ){
     let params = new HttpParams();
-    params = params.set('userId', userId);
+    params = params.set('userId', userId)
+                   .set('size', size);
     if (startDate)
       params = params.set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
     if (endDate)
       params = params.set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
-    if (size)
-      params = params.set('size', size);
     if(currencyFilter){
-      params = params.set('currencyId', currencyFilter);
+      params = params.set('currencyId', currencyFilter.toString());
      }
   
      if(categoryFilter){
-      params = params.set('categoryId', categoryFilter);
+      params = params.set('categoryId', categoryFilter.toString());
      }
      return this.http.get<number>(`${this.apiUrl}/expense/user/pages`, {params});
   }
