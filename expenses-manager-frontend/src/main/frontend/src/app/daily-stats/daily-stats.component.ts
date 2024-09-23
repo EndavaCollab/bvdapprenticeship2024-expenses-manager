@@ -39,7 +39,6 @@ export class DailyStatsComponent implements OnInit {
     this.fetchCategories();
     this.fetchDataForSelectedDate(this.currentDate);
     this.fetchExpenses();
-
   }
 
   fetchCategories(): void {
@@ -47,24 +46,19 @@ export class DailyStatsComponent implements OnInit {
       this.categories = categories;
       this.colorScheme.domain = categories.map(cat => cat.color);
     });
-
   }
 
-  fetchExpenses() : void {
-      this.expenseService.getFilteredExpenses(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
-        next: (expenses : Expense[]) => {
-          
-          this.expenses = expenses;
-          console.log(expenses);
-          
-        },
-        error: (error) => {
-          console.error('Error getting expenses:', error);
-        }
-      });
+  fetchExpenses(): void {
+    this.expenseService.getFilteredExpenses(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+      next: (expenses: Expense[]) => {
+        this.expenses = expenses;
+        console.log(expenses);
+      },
+      error: (error) => {
+        console.error('Error getting expenses:', error);
+      }
+    });
   }
-
-  
 
   onDateChange(event: MatDatepickerInputEvent<Date>): void {
     if (event.value) {
@@ -74,7 +68,7 @@ export class DailyStatsComponent implements OnInit {
     }
   }
 
-  setDate() : void {
+  setDate(): void {
     this.startDate.setHours(0);
     this.startDate.setMinutes(0);
     this.startDate.setSeconds(0);
@@ -99,15 +93,11 @@ export class DailyStatsComponent implements OnInit {
   }
 
   fetchDataForSelectedDate(date: Date): void {
-    // Resetăm datele pentru grafic
     this.data = [];
-  
-    // Setăm startDate și endDate pentru ziua selectată
     this.startDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
     this.endDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
     console.log(this.startDate);
     console.log(this.endDate);
-    // Obținem cheltuielile
     this.fetch();
   }
 
@@ -122,32 +112,26 @@ export class DailyStatsComponent implements OnInit {
         this.expenses = expenses;
         console.log(expenses);
         
-        // Grupăm cheltuielile pe categorii
         const categoryTotals: { [key: string]: number } = {};
         expenses.forEach(expense => {
           const category = this.categories.find(cat => cat.id === expense.categoryId);
           if (category) {
             const categoryName = category.description;
-  
-            // Inițializăm totalul pentru categorie dacă nu există
             if (!categoryTotals[categoryName]) {
-              categoryTotals[categoryName] = 0; // Inițializăm cu 0
+              categoryTotals[categoryName] = 0;
             }
-            // Adăugăm suma cheltuielilor
             categoryTotals[categoryName] += expense.amount;
           }
         });
   
-        // Transformăm categoryTotals în formatul necesar pentru grafic
         this.data = Object.entries(categoryTotals)
-          .filter(([_, total]) => total > 0) // Filtrăm categoriile cu total > 0
+          .filter(([_, total]) => total > 0)
           .map(([name, total]) => {
-            // Găsim categoria pentru a obține culoarea
             const category = this.categories.find(cat => cat.description === name);
             return {
               name,
               value: total,
-              color: category ? category.color : '#ccc' 
+              color: category ? category.color : '#ccc'
             };
           });
   
@@ -162,10 +146,4 @@ export class DailyStatsComponent implements OnInit {
       }
     });
   }
-  
-  
-  
-  
-  
-
 }
