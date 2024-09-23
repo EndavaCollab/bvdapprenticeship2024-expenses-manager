@@ -92,8 +92,8 @@ jobs:
         GITHUB_FE_SITE_DOMAIN: ${{ vars.DEPLOY_DOMAIN }}
         GITHUB_ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }} 
       run: |
-        sed -i "s/REPLACE_DOMAIN/$GITHUB_FE_SITE_DOMAIN/g" .github/workflows/configs/nginx.conf
-        sed -i "s/REPLACE_USER/$GITHUB_ADMIN_USERNAME/g" .github/workflows/configs/nginx.conf
+        sed -i "s/REPLACE_DOMAIN/$GITHUB_FE_SITE_DOMAIN/g" ${{ github.workspace }}/.github/workflows/configs/nginx.conf
+        sed -i "s/REPLACE_USER/$GITHUB_ADMIN_USERNAME/g" ${{ github.workspace }}/.github/workflows/configs/nginx.conf
 
     - name: Copy build files and nginx config to VM
       run: |
