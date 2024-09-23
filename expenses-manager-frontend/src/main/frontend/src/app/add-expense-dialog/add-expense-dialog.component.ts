@@ -3,7 +3,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CategoryService } from '../services/category-service/category.service';
 import { CurrencyService } from '../services/currency-service/currency.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LocalService } from '../services/local-service/local.service';
 import { UserService } from '../services/user-service/user.service';
 import { ExpenseService } from '../services/expense-service/expense.service';
 import { Category, Currency } from '../models';
@@ -18,8 +17,7 @@ export class AddExpenseDialogComponent implements OnInit {
   currentDate = new Date;
   submitted=false;
 
-  constructor( private localService: LocalService,
-    private userService: UserService,
+  constructor( private userService: UserService,
     private expenseService: ExpenseService,
     private categoryService: CategoryService,
     private currencyService: CurrencyService,

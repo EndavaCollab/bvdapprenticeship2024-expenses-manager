@@ -106,7 +106,7 @@
   </button>
 
   <!-- Puncte "..." înainte, dacă suntem pe pagina 5 sau mai departe -->
-  <button class="paginator-button" *ngIf="currentPage > 3">
+  <button class="paginator-button" *ngIf="(currentPage > 3) && (maxPages > 5)">
     ...
   </button>
 
@@ -118,12 +118,12 @@
   </ng-container>
 
   <!-- Puncte "..." după, dacă suntem pe pagina 6 sau mai înainte și sunt mai multe pagini -->
-  <button class="paginator-button" *ngIf="currentPage < maxPages - 2">
+  <button class="paginator-button" *ngIf="(currentPage < maxPages - 2) && (maxPages > 5)">
     ...
   </button>
 
   <!-- Ultima pagină -->
-  <button class="paginator-button" (click)="goToPage(maxPages)" [class.active]="currentPage === maxPages">
+  <button class="paginator-button" (click)="goToPage(maxPages)" [class.active]="currentPage === maxPages" *ngIf="maxPages > 5">
     {{ maxPages }}
   </button>
 
