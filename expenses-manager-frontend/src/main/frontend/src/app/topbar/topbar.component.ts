@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AddExpenseDialogComponent } from '../add-expense-dialog/add-expense-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ExpenseService } from '../services/expense-service/expense.service';
+import { GuardService } from '../services/guard-service/guard.service';
 
 @Component({
   selector: 'app-topbar',
@@ -17,9 +18,10 @@ export class TopbarComponent implements OnInit {
   userId: number = Number(localStorage.getItem('userId'));
   selectedTab: number = 0;
 
-  constructor(public router: Router, private dialog: MatDialog, private expenseService: ExpenseService) { }
+  constructor(public router: Router, private dialog: MatDialog, private expenseService: ExpenseService, private guardService: GuardService) { }
 
   ngOnInit(): void {
+    this.guardService.notLoggedIn()
     this.onTabChange(0);
   }
 
