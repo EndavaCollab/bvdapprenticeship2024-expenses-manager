@@ -110,11 +110,7 @@ jobs:
     - name: Run Backend Application
       run: |
         ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
-          nohup 'java -jar /home/admin/expenses-manager-backend.jar \
-            --spring.profiles.active=prod \
-            --spring.datasource.url="${{ secrets.DB_URL }}" \
-            --spring.datasource.username="${{ secrets.DB_USERNAME }}" \
-            --spring.datasource.password="${{ secrets.DB_PASSWORD }}"' > output.out 2>&1 &
+          nohup java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod --spring.datasource.url="${{ secrets.DB_URL }}" --spring.datasource.username="${{ secrets.DB_USERNAME }}" --spring.datasource.password="${{ secrets.DB_PASSWORD }}" > output.out 2>&1 &
         EOF
 
     - name: Remove SSH private key file
