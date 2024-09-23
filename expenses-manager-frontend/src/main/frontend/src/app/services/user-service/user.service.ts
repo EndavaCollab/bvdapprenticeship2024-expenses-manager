@@ -24,6 +24,7 @@ export class UserService {
           .pipe(
             map(response => {
               localStorage.setItem("userId", response.id);
+              localStorage.setItem("userName", response.name);
             }));
           }
 }

@@ -2,6 +2,7 @@
     inline-size: 35rem;
     block-size: 50%;
     overflow: auto;
+    padding-top: 0rem;
 }
 
 .mat-list-item{
@@ -45,3 +46,33 @@
     margin-bottom: auto;
 }
 
+div.horizontal-container{
+    inline-size: 35rem;
+    block-size: 5rem;
+    display: flex;
+    justify-content: center !important;
+    align-items: center !important;
+
+    h2{
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin-right: 3rem;
+        font-family: 'Outfit', sans-serif !important;
+        margin-bottom: 0rem;
+    }
+}
+
+.mat-select{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    inline-size: 8rem;
+    block-size: 3rem;
+    border: 0.1rem solid var(--input-border-color);
+    border-radius: 0.8rem;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+mat-divider.outer-divider{
+    inline-size: 35rem;
+}

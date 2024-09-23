@@ -10,6 +10,9 @@ export class ReloadService {
 
   private reloadExpensesSource = new Subject<void>();
   reloadExpenses$ = this.reloadExpensesSource.asObservable();
+
+  private selectedCurrencySubject = new BehaviorSubject<string>('');
+  selectedCurrency$ = this.selectedCurrencySubject.asObservable();
   
   reloadExpenses() {
     this.reloadExpensesSource.next();
@@ -21,5 +24,18 @@ export class ReloadService {
 
   getCurrentTab(): string {
     return this.tabChangeSubject.getValue();
+  }
+
+  changeCurrency(currency: string) {
+    this.selectedCurrencySubject.next(currency);
+  }
+
+  getCurrentCurrency(): string {
+    return this.selectedCurrencySubject.getValue();
+  }
+
+  setCurrentCurrency(currency: string) {
+    this.selectedCurrencySubject.next(currency);
+    this.reloadExpenses();
   }
 }

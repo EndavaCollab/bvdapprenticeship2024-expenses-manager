@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Category, Expense } from '../models';
+import { Category, Currency, Expense } from '../models';
 import { ExpenseService } from '../services/expense-service/expense.service';
 import { CategoryService } from '../services/category-service/category.service';
 import { ReloadService } from '../services/reload-service/reload.service';
+import { CurrencyService } from '../services/currency-service/currency.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-right-sidebar',
@@ -11,16 +13,19 @@ import { ReloadService } from '../services/reload-service/reload.service';
 })
 export class RightSidebarComponent implements OnInit {
   categories: Category[] = [];
+  currencies: Currency[] = [];
   expenses: Map<Date, Map<string, number>> = new Map<Date, Map<string, number>>();
   filteredExpenses: Map<any, Map<string, number>> = new Map<any, Map<string, number>>();
 
   userId: number = Number(localStorage.getItem('userId'));
-  currency: string = "RON";
+  userName: string = localStorage.getItem('userName') ?? 'Not found';
 
   constructor(
+    public router: Router,
     private expenseService: ExpenseService, 
     private categoryService: CategoryService,
-    private reloadService: ReloadService
+    private currencyService: CurrencyService,
+    public reloadService: ReloadService
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +37,16 @@ export class RightSidebarComponent implements OnInit {
         console.error('Error fetching categories:', error);
       }
   });
+
+  this.currencyService.getAllCurrencies().subscribe({
+    next: (dbCurrencies) => {
+      this.currencies = dbCurrencies;
+      this.reloadService.setCurrentCurrency(this.currencies[0].code);
+    },
+    error: (error) => {
+      console.error('Error fetching currencies:', error);
+    }
+  })
 
   this.reloadService.tabChange$.subscribe(tabName => {
     if (tabName) {
@@ -46,8 +61,12 @@ export class RightSidebarComponent implements OnInit {
   this.getExpensesBetweenDates(this.userId);
 }
 
+onCurrencyChange(newCurrency: string): void {
+  this.reloadService.setCurrentCurrency(newCurrency);
+}
+
   getExpensesBetweenDates(userId: number, startDate?: Date, endDate?: Date): void {
-    this.expenseService.getFilteredExpenses(userId, startDate, endDate)
+    this.expenseService.getFilteredExpenses(userId, startDate, endDate, this.reloadService.getCurrentCurrency())
               .subscribe(
                 expenses => {
                   this.expenses = this.transformExpenses(expenses);

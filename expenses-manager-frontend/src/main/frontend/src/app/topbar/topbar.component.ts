@@ -19,7 +19,8 @@ export class TopbarComponent implements OnInit {
   selectedTab: number = 0;
 
   constructor(
-    public router: Router, private dialog: MatDialog, 
+    public router: Router, 
+    private dialog: MatDialog, 
     private expenseService: ExpenseService, 
     private reloadService: ReloadService
   ) {}

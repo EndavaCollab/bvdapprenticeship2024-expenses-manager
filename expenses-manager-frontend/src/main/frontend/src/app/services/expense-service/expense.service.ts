@@ -30,11 +30,12 @@ export class ExpenseService {
     return this.http.get<number>(`${this.apiUrl}/expense/user/total`, {params});
   }
 
-  public getFilteredExpenses(userId: any, startDate?: Date, endDate?: Date)
+  public getFilteredExpenses(userId: any, startDate?: Date, endDate?: Date, currency?: string)
   {
     let params = new HttpParams()
                 .set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
-                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
+                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
+                .set('currency', currency ?? '');
 
     return this.http.get<Expense[]>(`${this.apiUrl}/expense/user/${userId}`, {params})
   }
