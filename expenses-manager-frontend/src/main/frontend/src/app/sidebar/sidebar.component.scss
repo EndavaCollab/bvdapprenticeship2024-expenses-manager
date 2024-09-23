@@ -8,21 +8,29 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        font-size:1.5rem;
+        font-family: var(--font-family);
+        font-size: 2.4rem;
         color: var(--secondary-color);
         
-        .logo-title, .logo-image{
-            margin: 0.3rem;
+        .logo-image{
+            padding-top: 1.6rem;
         }
+
+        .logo-title{
+            padding-top: 0.5rem;
+        } 
 
         .sidebar-button{
             margin: 0.4rem;
             width: 90%;
+            padding: 0.8rem;
+            padding-left: 2.4rem;
             background-color: var(--primary-color);
-            font-size:1rem;
             color: var(--secondary-color);
             display: flex;
             align-content: flex-start;
+            font-size: 1.6rem;
+            font-family: var(--font-family);
             
             &:hover{
                 background-color: var(--secondary-color);
