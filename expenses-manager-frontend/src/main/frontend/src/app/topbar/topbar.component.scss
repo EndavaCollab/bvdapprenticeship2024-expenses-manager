@@ -9,9 +9,11 @@
 }
 
 .mat-tab-group .mat-tab-label {
-    inline-size: 7rem;
-    block-size: 5rem;
+    inline-size: 10rem;
+    block-size: 7rem;
     min-inline-size: 0rem !important;
+    font-family: var(--font-family);
+    font-size: 2.4rem;
 }
 
 .mat-tab-group .mat-tab-label:not(:last-child) {

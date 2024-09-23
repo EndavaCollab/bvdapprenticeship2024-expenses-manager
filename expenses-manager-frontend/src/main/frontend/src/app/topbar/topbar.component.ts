@@ -15,6 +15,7 @@ export class TopbarComponent implements OnInit {
   totalAmount: number = 0;
   currency: string = "RON";
   userId: number = Number(localStorage.getItem('userId'));
+  selectedTab: number = 0;
 
   constructor(public router: Router, private dialog: MatDialog, private expenseService: ExpenseService) { }
 
@@ -32,6 +33,7 @@ export class TopbarComponent implements OnInit {
     const date = new Date();
     let startOfWeek: Date;
     let endOfWeek: Date;
+    this.selectedTab=index;
 
     switch(selectedTab){
       case 'Day':
@@ -67,6 +69,11 @@ export class TopbarComponent implements OnInit {
   openDialog(): void{
     this.dialog.open(AddExpenseDialogComponent, {
       width: '45rem',
+      data: {
+        onExpenseAdded: () => {
+          this.onTabChange(this.selectedTab);
+        }
+      }
     });
   }
 }
