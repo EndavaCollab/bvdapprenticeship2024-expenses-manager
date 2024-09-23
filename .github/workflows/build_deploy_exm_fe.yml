@@ -41,7 +41,7 @@ jobs:
       if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     - name: Replace BE_BASE_URL in environment.prod.ts
-      run: sed -i 's/%{BE_BASE_URL}/https://${{ vars.DEPLOY_DOMAIN }}:8080/' expenses-manager-frontend/src/main/frontend/src/environments/environment.prod.ts
+      run: sed -i 's#%{BE_BASE_URL}#https://${{ vars.DEPLOY_DOMAIN }}:8080#g' expenses-manager-frontend/src/main/frontend/src/environments/environment.prod.ts
       if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     - name: Build Angular application using Maven
