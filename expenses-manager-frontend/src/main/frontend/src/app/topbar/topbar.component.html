@@ -1,4 +1,3 @@
-
 <mat-tab-group dynamicHeight animationDuration="0ms" (selectedIndexChange)="onTabChange($event)">
     <mat-tab *ngFor="let tab of tabs" [label]="tab">
       <ng-container [ngSwitch]="router.url">
@@ -6,6 +5,9 @@
           <h1>{{currency + totalAmount}}</h1>
           <div class="b-home">
             <button mat-button class="add-expense-button" (click)="openDialog()">+</button>
+          </div>
+          <div style="margin-top: 15rem;"> 
+            <app-daily-stats></app-daily-stats>
           </div>
         </ng-container>
         <ng-container *ngSwitchCase="'/expenses'" style="font-family: 'Outfit', sans-serif !important;">
