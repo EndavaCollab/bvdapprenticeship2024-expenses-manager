@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../services/user-service/user.service';
 import { ExpenseService } from '../services/expense-service/expense.service';
 import { Category, Currency } from '../models';
+import { NotificationService } from '../services/notification-service/notification.service';
 
 @Component({
   selector: 'app-add-expense-dialog',
@@ -21,6 +22,7 @@ export class AddExpenseDialogComponent implements OnInit {
     private expenseService: ExpenseService,
     private categoryService: CategoryService,
     private currencyService: CurrencyService,
+    private notificationService: NotificationService,
     private dialogRef: MatDialogRef<AddExpenseDialogComponent>,
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -88,14 +90,15 @@ export class AddExpenseDialogComponent implements OnInit {
         next: (response) => {
           this.data.onExpenseAdded();
           this.dialogRef.close();
+          this.notificationService.showSuccess("Expense added successfully!");
         },
         error: (error) => {
-          console.error('Error creating expense:', error);
+          this.notificationService.showError("Error creating expense!");
         }
       });
     }
     else{
-      console.log("Validation errors");
+      this.notificationService.showError("Invalid form! Complete all required fields!");
     }
   }
 }
