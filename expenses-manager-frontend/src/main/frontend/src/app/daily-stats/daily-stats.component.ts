@@ -52,7 +52,6 @@ export class DailyStatsComponent implements OnInit {
     this.expenseService.getFilteredExpenses(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
       next: (expenses: Expense[]) => {
         this.expenses = expenses;
-        console.log(expenses);
       },
       error: (error) => {
         console.error('Error getting expenses:', error);
@@ -63,7 +62,6 @@ export class DailyStatsComponent implements OnInit {
   onDateChange(event: MatDatepickerInputEvent<Date>): void {
     if (event.value) {
       this.currentDate = event.value;
-      console.log(this.expenses);
       this.fetchDataForSelectedDate(this.currentDate);
     }
   }
@@ -109,8 +107,6 @@ export class DailyStatsComponent implements OnInit {
     this.expenseService.getFilteredExpenses(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
       next: (expenses: Expense[]) => {
         this.expenses = expenses;
-        console.log(expenses);
-        
         if (expenses.length === 0) {
           this.data = []; 
           this.showChart = false; 
@@ -142,8 +138,6 @@ export class DailyStatsComponent implements OnInit {
   
         this.colorScheme.domain = this.data.map(d => d.color);
         this.showChart = this.data.length > 0; 
-        console.log(this.data);
-        console.log(this.colorScheme);
       },
       error: (error) => {
         console.error('Error getting expenses:', error);
