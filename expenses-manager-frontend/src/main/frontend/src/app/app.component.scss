@@ -5,3 +5,11 @@
     float: left;
     padding-left: 0%;
 }
+
+.notifications{
+    position:fixed;
+    top: 2rem; 
+    left: 2rem; 
+    inline-size: calc(100% - 4rem);
+    z-index: 1000; 
+}

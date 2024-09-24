@@ -1,0 +1,10 @@
+<div *ngFor="let notification of notifications; let index=index" [ngClass]="notification.type">
+    <div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="notification.type=='success'">
+        {{ notification.message }}
+        <button type="button" class="btn-close" (click)="removeNotification(index)" aria-label="Close"></button>
+    </div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="notification.type=='error'">
+        {{ notification.message }}
+        <button type="button" class="btn-close" (click)="removeNotification(index)" aria-label="Close"></button>
+    </div>
+</div>

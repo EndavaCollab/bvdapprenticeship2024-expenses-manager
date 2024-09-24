@@ -37,5 +37,13 @@ export class ExpenseService {
 
   public deleteExpense(expenseId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/expense/${expenseId}`);
+
+  public getFilteredExpenses(userId: any, startDate?: Date, endDate?: Date)
+  {
+    let params = new HttpParams()
+                .set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
+                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
+
+    return this.http.get<Expense[]>(`${this.apiUrl}/expense/user/${userId}`, {params})
   }
 }

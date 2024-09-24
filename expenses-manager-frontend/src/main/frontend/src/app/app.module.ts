@@ -40,6 +40,7 @@ import { DatePipe } from '@angular/common';
 import { ExpenseTableComponent } from './expense-table/expense-table.component';
 import { EditExpenseDialogComponent } from './edit-expense-dialog/edit-expense-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { NotificationComponent } from './notification/notification.component';
 
 @NgModule({
     declarations: [
@@ -52,7 +53,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
         AddExpenseDialogComponent,
         TopbarComponent,
         ExpenseTableComponent,
-        AddExpenseDialogComponent,
+        NotificationComponent,
         DailyStatsComponent,
         EditExpenseDialogComponent,
         ConfirmDialogComponent

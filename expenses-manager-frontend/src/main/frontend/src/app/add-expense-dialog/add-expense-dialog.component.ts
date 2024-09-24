@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CategoryService } from '../services/category-service/category.service';
 import { CurrencyService } from '../services/currency-service/currency.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LocalService } from '../services/local-service/local.service';
 import { UserService } from '../services/user-service/user.service';
 import { ExpenseService } from '../services/expense-service/expense.service';
 import { Category, Currency } from '../models';
+import { NotificationService } from '../services/notification-service/notification.service';
 
 @Component({
   selector: 'app-add-expense-dialog',
@@ -18,13 +18,14 @@ export class AddExpenseDialogComponent implements OnInit {
   currentDate = new Date;
   submitted=false;
 
-  constructor( private localService: LocalService,
-    private userService: UserService,
+  constructor( private userService: UserService,
     private expenseService: ExpenseService,
     private categoryService: CategoryService,
     private currencyService: CurrencyService,
+    private notificationService: NotificationService,
     private dialogRef: MatDialogRef<AddExpenseDialogComponent>,
     private formBuilder: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) {}
 
   categories: Category[] = [];
@@ -87,15 +88,17 @@ export class AddExpenseDialogComponent implements OnInit {
       this.expenseForm.patchValue({date: this.expenseForm.get("date")?.value+"T00:00:00"});
       this.expenseService.createExpense(this.expenseForm.value).subscribe({
         next: (response) => {
+          this.data.onExpenseAdded();
           this.dialogRef.close();
+          this.notificationService.showSuccess("Expense added successfully!");
         },
         error: (error) => {
-          console.error('Error creating expense:', error);
+          this.notificationService.showError("Error creating expense!");
         }
       });
     }
     else{
-      console.log("Validation errors");
+      this.notificationService.showError("Invalid form! Complete all required fields!");
     }
   }
 }
