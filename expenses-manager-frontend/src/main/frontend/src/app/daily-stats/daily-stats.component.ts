@@ -92,18 +92,17 @@ export class DailyStatsComponent implements OnInit {
     }
   }
 
-  fetchDataForSelectedDate(date: Date): void {
-    this.data = [];
-    this.startDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-    this.endDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-    console.log(this.startDate);
-    console.log(this.endDate);
-    this.fetch();
-  }
 
   getCategoryDescription(categoryId: number): string {
     const category = this.categories.find(cat => cat.id === categoryId);
     return category?.description || 'Unknown';
+  }
+  
+  fetchDataForSelectedDate(date: Date): void {
+    this.data = [];
+    this.startDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    this.endDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    this.fetch();
   }
   
   fetch(): void {
@@ -112,6 +111,12 @@ export class DailyStatsComponent implements OnInit {
         this.expenses = expenses;
         console.log(expenses);
         
+        if (expenses.length === 0) {
+          this.data = []; 
+          this.showChart = false; 
+          return; 
+        }
+  
         const categoryTotals: { [key: string]: number } = {};
         expenses.forEach(expense => {
           const category = this.categories.find(cat => cat.id === expense.categoryId);
@@ -136,14 +141,18 @@ export class DailyStatsComponent implements OnInit {
           });
   
         this.colorScheme.domain = this.data.map(d => d.color);
+        this.showChart = this.data.length > 0; 
         console.log(this.data);
         console.log(this.colorScheme);
-  
-        this.showChart = true; 
       },
       error: (error) => {
         console.error('Error getting expenses:', error);
       }
     });
   }
+  getFilteredCategories(): Category[] {
+    const categoryNames = this.data.map(d => d.name);
+    return this.categories.filter(cat => categoryNames.includes(cat.description));
+  }
+  
 }
