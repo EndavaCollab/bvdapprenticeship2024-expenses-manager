@@ -5,10 +5,14 @@ import { CategoryService } from '../services/category-service/category.service';
 import { CurrencyService } from '../services/currency-service/currency.service';
 import { FormControl } from '@angular/forms';
 import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDialog } from '@angular/material/dialog';
+import { EditExpenseDialogComponent } from '../edit-expense-dialog/edit-expense-dialog.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 import * as _moment from 'moment';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { AddExpenseDialogComponent } from '../add-expense-dialog/add-expense-dialog.component';
 
 @Component({
   selector: 'app-expense-table',
@@ -21,6 +25,7 @@ export class ExpenseTableComponent implements OnInit {
 
   categories: Category[] = [];
   currencies: Currency[] = [];
+  showActionsMap: { [key: number]: boolean } = {}; //submenu for actions
 
   currentPage: number = 1;
   maxPages: number = 10;
@@ -32,7 +37,8 @@ export class ExpenseTableComponent implements OnInit {
   constructor(
     private expenseService: ExpenseService,
     private categoryService: CategoryService,
-    private currencyService: CurrencyService
+    private currencyService: CurrencyService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -204,4 +210,61 @@ export class ExpenseTableComponent implements OnInit {
     const blue = parseInt(hexColor.substring(4, 6), 16);
     return `rgba(${red}, ${green}, ${blue}, 0.2)`;
   }
+
+  openEditExpenseDialog(expense: Expense): void {
+    const dialogRef = this.dialog.open(EditExpenseDialogComponent, {
+      width: '400px',
+      data: { expense }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        Object.assign(expense, result); // Update existing expense
+        this.expenseService.updateExpense(expense.id, expense).subscribe({
+          next: () => {
+            this.fetchExpenses(); // Refresh the expenses list
+          },
+          error: (error) => {
+            console.error('Error updating expense:', error);
+          }
+        });
+      }
+    });
+  }
+  
+  fetchExpenses(): void {
+    const userId = localStorage.getItem("userId");
+    this.expenseService.getExpensesByUserId(userId).subscribe({
+      next: (response) => {
+        this.expenses = response; 
+        this.showActionsMap = {}; 
+      },
+      error: (error) => {
+        console.error('Error getting expenses:', error);
+      }
+    });
+  }
+  
+  
+  confirmDelete(expense: Expense): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.expenseService.deleteExpense(expense.id).subscribe({
+          next: () => {
+            this.fetchExpenses();
+          },
+          error: (error) => {
+            console.error('Error deleting expense:', error);
+          }
+        });
+      }
+    });
+  }
+
+    toggleActions(expenseId: number): void {
+      this.showActionsMap[expenseId] = !this.showActionsMap[expenseId];
+    }
+    
 }

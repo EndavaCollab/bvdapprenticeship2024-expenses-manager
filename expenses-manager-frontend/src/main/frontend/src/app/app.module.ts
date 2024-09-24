@@ -38,6 +38,8 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {TopbarComponent} from "./topbar/topbar.component";
 import { DatePipe } from '@angular/common';
 import { ExpenseTableComponent } from './expense-table/expense-table.component';
+import { EditExpenseDialogComponent } from './edit-expense-dialog/edit-expense-dialog.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @NgModule({
     declarations: [
@@ -51,7 +53,9 @@ import { ExpenseTableComponent } from './expense-table/expense-table.component';
         TopbarComponent,
         ExpenseTableComponent,
         AddExpenseDialogComponent,
-        DailyStatsComponent
+        DailyStatsComponent,
+        EditExpenseDialogComponent,
+        ConfirmDialogComponent
     ],
     imports: [
         BrowserModule,
