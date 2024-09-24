@@ -21,6 +21,9 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
+import { DailyStatsComponent } from './daily-stats/daily-stats.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ExpenseService } from './services/expense-service/expense.service';
 
 
 import { AddExpenseDialogComponent } from './add-expense-dialog/add-expense-dialog.component';
@@ -35,6 +38,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {TopbarComponent} from "./topbar/topbar.component";
 import { DatePipe } from '@angular/common';
 import { ExpenseTableComponent } from './expense-table/expense-table.component';
+import { NotificationComponent } from './notification/notification.component';
 import {MatListModule} from "@angular/material/list";
 import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
 
@@ -49,6 +53,9 @@ import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
         AddExpenseDialogComponent,
         TopbarComponent,
         ExpenseTableComponent,
+        NotificationComponent,
+        AddExpenseDialogComponent,
+        DailyStatsComponent,
         RightSidebarComponent
     ],
     imports: [
@@ -70,9 +77,10 @@ import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
         MatTabsModule,
         MatTableModule,
         MatSortModule,
+        NgxChartsModule,
         MatListModule
     ],
-    providers: [DatePipe],
+    providers: [DatePipe, ExpenseService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
