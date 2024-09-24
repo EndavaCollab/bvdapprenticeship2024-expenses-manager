@@ -1,7 +1,7 @@
 <div class="horizontal-container"> 
   <h2>{{ userName }}</h2>
-  <mat-select *ngIf="router.url == '/home'" (selectionChange)="onCurrencyChange($event.value)">
-    <mat-option *ngFor="let currency of currencies" [value]="currency.code"> 
+  <mat-select *ngIf="router.url == '/home'" [(value)]="selectedCurrencyIndex" (selectionChange)="onCurrencyChange(currencies[$event.value].code)">
+    <mat-option *ngFor="let currency of currencies; let i = index" [value]="i"> 
       <fa-icon *ngIf="currency.code == 'USD'" [icon]="['fas', 'dollar-sign']"></fa-icon>
       <fa-icon *ngIf="currency.code == 'EUR'" [icon]="['fas', 'euro-sign']"></fa-icon>
       {{ currency.code }} 
@@ -10,7 +10,7 @@
 </div>
 <mat-divider class="outer-divider"></mat-divider>
 <mat-list *ngIf="router.url == '/home'">
-  <div *ngFor="let date of filteredExpenses | keyvalue">
+  <div *ngFor="let date of filteredExpenses | keyvalue: sortDesc">
     <h2 mat-subheader>{{ date.key }}</h2>
     <mat-divider></mat-divider>
     <mat-list-item *ngFor="let item of date.value | keyvalue">

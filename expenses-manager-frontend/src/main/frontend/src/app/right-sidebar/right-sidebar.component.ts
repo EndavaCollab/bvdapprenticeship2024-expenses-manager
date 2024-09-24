@@ -19,6 +19,11 @@ export class RightSidebarComponent implements OnInit {
 
   userId: number = Number(localStorage.getItem('userId'));
   userName: string = localStorage.getItem('userName') ?? 'Not found';
+  selectedCurrencyIndex: number = 3;
+
+  sortDesc = (a: any, b: any): number => {
+    return parseInt(b.key) - parseInt(a.key);
+  };
 
   constructor(
     public router: Router,
@@ -41,7 +46,7 @@ export class RightSidebarComponent implements OnInit {
   this.currencyService.getAllCurrencies().subscribe({
     next: (dbCurrencies) => {
       this.currencies = dbCurrencies;
-      this.reloadService.setCurrentCurrency(this.currencies[0].code);
+      this.reloadService.setCurrentCurrency(this.currencies[3].code);
     },
     error: (error) => {
       console.error('Error fetching currencies:', error);
@@ -58,12 +63,11 @@ export class RightSidebarComponent implements OnInit {
     this.getExpensesBetweenDates(this.userId);
   });
 
-  this.getExpensesBetweenDates(this.userId);
-}
+  }
 
-onCurrencyChange(newCurrency: string): void {
-  this.reloadService.setCurrentCurrency(newCurrency);
-}
+  onCurrencyChange(newCurrency: string): void {
+    this.reloadService.setCurrentCurrency(newCurrency);
+  }
 
   getExpensesBetweenDates(userId: number, startDate?: Date, endDate?: Date): void {
     this.expenseService.getFilteredExpenses(userId, startDate, endDate, this.reloadService.getCurrentCurrency())
@@ -227,7 +231,7 @@ onCurrencyChange(newCurrency: string): void {
           if(!result.has(category)){
             result.set(category, 0);
           }
-          result.set(category, result.get(category)! + amount);
+          result.set(category, Number((result.get(category)! + amount).toPrecision(3)));
         }
       }
     }
