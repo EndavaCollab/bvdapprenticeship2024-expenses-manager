@@ -27,14 +27,14 @@ public class ExpenseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ExpenseDto>> getAllExpenses() {
-        List<ExpenseDto> expenses = expenseService.getAllExpenses();
+    public ResponseEntity<List<ExpenseDto>> getAllExpenses(@RequestParam(required = false) String currency) {
+        List<ExpenseDto> expenses = expenseService.getAllExpenses(currency);
         return ResponseEntity.ok(expenses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ExpenseDto> getExpenseById(@PathVariable int id) {
-        Optional<ExpenseDto> expense = expenseService.getExpenseById(id);
+    public ResponseEntity<ExpenseDto> getExpenseById(@PathVariable int id, @RequestParam(required = false) String currency) {
+        Optional<ExpenseDto> expense = expenseService.getExpenseById(id, currency);
         return expense.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -51,39 +51,58 @@ public class ExpenseController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ExpenseDto>> getExpensesByUserId(@PathVariable int userId, @RequestParam(required = false) LocalDateTime startDate, @RequestParam(required = false) LocalDateTime endDate) {
-        List<ExpenseDto> expenses = expenseService.getExpensesByUserId(userId, startDate, endDate);
+    public ResponseEntity<List<ExpenseDto>> getExpensesByUserId(
+            @PathVariable int userId,
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate,
+            @RequestParam(required = false) String currency) {
+        List<ExpenseDto> expenses = expenseService.getExpensesByUserId(userId, startDate, endDate, currency);
         return ResponseEntity.ok(expenses);
     }
 
     @GetMapping("/user/total")
-    public ResponseEntity<BigDecimal> getTotalAmountByDateBetween(@RequestParam int userId, @RequestParam(required = false) LocalDateTime startDate, @RequestParam(required = false) LocalDateTime endDate) {
-        BigDecimal total = expenseService.getTotalAmountByDateBetween(userId, startDate, endDate);
+    public ResponseEntity<BigDecimal> getTotalAmountByDateBetween(
+            @RequestParam int userId,
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate,
+            @RequestParam(required = false) String currency) {
+        BigDecimal total = expenseService.getTotalAmountByDateBetween(userId, startDate, endDate, currency);
         return ResponseEntity.ok(total);
     }
 
     @GetMapping("/user/{userId}/")
-    public ResponseEntity<List<ExpenseDto>> getExpensesPage(@PathVariable int userId,
-                                                            @RequestParam(required = false) LocalDateTime startDate,
-                                                            @RequestParam(required = false) LocalDateTime endDate,
-                                                            @RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "5")int size,
-                                                            @RequestParam(defaultValue = "DATE") PropertyEnum sortBy,
-                                                            @RequestParam(required = false) boolean ascending,
-                                                            @RequestParam(required = false) Integer categoryId,
-                                                            @RequestParam(required = false) Integer currencyId){
-        List<ExpenseDto> expenses = expenseService.getExpensesPage(userId, startDate, endDate, page, size, sortBy, ascending, categoryId, currencyId);
+    public ResponseEntity<List<ExpenseDto>> getExpensesPage(
+            @PathVariable int userId,
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "DATE") PropertyEnum sortBy,
+            @RequestParam(required = false) boolean ascending,
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) Integer currencyId,
+            @RequestParam(required = false) String currency) {
+        List<ExpenseDto> expenses = expenseService.getExpensesPage(
+                userId, startDate, endDate, page, size, sortBy, ascending, categoryId, currencyId, currency);
         return ResponseEntity.ok(expenses);
     }
 
     @GetMapping("/user/pages")
-    public ResponseEntity<Integer> getExpensesPage(@RequestParam int userId,
+    public ResponseEntity<Integer> countExpensesPage(@RequestParam int userId,
                                                    @RequestParam(required = false) LocalDateTime startDate,
                                                    @RequestParam(required = false) LocalDateTime endDate,
                                                    @RequestParam(defaultValue = "5")int size,
                                                    @RequestParam(required = false) Integer categoryId,
-                                                   @RequestParam(required = false) Integer currencyId){
+                                                   @RequestParam(required = false) Integer currencyId) {
         int expensesCount = expenseService.countExpensesPage(userId, startDate, endDate, size, categoryId, currencyId);
         return ResponseEntity.ok(expensesCount);
+    }
+
+    @GetMapping("/convert/{expenseId}")
+    public ResponseEntity<BigDecimal> convertExpenseToCurrency(
+            @PathVariable int expenseId,
+            @RequestParam String targetCurrency) {
+        BigDecimal convertedAmount = expenseService.convertExpenseToCurrency(expenseId, targetCurrency);
+        return ResponseEntity.ok(convertedAmount);
     }
 }

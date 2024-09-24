@@ -11,19 +11,21 @@ import java.util.Optional;
 public interface ExpenseService {
     ExpenseDto createExpense(ExpenseDto expenseDto);
 
-    List<ExpenseDto> getAllExpenses();
+    List<ExpenseDto> getAllExpenses(String currency);
 
-    Optional<ExpenseDto> getExpenseById(int id);
+    Optional<ExpenseDto> getExpenseById(int id, String currency);
 
     ExpenseDto updateExpense(int id, ExpenseDto expenseDto);
 
     void deleteExpense(int id);
 
-    List<ExpenseDto> getExpensesByUserId(int userId, LocalDateTime startDate, LocalDateTime endDate);
+    List<ExpenseDto> getExpensesByUserId(int userId, LocalDateTime startDate, LocalDateTime endDate, String currency);
 
-    BigDecimal getTotalAmountByDateBetween(int userId, LocalDateTime startDate, LocalDateTime endDate);
+    BigDecimal getTotalAmountByDateBetween(int userId, LocalDateTime startDate, LocalDateTime endDate, String currency);
 
-    List<ExpenseDto> getExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int page, int size, PropertyEnum property, boolean ascending, Integer categoryId, Integer currencyId);
+    List<ExpenseDto> getExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int page, int size, PropertyEnum property, boolean ascending, Integer categoryId, Integer currencyId, String currency);
 
     Integer countExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int size, Integer categoryId, Integer currencyId);
+
+    BigDecimal convertExpenseToCurrency(int expenseId, String targetCurrency);
 }

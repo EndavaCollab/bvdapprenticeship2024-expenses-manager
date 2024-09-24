@@ -25,10 +25,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Java 17
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -43,7 +43,7 @@ jobs:
 
     - name: Upload build artifacts
       if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: backend-build
         path: expenses-manager-backend/target/*.jar
@@ -57,7 +57,7 @@ jobs:
 
     steps:
     - name: Download build artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: backend-build
         path: ./backend-build
@@ -82,8 +82,8 @@ jobs:
     - name: Verify /home/admin directory and create if missing
       run: |
         ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
-        sudo mkdir -p /home/admin
-        sudo chown ${{ secrets.ADMIN_USERNAME }}:${{ secrets.ADMIN_USERNAME }} /home/admin
+          sudo mkdir -p /home/admin
+          sudo chown ${{ secrets.ADMIN_USERNAME }}:${{ secrets.ADMIN_USERNAME }} /home/admin
         EOF
 
     - name: Install Java JDK on VM
@@ -96,17 +96,22 @@ jobs:
     - name: Copy Artifact to VM
       run: |
        scp -i ssh_key -o StrictHostKeyChecking=no backend-build/*.jar ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }}:/home/admin/expenses-manager-backend.jar
-
+    
+    - name: Kill previous backend process (if any)
+      run: |
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
+          if lsof -i :${{ vars.EXM_BE_PORT }}; then
+            sudo fuser -k ${{ vars.EXM_BE_PORT }}/tcp || true
+          else
+            echo "No process running on port ${{ vars.EXM_BE_PORT }}"
+          fi
+        EOF
+       
     - name: Run Backend Application
       run: |
-         ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<content
-           echo 'export DATABASE_URL="${{ secrets.DB_URL }}"' > run_backend.sh
-           echo 'export DATABASE_USERNAME="${{ secrets.DB_USERNAME }}"' >> run_backend.sh
-           echo 'export DATABASE_PASSWORD="${{ secrets.DB_PASSWORD }}"' >> run_backend.sh
-           echo 'java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod' >> run_backend.sh
-           nohup bash ./run_backend.sh > output.out 2>&1 &
-         content
-     
+        ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.ADMIN_USERNAME }}@${{ steps.get-vm-ip.outputs.vm_ip }} <<EOF
+          nohup java -jar /home/admin/expenses-manager-backend.jar --spring.profiles.active=prod --spring.datasource.url="${{ secrets.DB_URL }}" --spring.datasource.username="${{ secrets.DB_USERNAME }}" --spring.datasource.password="${{ secrets.DB_PASSWORD }}" --server.port="${{ vars.EXM_BE_PORT }}" > output.out 2>&1 &
+        EOF
 
     - name: Remove SSH private key file
       run: rm ssh_key

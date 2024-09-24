@@ -22,6 +22,9 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatMenuModule} from '@angular/material/menu';
+import { DailyStatsComponent } from './daily-stats/daily-stats.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ExpenseService } from './services/expense-service/expense.service';
 
 
 import { AddExpenseDialogComponent } from './add-expense-dialog/add-expense-dialog.component';
@@ -36,6 +39,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {TopbarComponent} from "./topbar/topbar.component";
 import { DatePipe } from '@angular/common';
 import { ExpenseTableComponent } from './expense-table/expense-table.component';
+import { NotificationComponent } from './notification/notification.component';
 
 @NgModule({
     declarations: [
@@ -47,7 +51,10 @@ import { ExpenseTableComponent } from './expense-table/expense-table.component';
         LoginComponent,
         AddExpenseDialogComponent,
         TopbarComponent,
-        ExpenseTableComponent
+        ExpenseTableComponent,
+        NotificationComponent,
+        AddExpenseDialogComponent,
+        DailyStatsComponent
     ],
     imports: [
         BrowserModule,
@@ -68,9 +75,10 @@ import { ExpenseTableComponent } from './expense-table/expense-table.component';
         MatTabsModule,
         MatTableModule,
         MatSortModule,
-        MatMenuModule
+        MatMenuModule,
+        NgxChartsModule
     ],
-    providers: [DatePipe],
+    providers: [DatePipe, ExpenseService], 
     bootstrap: [AppComponent]
 })
 export class AppModule {
