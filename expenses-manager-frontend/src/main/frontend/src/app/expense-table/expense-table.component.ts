@@ -334,6 +334,10 @@ export class ExpenseTableComponent implements OnInit {
       }
     });
   }
+
+
+
+  
   
   
   confirmDelete(expense: Expense): void {
