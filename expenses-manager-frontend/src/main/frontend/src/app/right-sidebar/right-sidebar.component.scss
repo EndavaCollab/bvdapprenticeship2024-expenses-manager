@@ -1,6 +1,6 @@
 .mat-list{
-    inline-size: 35rem;
-    block-size: 50%;
+    inline-size: 40rem;
+    block-size: 80%;
     overflow: auto;
     padding-top: 0rem;
 }
@@ -23,14 +23,14 @@
 }
 
 .mat-subheader{
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 600;
     color: var(--primary-text-color) !important;
     margin-top: 0rem !important;
 }
 
 .category{
-    font-size: 1.6rem;
+    font-size: 1.7rem;
     font-weight: 500;
     margin-top: auto;
     margin-bottom: auto;
@@ -38,7 +38,7 @@
 }
 
 .price-tag{
-    font-size: 2rem;
+    font-size: 2.1rem;
     color: var(--text-danger-color);
     align-self: flex-end;
     margin-left: auto;
@@ -47,14 +47,14 @@
 }
 
 div.horizontal-container{
-    inline-size: 35rem;
-    block-size: 5rem;
+    inline-size: 40rem;
+    block-size: 7rem;
     display: flex;
     justify-content: center !important;
     align-items: center !important;
 
     h2{
-        font-size: 1.6rem;
+        font-size: 2rem;
         font-weight: 500;
         margin-right: 3rem;
         font-family: 'Outfit', sans-serif !important;
@@ -66,7 +66,7 @@ div.horizontal-container{
     display: flex;
     justify-content: center;
     align-items: center;
-    inline-size: 8rem;
+    inline-size: 8.5rem;
     block-size: 3rem;
     border: 0.1rem solid var(--input-border-color);
     border-radius: 0.8rem;
@@ -74,5 +74,5 @@ div.horizontal-container{
 }
 
 mat-divider.outer-divider{
-    inline-size: 35rem;
+    inline-size: auto;
 }

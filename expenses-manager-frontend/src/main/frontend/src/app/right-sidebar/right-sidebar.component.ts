@@ -80,28 +80,21 @@ export class RightSidebarComponent implements OnInit {
   }
 
   filterExpenses(period: string) {
-    const date = new Date();
-    let startDate: Date;
-
     switch(period){
       case 'Day':
         this.filteredExpenses = this.groupExpensesByLastDays(this.expenses, 7);
         break;
 
       case 'Week':
-        startDate = new Date(date);
-        startDate.setDate(startDate.getDate() - startDate.getDay());
-        startDate.setHours(0, 0, 0);
-
-        this.filteredExpenses = this.groupExpensesByWeek(this.expenses, startDate, 4);
+        this.filteredExpenses = this.groupExpensesByWeek(this.expenses, 4);
         break;
 
       case 'Month':
-        this.filteredExpenses = this.groupExpensesByMonth(this.expenses, new Date(date.getFullYear(), date.getMonth(), 1), 4);
+        this.filteredExpenses = this.groupExpensesByMonth(this.expenses, 4);
         break;
 
       case 'Year':
-       this.filteredExpenses = this.groupExpensesByYear(this.expenses, new Date(date.getFullYear(), 0, 1), 4);
+       this.filteredExpenses = this.groupExpensesByYear(this.expenses, 4);
         break;
         
       case 'Custom':
@@ -152,10 +145,20 @@ export class RightSidebarComponent implements OnInit {
     return result;
   }
 
-  groupExpensesByWeek(expenses: Map<Date, Map<string, number>>, startOfWeek: Date, weekCount: number): Map<any, Map<string, number>> {
+  groupExpensesByWeek(expenses: Map<Date, Map<string, number>>, weekCount: number): Map<any, Map<string, number>> {
       let result = new Map<any, Map<string, number>>();
+
+      const currentDate = new Date();
+
+      let startOfWeek = new Date(currentDate);
+      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+
       let endDate = new Date(startOfWeek);
       endDate.setDate(endDate.getDate() - 1);
+
+      const thisWeek = this.processExpenses(expenses, startOfWeek, currentDate);
+      if(thisWeek.size > 0)
+        result.set('This week', thisWeek);
 
       for(let i = 0; i < weekCount; i++) {
         const currentWeekKey = `Last ${i > 0 ? i+1 : ''} week${i > 0 ? 's' : ''}`;
@@ -175,10 +178,18 @@ export class RightSidebarComponent implements OnInit {
     return result;
   }
 
-  groupExpensesByMonth(expenses: Map<Date, Map<string, number>>, startOfMonth: Date, monthCount: number): Map<any, Map<string, number>> {
+  groupExpensesByMonth(expenses: Map<Date, Map<string, number>>, monthCount: number): Map<any, Map<string, number>> {
     let result = new Map<any, Map<string, number>>();
+
+    const currentDate = new Date();
+    let startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
     let endDate = new Date(startOfMonth);
     endDate.setDate(endDate.getDate() - 1);
+
+    const thisMonth = this.processExpenses(expenses, startOfMonth, currentDate);
+    if(thisMonth.size > 0)
+      result.set('This month', thisMonth);
 
     for(let i = 0; i < monthCount; i++){
       const currentMonthKey = endDate.toLocaleString('default', { month: 'long' });
@@ -198,10 +209,17 @@ export class RightSidebarComponent implements OnInit {
     return result;
   }
 
-  groupExpensesByYear(expenses: Map<Date, Map<string, number>>, startOfYear: Date, yearCount: number): Map<any, Map<string, number>> {
+  groupExpensesByYear(expenses: Map<Date, Map<string, number>>, yearCount: number): Map<any, Map<string, number>> {
     let result = new Map<any, Map<string, number>>();
+
+    const currentDate = new Date();
+    let startOfYear = new Date(currentDate.getFullYear(), 0, 1);
     let endDate = new Date(startOfYear);
     endDate.setDate(endDate.getDate() - 1);
+
+    const thisYear = this.processExpenses(expenses, startOfYear, currentDate);
+    if(thisYear.size > 0)
+      result.set(currentDate.getFullYear(), thisYear);
 
     for(let i = 0; i < yearCount; i++){
       const currentYearKey = endDate.getFullYear();
