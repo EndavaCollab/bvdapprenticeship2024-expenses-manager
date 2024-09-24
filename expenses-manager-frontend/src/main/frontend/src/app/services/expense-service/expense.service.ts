@@ -17,6 +17,15 @@ export class ExpenseService {
     return this.http.post(`${this.apiUrl}/expense`, expense);
   }
 
+  public getExpensesByUserId(userId: any, startDate?: Date, endDate?: Date)
+  {
+    let params = new HttpParams()
+                .set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
+                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
+
+    return this.http.get<Expense[]>(`${this.apiUrl}/expense/user/${userId}`, {params})
+  }
+
   public getExpensesPage(
     userId: string,
     startDate?: Date,

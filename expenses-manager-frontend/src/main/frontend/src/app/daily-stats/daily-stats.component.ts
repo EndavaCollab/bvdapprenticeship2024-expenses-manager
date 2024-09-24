@@ -49,7 +49,7 @@ export class DailyStatsComponent implements OnInit {
   }
 
   fetchExpenses(): void {
-    this.expenseService.getFilteredExpenses(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
       next: (expenses: Expense[]) => {
         this.expenses = expenses;
       },
@@ -104,7 +104,7 @@ export class DailyStatsComponent implements OnInit {
   }
   
   fetch(): void {
-    this.expenseService.getFilteredExpenses(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
       next: (expenses: Expense[]) => {
         this.expenses = expenses;
         if (expenses.length === 0) {
