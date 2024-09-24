@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <div class="errors" *ngIf="submitted && (expenseForm.get('amount')?.hasError('min'))">
+  <div class="errors" *ngIf="submitted && (expenseForm.get('amount')?.hasError('min') || expenseForm.get('amount')?.hasError('required'))">
     Amount must be greater than 0.
   </div>
   <div class="col-md-12 mb-3 d-flex align-items-center">
