@@ -21,6 +21,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
+import {MatMenuModule} from '@angular/material/menu';
 import { DailyStatsComponent } from './daily-stats/daily-stats.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ExpenseService } from './services/expense-service/expense.service';
@@ -77,6 +78,7 @@ import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
         MatTabsModule,
         MatTableModule,
         MatSortModule,
+        MatMenuModule,
         NgxChartsModule,
         MatListModule
     ],

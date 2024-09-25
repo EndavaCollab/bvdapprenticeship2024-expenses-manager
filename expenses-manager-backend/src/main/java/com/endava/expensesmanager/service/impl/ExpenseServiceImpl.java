@@ -149,4 +149,9 @@ public class ExpenseServiceImpl implements ExpenseService {
         }
         return false;
     }
+
+    public Integer countExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int size, Integer categoryId, Integer currencyId) {
+        int expensesCount=expenseRepository.countAllExpenses(userId, startDate, endDate, categoryId, currencyId);
+        return (int) Math.ceil((double) expensesCount/size);
+    }
 }

@@ -9,6 +9,7 @@ import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepi
 import * as _moment from 'moment';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-expense-table',
@@ -22,8 +23,14 @@ export class ExpenseTableComponent implements OnInit {
   categories: Category[] = [];
   currencies: Currency[] = [];
 
+  sortBy?: string;
+  ascending?: boolean;
+  currencyId?: number;
+  categoryId?: number;
   currentPage: number = 1;
-  maxPages: number = 10;
+  pageSize: number=5;
+  maxPages!: number;
+  userId!:string;
 
   date = new FormControl(_moment());
 
@@ -83,7 +90,15 @@ export class ExpenseTableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.expenseService.getFilteredExpenses(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+    this.userId=localStorage.getItem("userId") as string;
+    this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+
+    this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe({
       next: (response) => {
         this.expenses = response;
       },
@@ -91,7 +106,7 @@ export class ExpenseTableComponent implements OnInit {
         console.error('Error getting expenses:', error);
       }
     });
-
+    
     this.categoryService.getAllCategories().subscribe({
       next: (dbCategories) => {
         this.categories = dbCategories;
@@ -109,25 +124,54 @@ export class ExpenseTableComponent implements OnInit {
         console.error('Error fetching currencies:', error);
       }
     });
-
-
   }
 
   goToPage(page: number): void {
+    this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+    
     if (page !== this.currentPage && page >= 1 && page <= this.maxPages) {
       this.currentPage = page;
+
+      this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe((data: any) => {
+      this.expenses = data;
+    });
     }
   }
 
   goToPreviousPage(): void {
+    this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe((data: any) => {
+      this.expenses = data;
+    });
     }
   }
 
   goToNextPage(): void {
+    this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+
     if (this.currentPage < this.maxPages) {
       this.currentPage++;
+      this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe((data: any) => {
+      this.expenses = data;
+    });
     }
   }
 
@@ -159,6 +203,7 @@ export class ExpenseTableComponent implements OnInit {
   }
 
   setDay(event: MatDatepickerInputEvent<Date>, datepicker: MatDatepicker<Moment>) {
+    this.currentPage = 1;
     const selectedDate = _moment(event.value);
     this.date.setValue(selectedDate);
     this.updateTable("day");
@@ -171,6 +216,7 @@ export class ExpenseTableComponent implements OnInit {
     const newMonthAndYear = _moment(normalizedMonthAndYear);
 
     if (ctrlValue) {
+      this.currentPage = 1;
       const updatedDate = ctrlValue.year(newMonthAndYear.year()).month(newMonthAndYear.month());
       this.date.setValue(updatedDate);
       this.updateTable("month");
@@ -184,6 +230,7 @@ export class ExpenseTableComponent implements OnInit {
     const newYear = _moment(normalizedYear);
 
     if (ctrlValue) {
+      this.currentPage = 1;
       const updatedDate = ctrlValue.year(newYear.year());
       this.date.setValue(updatedDate);
       this.updateTable("year");
@@ -213,7 +260,14 @@ export class ExpenseTableComponent implements OnInit {
       }
     }
 
-    this.expenseService.getFilteredExpenses(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+      this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+
+    this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe({
       next: (response) => {
         this.expenses = response;
       },
@@ -242,32 +296,38 @@ export class ExpenseTableComponent implements OnInit {
     return selectedDate ? selectedDate.format('YYYY') : 'Select Year';
   }
 
-  goToPreviousDay(): void {
+  goToPreviousDay(): void{
+    this.currentPage = 1;
     this.date.value.subtract(1, 'day');
     this.updateTable("day");
   }
 
-  goToNextDay(): void {
+  goToNextDay(): void{
+    this.currentPage = 1;
     this.date.value.add(1, 'day');
     this.updateTable("day");
   }
 
-  goToPreviousMonth(): void {
+  goToPreviousMonth(): void{
+    this.currentPage = 1;
     this.date.value.subtract(1, 'month');
     this.updateTable("month");
   }
 
-  goToNextMonth(): void {
+  goToNextMonth(): void{
+    this.currentPage = 1;
     this.date.value.add(1, 'month');
     this.updateTable("month");
   }
 
-  goToPreviousYear(): void {
+  goToPreviousYear(): void{
+    this.currentPage = 1;
     this.date.value.subtract(1, 'year');
     this.updateTable("year");
   }
 
-  goToNextYear(): void {
+  goToNextYear(): void{
+    this.currentPage = 1;
     this.date.value.add(1, 'year');
     this.updateTable("year");
   }
@@ -293,5 +353,47 @@ export class ExpenseTableComponent implements OnInit {
     const green = parseInt(hexColor.substring(2, 4), 16);
     const blue = parseInt(hexColor.substring(4, 6), 16);
     return `rgba(${red}, ${green}, ${blue}, 0.2)`;
+  }
+
+  sortData(sortState:Sort){
+      this.sortBy=sortState.active.toUpperCase();
+      this.ascending=sortState.direction === 'asc' ? true : (sortState.direction === 'desc' ? false : undefined);
+      this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+      .subscribe((data: any) => {
+        this.expenses = data;
+      });
+  }
+
+  filterByCurrency(filter:Currency){
+    this.currencyId=filter.id;
+    this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+
+      this.currentPage = 1;
+
+    this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe((data: any) => {
+      this.expenses = data;
+    });
+  }
+
+  filterByCategory(filter:Category){
+    this.categoryId=filter.id;
+
+    this.expenseService.countPages(this.userId, this.startDate, this.endDate, this.pageSize, this.categoryId, this.currencyId)
+    .subscribe({
+      next: (response) => {
+        this.maxPages = response;
+      }});
+      
+    this.currentPage = 1
+
+    this.expenseService.getExpensesPage(this.userId, this.startDate, this.endDate, this.currentPage, this.pageSize, this.sortBy, this.ascending, this.categoryId, this.currencyId)
+    .subscribe((data: any) => {
+      this.expenses = data;
+    });
   }
 }

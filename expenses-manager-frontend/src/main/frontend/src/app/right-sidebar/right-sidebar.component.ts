@@ -27,7 +27,7 @@ export class RightSidebarComponent implements OnInit {
 
   constructor(
     public router: Router,
-    private expenseService: ExpenseService, 
+    private expenseService: ExpenseService,
     private categoryService: CategoryService,
     private currencyService: CurrencyService,
     public reloadService: ReloadService
@@ -70,13 +70,13 @@ export class RightSidebarComponent implements OnInit {
   }
 
   getExpensesBetweenDates(userId: number, startDate?: Date, endDate?: Date): void {
-    this.expenseService.getFilteredExpenses(userId, startDate, endDate, this.reloadService.getCurrentCurrency())
+    this.expenseService.getExpensesByUserId(userId, startDate, endDate, this.reloadService.getCurrentCurrency())
               .subscribe(
                 expenses => {
                   this.expenses = this.transformExpenses(expenses);
                   this.filterExpenses(this.reloadService.getCurrentTab());
               });
-              
+
   }
 
   filterExpenses(period: string) {
@@ -96,7 +96,7 @@ export class RightSidebarComponent implements OnInit {
       case 'Year':
        this.filteredExpenses = this.groupExpensesByYear(this.expenses, 4);
         break;
-        
+
       case 'Custom':
         this.filteredExpenses = this.expenses;
         break;
@@ -106,35 +106,35 @@ export class RightSidebarComponent implements OnInit {
   transformExpenses(expenses: Expense[]): Map<Date, Map<string, number>> {
     return expenses.reduce((acc, expense) => {
       const dateKey = expense.date;
-  
+
       if (!acc.has(dateKey)) {
         acc.set(dateKey, new Map<string, number>());
       }
-  
+
       const dateMap = acc.get(dateKey)!;
       const category = this.categories.find(c => c.id === expense.categoryId);
       if (category) {
         if(!dateMap.has(category.description)) {
         dateMap.set(category.description, 0);
         }
-  
+
         dateMap.set(category.description, dateMap.get(category.description)! + expense.amount);
       }
-      
+
       return acc;
     }, new Map<Date, Map<string, number>>());
   }
 
   groupExpensesByLastDays(expenses: Map<Date, Map<string, number>>, dayCount: number): Map<any, Map<string, number>> {
     let result = new Map<any, Map<string, number>>();
-    
+
     let endDate = new Date();
     endDate.setHours(23, 59, 59);
 
     let startDate = new Date(endDate);
     startDate.setDate(startDate.getDate() - dayCount + 1);
     startDate.setHours(0, 0, 0);
-    
+
     expenses.forEach((value, key) => {
       key = new Date(key);
       if(key.getTime() >= startDate.getTime() && key.getTime() <= endDate.getTime()){
