@@ -31,12 +31,12 @@ export class EditExpenseDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.expenseForm = this.formBuilder.group({
-      description: [this.data.expense.description], 
-      date: [new Date(this.data.expense.date).toISOString().substring(0, 10), Validators.required],
-      amount: [this.data.expense.amount, [Validators.required, Validators.min(0.01)]],
-      categoryId: [this.data.expense.categoryId, Validators.required],
-      currencyId: [this.data.expense.currencyId, Validators.required],
-      userId: [null, Validators.required],
+      description: [this.data.expense ? this.data.expense.description : '', []], 
+      date: [this.data.expense ? new Date(this.data.expense.date).toISOString().substring(0, 10) : this.currentDate, Validators.required],
+      amount: [this.data.expense ? this.data.expense.amount : null, [Validators.required, Validators.min(0.01)]],
+      categoryId: [this.data.expense ? this.data.expense.categoryId : null, Validators.required],
+      currencyId: [this.data.expense ? this.data.expense.currencyId : null, Validators.required],
+      userId: [null, Validators.required]
     });
   
     this.setUserID();
@@ -95,5 +95,5 @@ export class EditExpenseDialogComponent implements OnInit {
     } else {
       console.log("Validation errors");
     }
-  }
+  }  
 }

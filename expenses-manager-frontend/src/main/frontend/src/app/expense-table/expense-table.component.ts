@@ -370,17 +370,24 @@ export class ExpenseTableComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         Object.assign(expense, result); // Update existing expense
-        this.expenseService.updateExpense(expense.id, expense).subscribe({
-          next: () => {
-            this.fetchExpenses(); // Refresh the expenses list
-          },
-          error: (error) => {
-            console.error('Error updating expense:', error);
-          }
-        });
+        
+        // Verificăm dacă id-ul este definit înainte de a actualiza
+        if (expense.id !== undefined) {
+          this.expenseService.updateExpense(expense.id, expense).subscribe({
+            next: () => {
+              this.fetchExpenses(); // Refresh the expenses list
+            },
+            error: (error) => {
+              console.error('Error updating expense:', error);
+            }
+          });
+        } else {
+          console.error('Expense ID is undefined, cannot update.');
+        }
       }
     });
   }
+  
   
   fetchExpenses(): void {
     const userId = localStorage.getItem("userId");
@@ -400,17 +407,23 @@ export class ExpenseTableComponent implements OnInit {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.expenseService.deleteExpense(expense.id).subscribe({
-          next: () => {
-            this.fetchExpenses();
-          },
-          error: (error) => {
-            console.error('Error deleting expense:', error);
-          }
-        });
+        // Verificăm dacă id-ul este definit înainte de a șterge
+        if (expense.id !== undefined) {
+          this.expenseService.deleteExpense(expense.id).subscribe({
+            next: () => {
+              this.fetchExpenses(); // Refresh the expenses list
+            },
+            error: (error) => {
+              console.error('Error deleting expense:', error);
+            }
+          });
+        } else {
+          console.error('Expense ID is undefined, cannot delete.');
+        }
       }
     });
   }
+  
 
     toggleActions(expenseId: number): void {
       this.showActionsMap[expenseId] = !this.showActionsMap[expenseId];

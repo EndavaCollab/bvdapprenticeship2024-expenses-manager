@@ -5,7 +5,7 @@ export interface User {
 }
 
 export interface Expense {
-    id : number;
+    id? : number;
     description: string;
     date: Date;
     amount: number;

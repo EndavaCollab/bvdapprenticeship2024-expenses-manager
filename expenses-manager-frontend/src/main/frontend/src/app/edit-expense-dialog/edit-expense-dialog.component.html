@@ -1,4 +1,7 @@
-<h1><fa-icon [icon]="['fas', 'money-bill']"></fa-icon> Edit expense</h1>
+<h1>
+  <fa-icon [icon]="['fas', 'money-bill']"></fa-icon>
+  {{ data.expense ? 'Update' : 'Add' }} expense
+</h1>
 
 <form [formGroup]="expenseForm" class="expense-form" (ngSubmit)="onSubmit()">
   <div class="errors" *ngIf="submitted && expenseForm.get('date')?.hasError('required')">
@@ -55,6 +58,8 @@
 
   <div class="buttons">
     <button class="cancel-button" aria-label="cancel-button" (click)="closeDialog()" type="button">Cancel</button>
-    <button class="update-expense-button" aria-label="update-expense-button" type="submit">Update expense</button>
+    <button class="update-expense-button" aria-label="update-expense-button" type="submit">
+      {{ data.expense ? 'Update' : 'Add' }} expense
+    </button>
   </div>
 </form>
