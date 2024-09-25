@@ -5,6 +5,9 @@
     </div>
 
     <form class="login-form">
+        <div class="error">
+            <p *ngIf="error==true">Username can not be empty</p>
+        </div>
         <input class="username-input" type="text" placeholder="Enter User Name here" aria-label="username-input" [(ngModel)]="name" [ngModelOptions]="{standalone: true}"/>
 
         <a mat-button class="login-button" type="submit" aria-label="login-button" (click)="loginUser()" >Login</a>

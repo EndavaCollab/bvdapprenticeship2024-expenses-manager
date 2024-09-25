@@ -12,6 +12,7 @@ import { NotificationService } from '../services/notification-service/notificati
 export class LoginComponent implements OnInit {
 
   name: string='';
+  error: boolean=false;
   constructor(private userService: UserService, 
     private localService: LocalService, 
     private router: Router,
@@ -25,9 +26,8 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         this.localService.saveData("name", this.name);
         this.router.navigate(['/home']); 
-        this.notificationService.showSuccess("User logged in successfully!");
       }, error: (error) => {
-        this.notificationService.showError("Login error!");
+        this.error=true;
       }
     });
   }

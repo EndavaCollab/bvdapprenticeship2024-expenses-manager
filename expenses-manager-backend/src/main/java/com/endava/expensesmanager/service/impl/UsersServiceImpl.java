@@ -2,6 +2,7 @@ package com.endava.expensesmanager.service.impl;
 
 import com.endava.expensesmanager.dto.UserDto;
 import com.endava.expensesmanager.entity.Users;
+import com.endava.expensesmanager.exception.BadRequestException;
 import com.endava.expensesmanager.mapper.UserMapper;
 import com.endava.expensesmanager.repository.UsersRepository;
 import com.endava.expensesmanager.service.UsersService;
@@ -64,6 +65,9 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UserDto loginUser(String name) {
+        if (!validateName(name)) {
+            throw new BadRequestException("Invalid name");
+        }
         Users user = usersRepository.findByName(name)
                 .orElseGet(() -> createUser(name));
 
@@ -72,5 +76,9 @@ public class UsersServiceImpl implements UsersService {
                 .name(user.getName())
                 .created(user.getCreated())
                 .build();
+    }
+
+    private boolean validateName(String name) {
+        return !name.isEmpty();
     }
 }
