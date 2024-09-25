@@ -76,7 +76,7 @@ public class ExpenseController {
             @RequestParam(required = false) LocalDateTime startDate,
             @RequestParam(required = false) LocalDateTime endDate,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "DATE") PropertyEnum sortBy,
             @RequestParam(required = false) boolean ascending,
             @RequestParam(required = false) Integer categoryId,
@@ -85,6 +85,17 @@ public class ExpenseController {
         List<ExpenseDto> expenses = expenseService.getExpensesPage(
                 userId, startDate, endDate, page, size, sortBy, ascending, categoryId, currencyId, currency);
         return ResponseEntity.ok(expenses);
+    }
+
+    @GetMapping("/user/pages")
+    public ResponseEntity<Integer> countExpensesPage(@RequestParam int userId,
+                                                   @RequestParam(required = false) LocalDateTime startDate,
+                                                   @RequestParam(required = false) LocalDateTime endDate,
+                                                   @RequestParam(defaultValue = "5")int size,
+                                                   @RequestParam(required = false) Integer categoryId,
+                                                   @RequestParam(required = false) Integer currencyId) {
+        int expensesCount = expenseService.countExpensesPage(userId, startDate, endDate, size, categoryId, currencyId);
+        return ResponseEntity.ok(expensesCount);
     }
 
     @GetMapping("/convert/{expenseId}")
