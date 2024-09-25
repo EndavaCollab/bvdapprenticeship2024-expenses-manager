@@ -65,7 +65,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UserDto loginUser(String name) {
-        if (!validateName(name)) {
+        if (name.isEmpty()) {
             throw new BadRequestException("Invalid name");
         }
         Users user = usersRepository.findByName(name)
@@ -78,7 +78,4 @@ public class UsersServiceImpl implements UsersService {
                 .build();
     }
 
-    private boolean validateName(String name) {
-        return !name.isEmpty();
-    }
 }
