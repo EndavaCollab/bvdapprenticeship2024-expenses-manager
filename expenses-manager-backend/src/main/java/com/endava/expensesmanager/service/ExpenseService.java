@@ -25,5 +25,7 @@ public interface ExpenseService {
 
     List<ExpenseDto> getExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int page, int size, PropertyEnum property, boolean ascending, Integer categoryId, Integer currencyId, String currency);
 
+    Integer countExpensesPage(int userId, LocalDateTime startDate, LocalDateTime endDate, int size, Integer categoryId, Integer currencyId);
+
     BigDecimal convertExpenseToCurrency(int expenseId, String targetCurrency);
 }
