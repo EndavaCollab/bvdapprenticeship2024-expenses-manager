@@ -2,8 +2,6 @@ package com.endava.expensesmanager.service.impl;
 
 import com.endava.expensesmanager.exception.BadRequestException;
 import com.endava.expensesmanager.service.CurrencyConversionService;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -35,7 +33,6 @@ public class CurrencyConversionServiceImpl implements CurrencyConversionService 
             return amount;
         }
 
-
         String url = String.format("%s/%s/pair/%s/%s", apiCurrencyUrl, apiKey, fromCurrency, toCurrency);
 
         CurrencyResponse response = restTemplate.getForObject(url, CurrencyResponse.class);
@@ -50,18 +47,5 @@ public class CurrencyConversionServiceImpl implements CurrencyConversionService 
         }
 
         return amount.multiply(BigDecimal.valueOf(conversionRate));
-    }
-
-    @Setter
-    @Getter
-    public static class CurrencyResponse {
-        private String result;
-
-        private String baseCode;
-
-        private String targetCode;
-
-        private Double conversionRate;
-
     }
 }
