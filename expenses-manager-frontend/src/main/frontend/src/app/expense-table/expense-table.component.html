@@ -2,28 +2,28 @@
   <div class="datepicker-buttons" *ngIf="selectedTab=='Day'">
     <button class="date-buttons" (click)="goToPreviousDay()">&lt;</button>
     <button class="date-buttons date-picker-button" (click)="openDatepicker(dayDatepicker)">
-      <input matInput [matDatepicker]="dayDatepicker" class="hidden-datepicker-input" (dateChange)="setDay($event, dayDatepicker)">
+      <input matInput [matDatepicker]="dayDatepicker" class="hidden-datepicker-input" (dateChange)="setDay($event, dayDatepicker)" [max]="currentDate | date:'yyyy-MM-dd'">
       {{ displayDay() }} <mat-icon>expand_more</mat-icon>
     </button>
-    <button class="date-buttons" (click)="goToNextDay()">&gt;</button>
+    <button class="date-buttons" (click)="goToNextDay()" [disabled]="disableButton()">&gt;</button>
   </div>
 
   <div class="datepicker-buttons" *ngIf="selectedTab=='Month'">
     <button class="date-buttons" (click)="goToPreviousMonth()">&lt;</button>
     <button class="date-buttons date-picker-button" (click)="openDatepicker(monthDatepicker)">
-      <input matInput [matDatepicker]="monthDatepicker" class="hidden-datepicker-input">
+      <input matInput [matDatepicker]="monthDatepicker" class="hidden-datepicker-input" [max]="currentDate | date:'yyyy-MM-dd'">
       {{ displayMonthAndYear() }} <mat-icon>expand_more</mat-icon>
     </button>
-    <button class="date-buttons" (click)="goToNextMonth()">&gt;</button>
+    <button class="date-buttons" (click)="goToNextMonth()" [disabled]="disableButton()">&gt;</button>
   </div>
 
   <div class="datepicker-buttons" *ngIf="selectedTab=='Year'">
     <button class="date-buttons" (click)="goToPreviousYear()">&lt;</button>
     <button class="date-buttons date-picker-button" (click)="openDatepicker(yearDatepicker)">
-      <input matInput [matDatepicker]="yearDatepicker" class="hidden-datepicker-input">
+      <input matInput [matDatepicker]="yearDatepicker" class="hidden-datepicker-input" [max]="currentDate | date:'yyyy-MM-dd'">
       {{ displayYear() }} <mat-icon>expand_more</mat-icon>
     </button>
-    <button class="date-buttons" (click)="goToNextYear()">&gt;</button>
+    <button class="date-buttons" (click)="goToNextYear()" [disabled]="disableButton()">&gt;</button>
   </div>
 
   <mat-datepicker #dayDatepicker></mat-datepicker>
@@ -139,7 +139,7 @@
   </button>
 
   <!-- Buton Next -->
-  <button class="paginator-button" (click)="goToNextPage()" [disabled]="currentPage === maxPages">
+  <button class="paginator-button" (click)="goToNextPage()" [disabled]="currentPage === maxPages || maxPages==0">
     &gt;
   </button>
 </div>
