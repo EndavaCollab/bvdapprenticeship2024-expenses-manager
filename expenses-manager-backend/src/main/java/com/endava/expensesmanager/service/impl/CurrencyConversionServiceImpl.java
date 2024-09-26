@@ -35,8 +35,8 @@ public class CurrencyConversionServiceImpl implements CurrencyConversionService 
             return amount;
         }
 
-        String url = String.format("%s/pair/%s/%s", apiCurrencyUrl.replace("YOUR-API-KEY", apiKey), fromCurrency, toCurrency);
 
+        String url = String.format("%s/%s/pair/%s/%s", apiCurrencyUrl, apiKey, fromCurrency, toCurrency);
 
         CurrencyResponse response = restTemplate.getForObject(url, CurrencyResponse.class);
 
@@ -52,18 +52,16 @@ public class CurrencyConversionServiceImpl implements CurrencyConversionService 
         return amount.multiply(BigDecimal.valueOf(conversionRate));
     }
 
+    @Setter
+    @Getter
     public static class CurrencyResponse {
-        @Setter
-        @Getter
         private String result;
-        private Double conversion_rate;
 
-        public Double getConversionRate() {
-            return conversion_rate;
-        }
+        private String baseCode;
 
-        public void setConversionRate(Double conversion_rate) {
-            this.conversion_rate = conversion_rate;
-        }
+        private String targetCode;
+
+        private Double conversionRate;
+
     }
 }
