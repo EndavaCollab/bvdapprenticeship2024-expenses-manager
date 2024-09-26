@@ -279,6 +279,20 @@ export class ExpenseTableComponent implements OnInit {
 
   openDatepicker(datepicker: MatDatepicker<moment.Moment>) {
     datepicker.open();
+    this.updateOverlay();
+  }
+
+  private updateOverlay() {
+    setTimeout(() => {
+      const changeViewButton = document.querySelector('.mat-calendar-period-button');
+      if (changeViewButton) {
+        if (this.selectedTab !== "Day") {
+          changeViewButton.classList.add('hide-change-view-button');
+        } else {
+          changeViewButton.classList.remove('hide-change-view-button');
+        }
+      }
+    }, 0);
   }
 
   displayDay(): string {
