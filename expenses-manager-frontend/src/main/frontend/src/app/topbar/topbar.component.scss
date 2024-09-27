@@ -1,5 +1,5 @@
 .mat-tab-group{
-    inline-size: auto;
+    inline-size: 100%;
 }
 
 .mat-tab-group h1{
@@ -9,15 +9,11 @@
 }
 
 .mat-tab-group .mat-tab-label {
-    inline-size: 10rem;
     block-size: 7rem;
-    min-inline-size: 0rem !important;
+    inline-size: 100%;
+    max-inline-size: unset !important;
     font-family: var(--font-family);
     font-size: 2.4rem;
-}
-
-.mat-tab-group .mat-tab-label:not(:last-child) {
-    margin-right: 5rem;
 }
 
 .mat-tab-group .mat-ink-bar {

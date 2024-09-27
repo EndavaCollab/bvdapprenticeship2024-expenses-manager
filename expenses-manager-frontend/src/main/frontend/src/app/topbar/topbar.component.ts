@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AddExpenseDialogComponent } from '../add-expense-dialog/add-expense-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ExpenseService } from '../services/expense-service/expense.service';
+import { ReloadService } from '../services/reload-service/reload.service';
 
 @Component({
   selector: 'app-topbar',
@@ -13,18 +14,26 @@ import { ExpenseService } from '../services/expense-service/expense.service';
 export class TopbarComponent implements OnInit {
   tabs = ['Day', 'Week', 'Month', 'Year', 'Custom'];
   totalAmount: number = 0;
-  currency: string = "RON";
   userId: number = Number(localStorage.getItem('userId'));
   selectedTab: number = 0;
 
-  constructor(public router: Router, private dialog: MatDialog, private expenseService: ExpenseService) { }
+  constructor(
+    public router: Router, 
+    private dialog: MatDialog, 
+    private expenseService: ExpenseService, 
+    public reloadService: ReloadService
+  ) {}
 
   ngOnInit(): void {
     this.onTabChange(0);
+
+    this.reloadService.reloadTopbar$.subscribe(() => {
+      this.onTabChange(this.selectedTab);
+    });
   }
 
   getTotalAmount(userId: number, startDate?: Date, endDate?: Date): void {
-    this.expenseService.getTotalAmountBetweenDates(userId, startDate, endDate)
+    this.expenseService.getTotalAmountBetweenDates(userId, startDate, endDate, this.reloadService.getCurrentCurrency())
               .subscribe(amount => this.totalAmount = amount);
   }
 
@@ -64,6 +73,8 @@ export class TopbarComponent implements OnInit {
         this.getTotalAmount(this.userId);
         break;
     }
+
+    this.reloadService.changeTab(selectedTab);
   }
 
   openDialog(): void{
@@ -72,6 +83,7 @@ export class TopbarComponent implements OnInit {
       data: {
         onExpenseAdded: () => {
           this.onTabChange(this.selectedTab);
+          this.reloadService.reloadExpenses();
         }
       }
     });

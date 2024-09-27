@@ -18,11 +18,12 @@ export class ExpenseService {
     return this.http.post(`${this.apiUrl}/expense`, expense);
   }
 
-  public getExpensesByUserId(userId: any, startDate?: Date, endDate?: Date)
+  public getExpensesByUserId(userId: any, startDate?: Date, endDate?: Date, currency?: string)
   {
     let params = new HttpParams()
                 .set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
-                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
+                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
+                .set('currency', currency ?? '');
 
     return this.http.get<Expense[]>(`${this.apiUrl}/expense/user/${userId}`, {params})
   }
@@ -77,7 +78,7 @@ export class ExpenseService {
     if(currencyFilter){
       params = params.set('currencyId', currencyFilter.toString());
      }
-  
+
      if(categoryFilter){
       params = params.set('categoryId', categoryFilter.toString());
      }
@@ -100,15 +101,17 @@ export class ExpenseService {
 
     return this.http.get<Expense[]>(`${this.apiUrl}/expense/user/${userId}`, {params})
   }
-  
-  
-  public getTotalAmountBetweenDates(userId: number, startDate?: Date, endDate?: Date){
+
+
+  public getTotalAmountBetweenDates(userId: number, startDate?: Date, endDate?: Date, currency?: string){
 
     let params = new HttpParams()
                 .set('userId', userId.toString())
                 .set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
-                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
-  
+                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
+                .set('currency', currency ?? '');
+
+
     return this.http.get<number>(`${this.apiUrl}/expense/user/total`, {params});
   }
 }

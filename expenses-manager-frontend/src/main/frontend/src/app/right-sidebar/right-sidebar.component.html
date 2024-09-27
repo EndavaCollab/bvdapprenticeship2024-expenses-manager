@@ -1,0 +1,22 @@
+<div class="horizontal-container"> 
+  <h2>{{ userName }}</h2>
+  <mat-select *ngIf="router.url == '/home'" [(value)]="selectedCurrencyIndex" (selectionChange)="onCurrencyChange(currencies[$event.value].code)">
+    <mat-option *ngFor="let currency of currencies; let i = index" [value]="i"> 
+      {{ currency.code }} 
+    </mat-option>
+  </mat-select>
+</div>
+<mat-divider class="outer-divider"></mat-divider>
+<mat-list *ngIf="router.url == '/home'">
+  <div *ngFor="let date of filteredExpenses | keyvalue: sortDesc">
+    <h2 mat-subheader>{{ date.key }}</h2>
+    <mat-divider></mat-divider>
+    <mat-list-item *ngFor="let item of date.value | keyvalue">
+      <img src="../../assets/icons/{{ item.key }}.svg" class="icon-image" alt="icon">
+      <h2 class="category">{{ item.key }}</h2>
+      <h2 class="price-tag">{{reloadService.getCurrentCurrency() + item.value}}</h2>
+      <mat-divider></mat-divider>
+    </mat-list-item>
+  </div>
+  <mat-divider></mat-divider>
+</mat-list>

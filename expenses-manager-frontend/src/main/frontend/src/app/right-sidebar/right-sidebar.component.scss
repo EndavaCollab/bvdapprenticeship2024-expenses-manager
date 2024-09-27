@@ -1,0 +1,83 @@
+div.horizontal-container{
+    inline-size: 40rem;
+    block-size: 7rem;
+    display: flex;
+    justify-content: center !important;
+    align-items: center !important;
+    border-left: 0.1rem solid var(--shadow-color);
+
+    h2{
+        font-size: 2rem;
+        font-weight: 500;
+        margin-right: 3rem;
+        font-family: 'Outfit', sans-serif !important;
+        margin-bottom: 0rem;
+    }
+}
+
+.mat-list{
+    inline-size: 40rem;
+    block-size: calc(100vh - 7.1rem);
+    overflow: auto;
+    padding-top: 0rem;
+    border-left: 0.1rem solid var(--shadow-color);
+}
+
+.mat-list-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    block-size: 6.5rem;
+}
+
+.icon-image{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.mat-list h2{
+    font-family: 'Outfit', sans-serif !important;
+}
+
+.mat-subheader{
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--primary-text-color) !important;
+    margin-top: 0rem !important;
+}
+
+.category{
+    font-size: 1.7rem;
+    font-weight: 500;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 1.5rem;
+}
+
+.price-tag{
+    font-size: 2.1rem;
+    color: var(--text-danger-color);
+    align-self: flex-end;
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.mat-select{
+    display: flex;
+    align-items: center;
+    inline-size: 8.5rem;
+    block-size: 3rem;
+    border: 0.1rem solid var(--input-border-color);
+    border-radius: 0.8rem;
+    font-family: 'Outfit', sans-serif !important;
+} 
+
+::ng-deep .mat-select .mat-select-value{
+    padding-left: 1rem;
+}
+
+mat-divider.outer-divider{
+    inline-size: auto;
+}
