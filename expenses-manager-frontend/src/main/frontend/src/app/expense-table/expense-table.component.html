@@ -41,7 +41,19 @@
   
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef class="column"> Actions </th>
-    <td mat-cell class="column" *matCellDef="let element"><button class="actions-button"><mat-icon>more_vert</mat-icon></button> </td>
+    <td mat-cell class="column" *matCellDef="let element">
+      <button class="actions-button" (click)="toggleActions(element.id)">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <div *ngIf="showActionsMap[element.id]">
+        <button mat-icon-button (click)="openEditExpenseDialog(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="confirmDelete(element)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </td>
   </ng-container>
   
   <ng-container matColumnDef="date">

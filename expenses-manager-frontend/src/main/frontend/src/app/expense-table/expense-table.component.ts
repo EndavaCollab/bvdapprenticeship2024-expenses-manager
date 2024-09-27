@@ -5,10 +5,13 @@ import { CategoryService } from '../services/category-service/category.service';
 import { CurrencyService } from '../services/currency-service/currency.service';
 import { FormControl } from '@angular/forms';
 import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 import * as _moment from 'moment';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { AddExpenseDialogComponent } from '../add-expense-dialog/add-expense-dialog.component';
 import { Sort } from '@angular/material/sort';
 
 @Component({
@@ -22,6 +25,7 @@ export class ExpenseTableComponent implements OnInit {
 
   categories: Category[] = [];
   currencies: Currency[] = [];
+  showActionsMap: { [key: number]: boolean } = {}; //submenu for actions
 
   sortBy?: string;
   ascending?: boolean;
@@ -34,22 +38,21 @@ export class ExpenseTableComponent implements OnInit {
 
   date = new FormControl(_moment());
 
-  private _selectedTab = ''; // Variabilă internă pentru stocarea valorii
+  private _selectedTab = ''; 
 
   startDate!: Date;
   endDate!: Date;
   currentDate: Date = new Date;
 
-  // Setter-ul este apelat automat când se schimbă valoarea din exterior
   @Input()
   set selectedTab(value: string) {
-    if (value !== this._selectedTab) { // Verificăm dacă valoarea s-a schimbat
-      this._selectedTab = value;  // Setăm noua valoare
-      this.onTabChange(); // Apelează funcția când valoarea se modifică
+    if (value !== this._selectedTab) { 
+      this._selectedTab = value;  
+      this.onTabChange(); 
     }
   }
 
-  // Getter-ul permite accesarea valorii din interiorul componentei
+
   get selectedTab(): string {
     return this._selectedTab;
   }
@@ -87,7 +90,8 @@ export class ExpenseTableComponent implements OnInit {
   constructor(
     private expenseService: ExpenseService,
     private categoryService: CategoryService,
-    private currencyService: CurrencyService
+    private currencyService: CurrencyService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -245,7 +249,7 @@ export class ExpenseTableComponent implements OnInit {
     this.endDate.setFullYear(this.date.value.year());
     if (selectedTime == "month" || selectedTime == "day") {
       this.startDate.setMonth(this.date.value.month());
-      this.endDate.setDate(1); // ca să nu treacă la luna următoare când folosim funcția setMonth
+      this.endDate.setDate(1); 
       this.endDate.setMonth(this.date.value.month());
 
       if (selectedTime == "day") {
@@ -370,6 +374,70 @@ export class ExpenseTableComponent implements OnInit {
     return `rgba(${red}, ${green}, ${blue}, 0.2)`;
   }
 
+  openEditExpenseDialog(expense: Expense): void {
+    const dialogRef = this.dialog.open(AddExpenseDialogComponent, {
+      width: '400px',
+      data: { expense } 
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (expense.id !== undefined) {
+          Object.assign(expense, result); 
+
+          this.expenseService.updateExpense(expense.id, expense).subscribe({
+            next: () => {
+              this.fetchExpenses(); // Refresh the expense list after update
+            },
+            error: (error) => {
+              console.error('Error updating expense:', error); // Log if there's an error
+            }
+          });
+        } else {
+          console.error('Expense ID is undefined, cannot update.'); // Log if ID is missing
+        }
+      }
+    });
+  }
+  
+  fetchExpenses(): void {
+    const userId = localStorage.getItem("userId");
+    this.expenseService.getExpensesByUserId(userId).subscribe({
+      next: (response) => {
+        this.expenses = response; 
+        this.showActionsMap = {}; 
+      },
+      error: (error) => {
+        console.error('Error getting expenses:', error);
+      }
+    });
+  }
+
+  confirmDelete(expense: Expense): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (expense.id !== undefined) {
+          this.expenseService.deleteExpense(expense.id).subscribe({
+            next: () => {
+              this.fetchExpenses();
+            },
+            error: (error) => {
+              console.error('Error deleting expense:', error);
+            }
+          });
+        } else {
+          console.error('Expense ID is undefined, cannot delete.');
+        }
+      }
+    });
+  }
+  
+  toggleActions(expenseId: number): void {
+    this.showActionsMap[expenseId] = !this.showActionsMap[expenseId];
+  }
+    
   sortData(sortState:Sort){
       this.sortBy=sortState.active.toUpperCase();
       this.ascending=sortState.direction === 'asc' ? true : (sortState.direction === 'desc' ? false : undefined);
