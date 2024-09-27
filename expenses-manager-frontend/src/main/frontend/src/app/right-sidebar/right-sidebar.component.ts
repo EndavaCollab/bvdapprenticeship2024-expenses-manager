@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Category, Currency, Expense } from '../models';
 import { ExpenseService } from '../services/expense-service/expense.service';
 import { CategoryService } from '../services/category-service/category.service';
 import { ReloadService } from '../services/reload-service/reload.service';
 import { CurrencyService } from '../services/currency-service/currency.service';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-right-sidebar',
   templateUrl: './right-sidebar.component.html',
   styleUrls: ['./right-sidebar.component.scss']
 })
-export class RightSidebarComponent implements OnInit {
+export class RightSidebarComponent implements OnInit, OnDestroy {
   categories: Category[] = [];
   currencies: Currency[] = [];
   expenses: Map<Date, Map<string, number>> = new Map<Date, Map<string, number>>();
@@ -20,6 +21,8 @@ export class RightSidebarComponent implements OnInit {
   userId: number = Number(localStorage.getItem('userId'));
   userName: string = localStorage.getItem('userName') ?? 'Not found';
   selectedCurrencyIndex: number = 3;
+
+  private destroy$ = new Subject<void>();
 
   sortDesc = (a: any, b: any): number => {
     return parseInt(b.key) - parseInt(a.key);
@@ -53,21 +56,29 @@ export class RightSidebarComponent implements OnInit {
     }
   })
 
-  this.reloadService.tabChange$.subscribe(tabName => {
-    if (tabName) {
-      this.filterExpenses(tabName);
-    }
-  });
+  this.reloadService.tabChange$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(tabName => {
+      if (tabName) {
+        this.filterExpenses(tabName);
+      }
+    });
 
-  this.reloadService.reloadExpenses$.subscribe(() => {
-    this.getExpensesBetweenDates(this.userId);
-  });
+  this.reloadService.reloadExpenses$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(() => {
+      this.getExpensesBetweenDates(this.userId);
+    });
+  }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onCurrencyChange(newCurrency: string): void {
     this.reloadService.setCurrentCurrency(newCurrency);
-    this.reloadService.reloadTopbar();
+    this.reloadService.reloadComponents();
   }
 
   getExpensesBetweenDates(userId: number, startDate?: Date, endDate?: Date): void {
@@ -76,7 +87,6 @@ export class RightSidebarComponent implements OnInit {
                 expenses => {
                   this.expenses = this.transformExpenses(expenses);
                   this.filterExpenses(this.reloadService.getCurrentTab());
-                  if(this.reloadService.getCurrentCurrency() === 'RON') console.log(this.expenses);
               });
 
   }
@@ -251,7 +261,7 @@ export class RightSidebarComponent implements OnInit {
           if(!result.has(category)){
             result.set(category, 0);
           }
-          result.set(category, Number((result.get(category)! + amount).toFixed(3)));
+          result.set(category, result.get(category)! + amount);
         }
       }
     }
