@@ -6,7 +6,6 @@ import { CurrencyService } from '../services/currency-service/currency.service';
 import { FormControl } from '@angular/forms';
 import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
-import { EditExpenseDialogComponent } from '../edit-expense-dialog/edit-expense-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 import * as _moment from 'moment';
