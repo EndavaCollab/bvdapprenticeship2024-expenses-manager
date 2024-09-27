@@ -67,6 +67,7 @@ export class RightSidebarComponent implements OnInit {
 
   onCurrencyChange(newCurrency: string): void {
     this.reloadService.setCurrentCurrency(newCurrency);
+    this.reloadService.reloadTopbar();
   }
 
   getExpensesBetweenDates(userId: number, startDate?: Date, endDate?: Date): void {
@@ -75,6 +76,7 @@ export class RightSidebarComponent implements OnInit {
                 expenses => {
                   this.expenses = this.transformExpenses(expenses);
                   this.filterExpenses(this.reloadService.getCurrentTab());
+                  if(this.reloadService.getCurrentCurrency() === 'RON') console.log(this.expenses);
               });
 
   }
@@ -249,7 +251,7 @@ export class RightSidebarComponent implements OnInit {
           if(!result.has(category)){
             result.set(category, 0);
           }
-          result.set(category, Number((result.get(category)! + amount).toPrecision(3)));
+          result.set(category, Number((result.get(category)! + amount).toFixed(3)));
         }
       }
     }

@@ -11,11 +11,18 @@ export class ReloadService {
   private reloadExpensesSource = new Subject<void>();
   reloadExpenses$ = this.reloadExpensesSource.asObservable();
 
+  private reloadTopbarSource = new Subject<void>();
+  reloadTopbar$ = this.reloadTopbarSource.asObservable();
+  
   private selectedCurrencySubject = new BehaviorSubject<string>('');
   selectedCurrency$ = this.selectedCurrencySubject.asObservable();
   
   reloadExpenses() {
     this.reloadExpensesSource.next();
+  }
+
+  reloadTopbar() {
+    this.reloadTopbarSource.next();
   }
   
   changeTab(tabName: string) {

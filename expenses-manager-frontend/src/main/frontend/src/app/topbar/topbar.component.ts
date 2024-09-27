@@ -14,7 +14,6 @@ import { ReloadService } from '../services/reload-service/reload.service';
 export class TopbarComponent implements OnInit {
   tabs = ['Day', 'Week', 'Month', 'Year', 'Custom'];
   totalAmount: number = 0;
-  currency: string = "RON";
   userId: number = Number(localStorage.getItem('userId'));
   selectedTab: number = 0;
 
@@ -22,15 +21,19 @@ export class TopbarComponent implements OnInit {
     public router: Router, 
     private dialog: MatDialog, 
     private expenseService: ExpenseService, 
-    private reloadService: ReloadService
+    public reloadService: ReloadService
   ) {}
 
   ngOnInit(): void {
     this.onTabChange(0);
+
+    this.reloadService.reloadTopbar$.subscribe(() => {
+      this.onTabChange(this.selectedTab);
+    });
   }
 
   getTotalAmount(userId: number, startDate?: Date, endDate?: Date): void {
-    this.expenseService.getTotalAmountBetweenDates(userId, startDate, endDate)
+    this.expenseService.getTotalAmountBetweenDates(userId, startDate, endDate, this.reloadService.getCurrentCurrency())
               .subscribe(amount => this.totalAmount = amount);
   }
 

@@ -2,8 +2,6 @@
   <h2>{{ userName }}</h2>
   <mat-select *ngIf="router.url == '/home'" [(value)]="selectedCurrencyIndex" (selectionChange)="onCurrencyChange(currencies[$event.value].code)">
     <mat-option *ngFor="let currency of currencies; let i = index" [value]="i"> 
-      <fa-icon *ngIf="currency.code == 'USD'" [icon]="['fas', 'dollar-sign']"></fa-icon>
-      <fa-icon *ngIf="currency.code == 'EUR'" [icon]="['fas', 'euro-sign']"></fa-icon>
       {{ currency.code }} 
     </mat-option>
   </mat-select>

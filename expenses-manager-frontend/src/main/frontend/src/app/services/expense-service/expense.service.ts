@@ -84,11 +84,13 @@ export class ExpenseService {
      return this.http.get<number>(`${this.apiUrl}/expense/user/pages`, {params});
   }
 
-  public getTotalAmountBetweenDates(userId: number, startDate?: Date, endDate?: Date){
+  public getTotalAmountBetweenDates(userId: number, startDate?: Date, endDate?: Date, currency?: string){
     let params = new HttpParams()
                 .set('userId', userId.toString())
                 .set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
-                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
+                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
+                .set('currency', currency ?? '');
+
 
     return this.http.get<number>(`${this.apiUrl}/expense/user/total`, {params});
   }
