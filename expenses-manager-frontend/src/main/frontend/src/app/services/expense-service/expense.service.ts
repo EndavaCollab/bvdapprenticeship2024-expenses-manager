@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { DatePipe } from '@angular/common';
 import { Expense } from 'src/app/models';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -84,7 +85,26 @@ export class ExpenseService {
      return this.http.get<number>(`${this.apiUrl}/expense/user/pages`, {params});
   }
 
+  public updateExpense(expenseId: number, expenseData: Expense): Observable<Expense> {
+    return this.http.put<Expense>(`${this.apiUrl}/expense/${expenseId}`, expenseData);
+  }
+
+  public deleteExpense(expenseId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/expense/${expenseId}`);
+  }
+
+  public getFilteredExpenses(userId: any, startDate?: Date, endDate?: Date)
+  {
+    let params = new HttpParams()
+                .set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')
+                .set('endDate', this.datePipe.transform(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '');
+
+    return this.http.get<Expense[]>(`${this.apiUrl}/expense/user/${userId}`, {params})
+  }
+
+
   public getTotalAmountBetweenDates(userId: number, startDate?: Date, endDate?: Date, currency?: string){
+
     let params = new HttpParams()
                 .set('userId', userId.toString())
                 .set('startDate', this.datePipe.transform(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss') ?? '')

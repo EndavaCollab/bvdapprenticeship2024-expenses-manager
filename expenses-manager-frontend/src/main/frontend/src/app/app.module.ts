@@ -39,6 +39,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {TopbarComponent} from "./topbar/topbar.component";
 import { DatePipe } from '@angular/common';
 import { ExpenseTableComponent } from './expense-table/expense-table.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { NotificationComponent } from './notification/notification.component';
 import {MatListModule} from "@angular/material/list";
 import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
@@ -55,8 +56,8 @@ import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
         TopbarComponent,
         ExpenseTableComponent,
         NotificationComponent,
-        AddExpenseDialogComponent,
         DailyStatsComponent,
+        ConfirmDialogComponent,
         RightSidebarComponent
     ],
     imports: [

@@ -1,4 +1,7 @@
-<h1><fa-icon [icon]="['fas', 'money-bill']"></fa-icon> Add expense</h1>
+<h1>
+  <fa-icon [icon]="['fas', 'money-bill']"></fa-icon>
+  {{ isEditMode ? 'Update' : 'Add' }} expense
+</h1>
 
 <form [formGroup]="expenseForm" class="expense-form" (ngSubmit)="onSubmit()">
 
@@ -68,6 +71,8 @@
   <!--buttons div-->
   <div class="buttons">
     <button class="cancel-button" aria-label="cancel-button" (click)="closeDialog()" type="button">Cancel</button>
-    <button class="add-expense-button" aria-label="add-expense-button" type="submit">Add expense</button>
+    <button class="add-expense-button" aria-label="add-expense-button" type="submit">
+      {{ isEditMode ? 'Update Expense' : 'Add Expense' }} 
+    </button>
   </div>
 </form>
