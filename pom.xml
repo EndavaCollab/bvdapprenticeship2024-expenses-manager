@@ -18,5 +18,6 @@
         <module>expenses-manager-backend</module>
         <module>expenses-manager-frontend</module>
     </modules>
+    <dependencies/>
 
 </project>
