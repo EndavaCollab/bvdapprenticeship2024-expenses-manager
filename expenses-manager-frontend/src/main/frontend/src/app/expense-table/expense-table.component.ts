@@ -39,22 +39,21 @@ export class ExpenseTableComponent implements OnInit {
 
   date = new FormControl(_moment());
 
-  private _selectedTab = ''; // Variabilă internă pentru stocarea valorii
+  private _selectedTab = ''; 
 
   startDate!: Date;
   endDate!: Date;
   currentDate: Date = new Date;
 
-  // Setter-ul este apelat automat când se schimbă valoarea din exterior
   @Input()
   set selectedTab(value: string) {
-    if (value !== this._selectedTab) { // Verificăm dacă valoarea s-a schimbat
-      this._selectedTab = value;  // Setăm noua valoare
-      this.onTabChange(); // Apelează funcția când valoarea se modifică
+    if (value !== this._selectedTab) { 
+      this._selectedTab = value;  
+      this.onTabChange(); 
     }
   }
 
-  // Getter-ul permite accesarea valorii din interiorul componentei
+
   get selectedTab(): string {
     return this._selectedTab;
   }
@@ -251,7 +250,7 @@ export class ExpenseTableComponent implements OnInit {
     this.endDate.setFullYear(this.date.value.year());
     if (selectedTime == "month" || selectedTime == "day") {
       this.startDate.setMonth(this.date.value.month());
-      this.endDate.setDate(1); // ca să nu treacă la luna următoare când folosim funcția setMonth
+      this.endDate.setDate(1); 
       this.endDate.setMonth(this.date.value.month());
 
       if (selectedTime == "day") {
@@ -377,32 +376,30 @@ export class ExpenseTableComponent implements OnInit {
   }
 
   openEditExpenseDialog(expense: Expense): void {
-    const dialogRef = this.dialog.open(EditExpenseDialogComponent, {
+    const dialogRef = this.dialog.open(AddExpenseDialogComponent, {
       width: '400px',
-      data: { expense }
+      data: { expense } 
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        Object.assign(expense, result); // Update existing expense
-        
-        // Verificăm dacă id-ul este definit înainte de a actualiza
         if (expense.id !== undefined) {
+          Object.assign(expense, result); 
+
           this.expenseService.updateExpense(expense.id, expense).subscribe({
             next: () => {
-              this.fetchExpenses(); // Refresh the expenses list
+              this.fetchExpenses(); // Refresh the expense list after update
             },
             error: (error) => {
-              console.error('Error updating expense:', error);
+              console.error('Error updating expense:', error); // Log if there's an error
             }
           });
         } else {
-          console.error('Expense ID is undefined, cannot update.');
+          console.error('Expense ID is undefined, cannot update.'); // Log if ID is missing
         }
       }
     });
   }
-  
   
   fetchExpenses(): void {
     const userId = localStorage.getItem("userId");
@@ -422,11 +419,10 @@ export class ExpenseTableComponent implements OnInit {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Verificăm dacă id-ul este definit înainte de a șterge
         if (expense.id !== undefined) {
           this.expenseService.deleteExpense(expense.id).subscribe({
             next: () => {
-              this.fetchExpenses(); // Refresh the expenses list
+              this.fetchExpenses();
             },
             error: (error) => {
               console.error('Error deleting expense:', error);
@@ -439,10 +435,9 @@ export class ExpenseTableComponent implements OnInit {
     });
   }
   
-
-    toggleActions(expenseId: number): void {
-      this.showActionsMap[expenseId] = !this.showActionsMap[expenseId];
-    }
+  toggleActions(expenseId: number): void {
+    this.showActionsMap[expenseId] = !this.showActionsMap[expenseId];
+  }
     
   sortData(sortState:Sort){
       this.sortBy=sortState.active.toUpperCase();
