@@ -43,6 +43,7 @@ export class ExpenseTableComponent implements OnInit {
 
   startDate!: Date;
   endDate!: Date;
+  currentDate: Date = new Date;
 
   // Setter-ul este apelat automat când se schimbă valoarea din exterior
   @Input()
@@ -483,5 +484,15 @@ export class ExpenseTableComponent implements OnInit {
     .subscribe((data: any) => {
       this.expenses = data;
     });
+  }
+
+  disableButton(): boolean{
+    if (this.selectedTab==="Year" && this.date.value.year()==this.currentDate.getFullYear())
+      return true;
+    if (this.selectedTab==="Month" && this.date.value.year()==this.currentDate.getFullYear() && this.date.value.month()==this.currentDate.getMonth())
+      return true;
+    if (this.selectedTab==="Day" && this.date.value.year()==this.currentDate.getFullYear() && this.date.value.month()==this.currentDate.getMonth() && this.date.value.date()==this.currentDate.getDate())
+      return true;
+    return false;
   }
 }
