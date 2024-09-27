@@ -5,7 +5,7 @@ import { ExpenseService } from '../services/expense-service/expense.service';
 import { CategoryService } from '../services/category-service/category.service';
 import { Category, Expense } from '../models';
 import { ReloadService } from '../services/reload-service/reload.service';
-import { debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-daily-stats',
