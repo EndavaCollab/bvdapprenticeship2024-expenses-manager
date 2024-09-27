@@ -1,5 +1,5 @@
-<div class="chart-container">
-  <div class="date-picker-container">
+<div [ngClass]="{'reports-chart': router.url === '/reports', 'home-chart': router.url === '/home'}">
+  <div class="date-picker-container" *ngIf="router.url === '/home'">
       <button mat-icon-button (click)="previousDay()">
           <mat-icon>chevron_left</mat-icon>
       </button>
@@ -16,12 +16,16 @@
       <mat-datepicker #picker touchUi="true"></mat-datepicker>      
   </div>
 
+  <div class *ngIf="router.url === '/reports'">
+    <p>All categories</p>
+  </div>
+
   <hr class="red-divider"> <!-- Linia roșie vizibilă -->
 
   <div class="chart-and-legend">
       <ngx-charts-pie-chart
           *ngIf="showChart"
-          [view]="[300, 300]"
+          [view]="chartView"
           [results]="data"
           [legend]="false"
           [doughnut]="true"

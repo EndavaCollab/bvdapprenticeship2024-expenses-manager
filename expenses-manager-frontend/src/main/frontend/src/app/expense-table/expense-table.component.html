@@ -1,41 +1,4 @@
-<div class="datepicker-wrapper">
-  <div class="datepicker-buttons" *ngIf="selectedTab=='Day'">
-    <button class="date-buttons" (click)="goToPreviousDay()">&lt;</button>
-    <button class="date-buttons date-picker-button" (click)="openDatepicker(dayDatepicker)">
-      <input matInput [matDatepicker]="dayDatepicker" class="hidden-datepicker-input" (dateChange)="setDay($event, dayDatepicker)" [max]="currentDate | date:'yyyy-MM-dd'">
-      {{ displayDay() }} <mat-icon>expand_more</mat-icon>
-    </button>
-    <button class="date-buttons" (click)="goToNextDay()" [disabled]="disableButton()">&gt;</button>
-  </div>
-
-  <div class="datepicker-buttons" *ngIf="selectedTab=='Month'">
-    <button class="date-buttons" (click)="goToPreviousMonth()">&lt;</button>
-    <button class="date-buttons date-picker-button" (click)="openDatepicker(monthDatepicker)">
-      <input matInput [matDatepicker]="monthDatepicker" class="hidden-datepicker-input" [max]="currentDate | date:'yyyy-MM-dd'">
-      {{ displayMonthAndYear() }} <mat-icon>expand_more</mat-icon>
-    </button>
-    <button class="date-buttons" (click)="goToNextMonth()" [disabled]="disableButton()">&gt;</button>
-  </div>
-
-  <div class="datepicker-buttons" *ngIf="selectedTab=='Year'">
-    <button class="date-buttons" (click)="goToPreviousYear()">&lt;</button>
-    <button class="date-buttons date-picker-button" (click)="openDatepicker(yearDatepicker)">
-      <input matInput [matDatepicker]="yearDatepicker" class="hidden-datepicker-input" [max]="currentDate | date:'yyyy-MM-dd'">
-      {{ displayYear() }} <mat-icon>expand_more</mat-icon>
-    </button>
-    <button class="date-buttons" (click)="goToNextYear()" [disabled]="disableButton()">&gt;</button>
-  </div>
-
-  <mat-datepicker #dayDatepicker></mat-datepicker>
-  <mat-datepicker #monthDatepicker
-                  startView="multi-year"
-                  (monthSelected)="setMonthAndYear($event, monthDatepicker)">
-  </mat-datepicker>
-  <mat-datepicker #yearDatepicker
-                  startView="multi-year"
-                  (yearSelected)="setYear($event, yearDatepicker)">
-  </mat-datepicker>
-</div>
+<app-datepicker selectedTab="{{selectedTab}}" [(startDate)]="startDate" [(endDate)]="endDate" (updateRequest)="update()"></app-datepicker>
 
 <table mat-table [dataSource]="expenses" matSort (matSortChange)="sortData($event)" class="mat-elevation-z8 expense-table">
   

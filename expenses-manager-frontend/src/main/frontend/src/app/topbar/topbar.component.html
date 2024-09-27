@@ -14,8 +14,8 @@
           <app-expense-table class="expenses-tab" selectedTab="{{tab}}"></app-expense-table>
         </ng-container>
         <ng-container *ngSwitchCase="'/reports'">
-          <h1>Reports work!</h1>
+          <app-reports-overview selectedTab="{{tab}}"></app-reports-overview>
         </ng-container>
       </ng-container>
-    </mat-tab>
+  </mat-tab>
 </mat-tab-group>

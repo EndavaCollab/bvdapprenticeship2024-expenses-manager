@@ -7,8 +7,8 @@
 
 <app-notification class="notifications"></app-notification>
 <router-outlet></router-outlet>
-<div class="container" *ngIf="routes.url != '/login'">
+<div class="container" *ngIf="router.url != '/login'">
     <app-sidebar></app-sidebar>
     <app-topbar></app-topbar>
-    <app-right-sidebar></app-right-sidebar>
+    <app-right-sidebar [ngClass]="{'reports-sidebar': router.url === '/reports', 'home-sidebar': router.url === '/home'}"></app-right-sidebar>
 </div>

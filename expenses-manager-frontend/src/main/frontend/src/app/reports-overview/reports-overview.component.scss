@@ -1,0 +1,30 @@
+.container {
+    display: flex;
+    flex-direction: row; 
+    block-size: 30rem;
+    margin: 1rem;
+}
+
+.datepicker{
+    margin: 3rem;
+
+}
+.stats {
+    inline-size: 40rem !important;
+    block-size: 30rem !important; 
+    margin: 2rem;
+  }
+
+.overview{
+    display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      inline-size: 60rem;
+}
+
+.card{
+    margin: 1rem;
+    inline-size: 12.5rem;
+    block-size: 12.5rem;
+}

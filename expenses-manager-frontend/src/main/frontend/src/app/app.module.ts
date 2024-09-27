@@ -26,6 +26,7 @@ import { DailyStatsComponent } from './daily-stats/daily-stats.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ExpenseService } from './services/expense-service/expense.service';
 
+import {MatCardModule} from '@angular/material/card';
 
 import { AddExpenseDialogComponent } from './add-expense-dialog/add-expense-dialog.component';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -43,6 +44,9 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { NotificationComponent } from './notification/notification.component';
 import {MatListModule} from "@angular/material/list";
 import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
+import { ReportsOverviewComponent } from './reports-overview/reports-overview.component';
+import { DatepickerComponent } from './datepicker/datepicker.component';
+import { EvolutionChartComponent } from './evolution-chart/evolution-chart.component';
 
 @NgModule({
     declarations: [
@@ -58,7 +62,10 @@ import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
         NotificationComponent,
         DailyStatsComponent,
         ConfirmDialogComponent,
-        RightSidebarComponent
+        RightSidebarComponent,
+        ReportsOverviewComponent,
+        DatepickerComponent,
+        EvolutionChartComponent
     ],
     imports: [
         BrowserModule,
@@ -81,7 +88,8 @@ import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
         MatSortModule,
         MatMenuModule,
         NgxChartsModule,
-        MatListModule
+        MatListModule,
+        MatCardModule
     ],
     providers: [DatePipe, ExpenseService],
     bootstrap: [AppComponent]
