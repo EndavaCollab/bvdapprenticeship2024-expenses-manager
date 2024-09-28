@@ -1,19 +1,43 @@
 <div class="chart-container">
   <div class="date-picker-container">
-      <button mat-icon-button (click)="previousDay()">
+      <button mat-icon-button (click)="previousPeriod()">
           <mat-icon>chevron_left</mat-icon>
       </button>
 
-      <button mat-button (click)="picker.open()">
+      <div *ngIf="selectedTab=='Day'">
+        <button mat-button (click)="dayDatepicker.open()">
           {{ currentDate | date: 'EEEE - d MMMM y' }}
-      </button>
+          <input matInput [matDatepicker]="dayDatepicker" class="hidden-datepicker-input" (dateChange)="onDateChange($event)" [max]="maxDate">
+        </button>
+      </div>
 
-      <button mat-icon-button (click)="nextDay()">
+      <div *ngIf="selectedTab=='Month'">
+        <button mat-button (click)="monthDatepicker.open()">
+          {{ currentDate | date: 'MMMM y' }}
+          <input matInput [matDatepicker]="monthDatepicker" class="hidden-datepicker-input" [max]="maxDate">
+        </button>
+      </div>
+
+      <div *ngIf="selectedTab=='Year'">
+        <button mat-button (click)="yearDatepicker.open()">
+          {{ currentDate | date: 'y' }}
+          <input matInput [matDatepicker]="yearDatepicker" class="hidden-datepicker-input" [max]="maxDate">
+        </button>
+      </div>
+
+      <button mat-icon-button (click)="nextPeriod()">
           <mat-icon>chevron_right</mat-icon>
       </button>
 
-      <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" [max]="maxDate" style="display: none;">
-      <mat-datepicker #picker touchUi="true"></mat-datepicker>      
+      <mat-datepicker #dayDatepicker></mat-datepicker>
+      <mat-datepicker #monthDatepicker
+                      startView="multi-year"
+                      (monthSelected)="setMonth($event, monthDatepicker)">
+      </mat-datepicker>  
+      <mat-datepicker #yearDatepicker
+                      startView="multi-year"
+                      (yearSelected)="setYear($event, yearDatepicker)">
+      </mat-datepicker> 
   </div>
 
   <hr class="red-divider"> <!-- Linia roșie vizibilă -->

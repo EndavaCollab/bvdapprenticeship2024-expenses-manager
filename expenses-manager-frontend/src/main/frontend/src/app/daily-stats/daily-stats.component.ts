@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInput, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { ExpenseService } from '../services/expense-service/expense.service';
 import { CategoryService } from '../services/category-service/category.service';
 import { Category, Expense } from '../models';
@@ -8,7 +8,7 @@ import { Category, Expense } from '../models';
 @Component({
   selector: 'app-daily-stats',
   templateUrl: './daily-stats.component.html',
-  styleUrls: ['./daily-stats.component.css']
+  styleUrls: ['./daily-stats.component.scss']
 })
 export class DailyStatsComponent implements OnInit {
 
@@ -22,12 +22,48 @@ export class DailyStatsComponent implements OnInit {
   data: { name: string, value: number, color: string }[] = [];  
   showChart = false; 
 
+  private _selectedTab = ''; 
+
+  @Input()
+  set selectedTab(value: string) {
+    if (value !== this._selectedTab) { 
+      this._selectedTab = value;  
+      this.onTabChange(); 
+    }
+  }
+
+  get selectedTab(): string {
+    return this._selectedTab;
+  }
+
   colorScheme: Color = {
     name: 'custom',
     selectable: true,
     group: ScaleType.Ordinal,
     domain: []
   };
+
+  onTabChange() {
+    switch (this._selectedTab) {
+      case 'Day':
+        break;
+
+      case 'Week':
+        break;
+
+      case 'Month':
+        this.currentDate.setDate(1);
+        break;
+
+      case 'Year':
+        this.currentDate.setMonth(0);
+        this.currentDate.setDate(1);
+        break;
+
+      case 'Custom':
+        break;
+    }
+  }
 
   constructor(
     private expenseService: ExpenseService, 
@@ -37,7 +73,7 @@ export class DailyStatsComponent implements OnInit {
   ngOnInit(): void {
     this.setDate();
     this.fetchCategories();
-    this.fetchDataForSelectedDate(this.currentDate);
+    this.fetchDataForSelectedDate();
     this.fetchExpenses();
   }
 
@@ -62,7 +98,28 @@ export class DailyStatsComponent implements OnInit {
   onDateChange(event: MatDatepickerInputEvent<Date>): void {
     if (event.value) {
       this.currentDate = event.value;
-      this.fetchDataForSelectedDate(this.currentDate);
+      this.fetchDataForSelectedDate();
+    }
+  }
+
+  setYear(date: Date, datepicker: MatDatepicker<Date>) {
+    if (date) {
+      const updatedDate = new Date(this.currentDate);
+      updatedDate.setFullYear(date.getFullYear());
+      this.currentDate = updatedDate;
+
+      this.fetchDataForSelectedDate();
+      datepicker.close();
+    }
+  }
+
+  setMonth(date: Date, datepicker: MatDatepicker<Date>) {
+    if (date) {
+      const updatedDate = new Date(this.currentDate);
+      updatedDate.setFullYear(date.getFullYear(), date.getMonth());
+      this.currentDate = updatedDate;
+      this.fetchDataForSelectedDate();
+      datepicker.close();
     }
   }
 
@@ -75,18 +132,36 @@ export class DailyStatsComponent implements OnInit {
     this.endDate.setSeconds(59);
   }
 
-  previousDay(): void {
-    this.currentDate.setDate(this.currentDate.getDate() - 1);
-    this.currentDate = new Date(this.currentDate); 
-    this.fetchDataForSelectedDate(this.currentDate);
+  previousPeriod(): void {
+    if (this._selectedTab == "Year") {
+      this.currentDate.setFullYear(this.currentDate.getFullYear() - 1);
+      this.currentDate = new Date(this.currentDate);
+    }
+    if (this._selectedTab == "Month") {
+      this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+      this.currentDate = new Date(this.currentDate);
+    }
+    if (this._selectedTab == "Day") {
+      this.currentDate.setDate(this.currentDate.getDate() - 1);
+      this.currentDate = new Date(this.currentDate);
+    }
+    this.fetchDataForSelectedDate();
   }
 
-  nextDay(): void {
+  nextPeriod(): void {
     const tomorrow = new Date(this.currentDate);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    if (this._selectedTab == "Year") {
+      tomorrow.setFullYear(tomorrow.getFullYear() + 1);
+    }
+    if (this._selectedTab == "Month") {
+      tomorrow.setMonth(tomorrow.getMonth() + 1);
+    }
+    if (this._selectedTab == "Day") {
+      tomorrow.setDate(tomorrow.getDate() + 1);
+    }
     if (tomorrow <= this.maxDate) {
       this.currentDate = tomorrow;
-      this.fetchDataForSelectedDate(this.currentDate);
+      this.fetchDataForSelectedDate();
     }
   }
 
@@ -96,11 +171,33 @@ export class DailyStatsComponent implements OnInit {
     return category?.description || 'Unknown';
   }
   
-  fetchDataForSelectedDate(date: Date): void {
+  fetchDataForSelectedDate(): void {
     this.data = [];
-    this.startDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-    this.endDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    this.updateStartAndEndDates()
     this.fetch();
+  }
+
+  updateStartAndEndDates() {
+    if (this._selectedTab=="Year"){
+      this.startDate.setFullYear(this.currentDate.getFullYear(), 0, 1);
+      this.endDate.setFullYear(this.currentDate.getFullYear(), 11, 31);
+    }
+    if (this._selectedTab=="Month"){
+      this.startDate.setFullYear(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1);
+      const lastDayOfMonth = new Date(this.startDate);
+      lastDayOfMonth.setMonth(this.startDate.getMonth() + 1);
+      lastDayOfMonth.setDate(this.startDate.getDate() - 1);
+      
+      lastDayOfMonth.setHours(23);
+      lastDayOfMonth.setMinutes(59);
+      lastDayOfMonth.setSeconds(59);
+      this.endDate = lastDayOfMonth;
+    }
+
+    if (this._selectedTab == "Day") {
+      this.startDate.setFullYear(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate());
+      this.endDate.setFullYear(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate());
+    }
   }
   
   fetch(): void {
