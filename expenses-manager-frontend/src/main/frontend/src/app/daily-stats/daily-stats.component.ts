@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { ExpenseService } from '../services/expense-service/expense.service';
@@ -6,13 +6,15 @@ import { CategoryService } from '../services/category-service/category.service';
 import { Category, Expense } from '../models';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { ReloadService } from '../services/reload-service/reload.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-daily-stats',
   templateUrl: './daily-stats.component.html',
   styleUrls: ['./daily-stats.component.css']
 })
-export class DailyStatsComponent implements OnInit {
+export class DailyStatsComponent implements OnInit, OnDestroy {
 
   @Input() selectedTab="";
   @Input() startDate!:Date;
@@ -36,9 +38,12 @@ export class DailyStatsComponent implements OnInit {
     domain: []
   };
 
+  private destroy$ = new Subject<void>();
+
   constructor(public router: Router,
     private expenseService: ExpenseService, 
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private reloadService: ReloadService
   ) { }
 
   ngOnInit(): void {
@@ -61,6 +66,17 @@ export class DailyStatsComponent implements OnInit {
       .subscribe(() => {
         this.updateChartView();
       });
+
+    this.reloadService.reloadComponents$
+      .pipe(takeUntil(this.destroy$)) 
+      .subscribe(() => {
+        this.fetchDataForSelectedDate(this.currentDate);
+      });
+    }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   fetchCategories(): void {

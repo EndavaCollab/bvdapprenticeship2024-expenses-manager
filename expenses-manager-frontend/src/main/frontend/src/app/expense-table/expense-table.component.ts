@@ -10,9 +10,9 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 
 import * as _moment from 'moment';
 import { Moment } from 'moment';
-import * as moment from 'moment';
 import { AddExpenseDialogComponent } from '../add-expense-dialog/add-expense-dialog.component';
 import { Sort } from '@angular/material/sort';
+import { ReloadService } from '../services/reload-service/reload.service';
 
 @Component({
   selector: 'app-expense-table',
@@ -44,6 +44,7 @@ export class ExpenseTableComponent implements OnInit {
     private expenseService: ExpenseService,
     private categoryService: CategoryService,
     private currencyService: CurrencyService,
+    private reloadService: ReloadService,
     private dialog: MatDialog
   ) { }
 
@@ -182,6 +183,8 @@ export class ExpenseTableComponent implements OnInit {
           this.expenseService.updateExpense(expense.id, expense).subscribe({
             next: () => {
               this.fetchExpenses(); // Refresh the expense list after update
+              this.reloadService.reloadComponents();
+              this.reloadService.reloadExpenses();
             },
             error: (error) => {
               console.error('Error updating expense:', error); // Log if there's an error
@@ -216,6 +219,8 @@ export class ExpenseTableComponent implements OnInit {
           this.expenseService.deleteExpense(expense.id).subscribe({
             next: () => {
               this.fetchExpenses();
+              this.reloadService.reloadComponents();
+              this.reloadService.reloadExpenses();
             },
             error: (error) => {
               console.error('Error deleting expense:', error);
