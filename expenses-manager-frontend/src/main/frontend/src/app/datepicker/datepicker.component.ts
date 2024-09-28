@@ -4,6 +4,7 @@ import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepi
 
 import * as moment from 'moment';
 import { Moment } from 'moment';
+import { ReloadService } from '../services/reload-service/reload.service';
 
 @Component({
   selector: 'app-datepicker',
@@ -15,33 +16,19 @@ export class DatepickerComponent implements OnInit {
   date = new FormControl(moment());
   currentDate:Date = new Date();
 
-  private _selectedTab = ''; // Variabilă internă pentru stocarea valorii
+  public selectedTab = ''; // Variabilă internă pentru stocarea valorii
 
   @Input() startDate!: Date;
   @Input() endDate!: Date;
-
-  // Setter-ul este apelat automat când se schimbă valoarea din exterior
-  @Input()
-  set selectedTab(value: string) {
-    if (value !== this._selectedTab) { // Verificăm dacă valoarea s-a schimbat
-      this._selectedTab = value;  // Setăm noua valoare
-      this.onTabChange(); // Apelează funcția când valoarea se modifică
-    }
-  }
-
-  // Getter-ul permite accesarea valorii din interiorul componentei
-  get selectedTab(): string {
-    return this._selectedTab;
-  }
 
   @Output() startDateChange = new EventEmitter<Date>();
   @Output() endDateChange = new EventEmitter<Date>();
 
   @Output() updateRequest = new EventEmitter();
 
-  onTabChange() {
+  onTabChange(period: string) {
     const momentDate = this.date.value;
-    switch (this._selectedTab) {
+    switch (period) {
       case 'Day':
         this.startDate = new Date(momentDate.year(), momentDate.month(), momentDate.date(), 0, 0, 0);
         this.endDate = new Date(momentDate.year(), momentDate.month(), momentDate.date(), 23, 59, 59);
@@ -77,9 +64,15 @@ export class DatepickerComponent implements OnInit {
         break;
     }
   }
-  constructor() { }
+  constructor(public reloadService: ReloadService) { }
 
   ngOnInit(): void {
+    this.reloadService.tabChange$.subscribe(tabName => {
+      if (tabName) {
+        this.selectedTab=tabName;
+        this.onTabChange(tabName);
+      }
+    });
   }
 
   setDay(event: MatDatepickerInputEvent<Date>, datepicker: MatDatepicker<Moment>) {

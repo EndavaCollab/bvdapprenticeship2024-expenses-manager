@@ -39,12 +39,10 @@ import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import {MatTabsModule} from "@angular/material/tabs";
 import {TopbarComponent} from "./topbar/topbar.component";
 import { DatePipe } from '@angular/common';
-import { ExpenseTableComponent } from './expense-table/expense-table.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { NotificationComponent } from './notification/notification.component';
 import {MatListModule} from "@angular/material/list";
 import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
-import { ReportsOverviewComponent } from './reports-overview/reports-overview.component';
 import { DatepickerComponent } from './datepicker/datepicker.component';
 import { EvolutionChartComponent } from './evolution-chart/evolution-chart.component';
 
@@ -58,12 +56,10 @@ import { EvolutionChartComponent } from './evolution-chart/evolution-chart.compo
         LoginComponent,
         AddExpenseDialogComponent,
         TopbarComponent,
-        ExpenseTableComponent,
         NotificationComponent,
         DailyStatsComponent,
         ConfirmDialogComponent,
         RightSidebarComponent,
-        ReportsOverviewComponent,
         DatepickerComponent,
         EvolutionChartComponent
     ],
