@@ -121,9 +121,6 @@ export class ExpenseTableComponent implements OnInit {
         this.startDate = new Date(momentDate.year(), 0, 1, 0, 0, 0);
         this.endDate = new Date(momentDate.year(), 11, 31, 23, 59, 59);
         break;
-
-      case 'Custom':
-        break;
     }
   }
 

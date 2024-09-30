@@ -90,9 +90,6 @@ export class DailyStatsComponent implements OnInit {
         this.currentDate.setMonth(0);
         this.currentDate.setDate(1);
         break;
-
-      case 'Custom':
-        break;
     }
   }
 
@@ -173,51 +170,58 @@ export class DailyStatsComponent implements OnInit {
   }
 
   previousPeriod(): void {
-    if (this._selectedTab == "Year") {
-      this.currentDate.setFullYear(this.currentDate.getFullYear() - 1);
-      this.currentDate = new Date(this.currentDate);
+    switch (this._selectedTab) {
+      case 'Day':
+        this.currentDate.setDate(this.currentDate.getDate() - 1);
+        break;
+
+      case 'Week':
+        this.currentDate.setDate(this.currentDate.getDate() - 7);
+        break;
+        
+      case 'Month':
+        this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+        break;
+
+      case 'Year':
+        this.currentDate.setFullYear(this.currentDate.getFullYear() - 1);
+        break;
     }
-    if (this._selectedTab == "Month") {
-      this.currentDate.setMonth(this.currentDate.getMonth() - 1);
-      this.currentDate = new Date(this.currentDate);
-    }
-    if (this._selectedTab == "Week") {
-      this.currentDate.setDate(this.currentDate.getDate() - 7);
-      this.currentDate = new Date(this.currentDate);
-    }
-    if (this._selectedTab == "Day") {
-      this.currentDate.setDate(this.currentDate.getDate() - 1);
-      this.currentDate = new Date(this.currentDate);
-    }
+    this.currentDate = new Date(this.currentDate);
     this.fetchDataForSelectedDate();
   }
 
   nextPeriod(): void {
-    const tomorrow = new Date(this.currentDate);
-    if (this._selectedTab == "Year") {
-      tomorrow.setFullYear(tomorrow.getFullYear() + 1);
+    const nextPeriod = new Date(this.currentDate);
+    switch (this._selectedTab) {
+      case 'Day':
+        nextPeriod.setDate(nextPeriod.getDate() + 1);
+        break;
+        
+      case 'Month':
+        nextPeriod.setMonth(nextPeriod.getMonth() + 1);
+        break;
+
+      case 'Year':
+        nextPeriod.setFullYear(nextPeriod.getFullYear() + 1);
+        break;
     }
-    if (this._selectedTab == "Month") {
-      tomorrow.setMonth(tomorrow.getMonth() + 1);
+    if (nextPeriod <= this.maxDate) {
+      this.currentDate = nextPeriod;
+      this.fetchDataForSelectedDate();
     }
+
     if (this._selectedTab == "Week") {
-      tomorrow.setDate(tomorrow.getDate() + 7);
+      nextPeriod.setDate(nextPeriod.getDate() + 7);
     
-      const endOfWeek = new Date(tomorrow);
+      const endOfWeek = new Date(nextPeriod);
       endOfWeek.setDate(endOfWeek.getDate() + 3);
       console.log(endOfWeek, this.weekMaxDate) 
 
       if (endOfWeek <= this.weekMaxDate) {
-        this.currentDate = tomorrow;
+        this.currentDate = nextPeriod;
         this.fetchDataForSelectedDate();
       }
-    }
-    if (this._selectedTab == "Day") {
-      tomorrow.setDate(tomorrow.getDate() + 1);
-    }
-    if (tomorrow <= this.maxDate) {
-      this.currentDate = tomorrow;
-      this.fetchDataForSelectedDate();
     }
   }
 
