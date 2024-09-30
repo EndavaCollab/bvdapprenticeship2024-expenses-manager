@@ -1,14 +1,50 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
-import { MatDatepicker, MatDatepickerInput, MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInput, MatDatepickerInputEvent, MatDateRangePicker } from '@angular/material/datepicker';
 import { ExpenseService } from '../services/expense-service/expense.service';
 import { CategoryService } from '../services/category-service/category.service';
 import { Category, Expense } from '../models';
 
+import {
+  MatDateRangeSelectionStrategy,
+  DateRange,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
+} from '@angular/material/datepicker';
+import { DateAdapter } from '@angular/material/core';
+
+@Injectable()
+export class SevenDayRangeSelectionStrategy<D> implements MatDateRangeSelectionStrategy<D> {
+  constructor(private _dateAdapter: DateAdapter<D>) {}
+
+  selectionFinished(date: D | null): DateRange<D> {
+    return this._createSevenDayRange(date);
+  }
+
+  createPreview(activeDate: D | null): DateRange<D> {
+    return this._createSevenDayRange(activeDate);
+  }
+
+  private _createSevenDayRange(date: D | null): DateRange<D> {
+    if (date) {
+      const start = this._dateAdapter.addCalendarDays(date, -3);
+      const end = this._dateAdapter.addCalendarDays(date, 3);
+      return new DateRange<D>(start, end);
+    }
+
+    return new DateRange<D>(null, null);
+  }
+}
+
 @Component({
   selector: 'app-daily-stats',
   templateUrl: './daily-stats.component.html',
-  styleUrls: ['./daily-stats.component.scss']
+  styleUrls: ['./daily-stats.component.scss'],
+  providers: [
+    {
+      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+      useClass: SevenDayRangeSelectionStrategy,
+    },
+  ],
 })
 export class DailyStatsComponent implements OnInit {
 
@@ -16,6 +52,7 @@ export class DailyStatsComponent implements OnInit {
   maxDate = new Date(); 
   startDate = new Date();
   endDate = new Date();
+  weekMaxDate: Date = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + 3, 23, 59, 59);
 
   categories: Category[] = []; 
   expenses: Expense[] = [];
@@ -45,12 +82,6 @@ export class DailyStatsComponent implements OnInit {
 
   onTabChange() {
     switch (this._selectedTab) {
-      case 'Day':
-        break;
-
-      case 'Week':
-        break;
-
       case 'Month':
         this.currentDate.setDate(1);
         break;
@@ -123,6 +154,15 @@ export class DailyStatsComponent implements OnInit {
     }
   }
 
+  setWeek(event: MatDatepickerInputEvent<Date>): void {
+    if (event.value) {
+      const updatedDate = new Date();
+      updatedDate.setFullYear(event.value.getFullYear(), event.value.getMonth(), event.value.getDate()+3);
+      this.currentDate = updatedDate;
+      this.fetchDataForSelectedDate();
+    }
+  }
+
   setDate(): void {
     this.startDate.setHours(0);
     this.startDate.setMinutes(0);
@@ -141,6 +181,10 @@ export class DailyStatsComponent implements OnInit {
       this.currentDate.setMonth(this.currentDate.getMonth() - 1);
       this.currentDate = new Date(this.currentDate);
     }
+    if (this._selectedTab == "Week") {
+      this.currentDate.setDate(this.currentDate.getDate() - 7);
+      this.currentDate = new Date(this.currentDate);
+    }
     if (this._selectedTab == "Day") {
       this.currentDate.setDate(this.currentDate.getDate() - 1);
       this.currentDate = new Date(this.currentDate);
@@ -155,6 +199,18 @@ export class DailyStatsComponent implements OnInit {
     }
     if (this._selectedTab == "Month") {
       tomorrow.setMonth(tomorrow.getMonth() + 1);
+    }
+    if (this._selectedTab == "Week") {
+      tomorrow.setDate(tomorrow.getDate() + 7);
+    
+      const endOfWeek = new Date(tomorrow);
+      endOfWeek.setDate(endOfWeek.getDate() + 3);
+      console.log(endOfWeek, this.weekMaxDate) 
+
+      if (endOfWeek <= this.weekMaxDate) {
+        this.currentDate = tomorrow;
+        this.fetchDataForSelectedDate();
+      }
     }
     if (this._selectedTab == "Day") {
       tomorrow.setDate(tomorrow.getDate() + 1);
@@ -173,7 +229,7 @@ export class DailyStatsComponent implements OnInit {
   
   fetchDataForSelectedDate(): void {
     this.data = [];
-    this.updateStartAndEndDates()
+    this.updateStartAndEndDates();
     this.fetch();
   }
 
@@ -192,6 +248,14 @@ export class DailyStatsComponent implements OnInit {
       lastDayOfMonth.setMinutes(59);
       lastDayOfMonth.setSeconds(59);
       this.endDate = lastDayOfMonth;
+    }
+
+    if (this._selectedTab == "Week"){
+      this.startDate = new Date(this.currentDate);
+      this.startDate.setDate(this.currentDate.getDate() - 3);
+      this.endDate = new Date(this.currentDate);
+      this.endDate.setDate(this.currentDate.getDate() + 3);
+      this.setDate();
     }
 
     if (this._selectedTab == "Day") {
@@ -246,4 +310,26 @@ export class DailyStatsComponent implements OnInit {
     return this.categories.filter(cat => categoryNames.includes(cat.description));
   }
   
+  openDatepicker(datepicker: MatDatepicker<moment.Moment>) {
+    datepicker.open();
+    this.updateOverlay();
+  }
+
+  openWeekDatepicker(datepicker: MatDateRangePicker<Date>) {
+    datepicker.open();
+    this.updateOverlay();
+  }
+
+  private updateOverlay() {
+    setTimeout(() => {
+      const changeViewButton = document.querySelector('.mat-calendar-period-button');
+      if (changeViewButton) {
+        if (this.selectedTab !== "Day" && this.selectedTab !== "Week") {
+          changeViewButton.classList.add('hide-change-view-button');
+        } else {
+          changeViewButton.classList.remove('hide-change-view-button');
+        }
+      }
+    }, 0);
+  }
 }

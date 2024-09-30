@@ -75,3 +75,7 @@
     transform: translateX(-50%) !important; 
     z-index: 1000 !important; 
 }
+
+::ng-deep .hide-change-view-button {
+    display: none !important;
+}

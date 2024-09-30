@@ -5,21 +5,31 @@
       </button>
 
       <div *ngIf="selectedTab=='Day'">
-        <button mat-button (click)="dayDatepicker.open()">
+        <button mat-button (click)="openDatepicker(dayDatepicker)">
           {{ currentDate | date: 'EEEE - d MMMM y' }}
           <input matInput [matDatepicker]="dayDatepicker" class="hidden-datepicker-input" (dateChange)="onDateChange($event)" [max]="maxDate">
         </button>
       </div>
 
+      <div *ngIf="selectedTab=='Week'">
+        <button mat-button (click)="openWeekDatepicker(weekDatepicker)">
+          <mat-date-range-input [rangePicker]="weekDatepicker" class="hidden-datepicker-input" [max]="weekMaxDate | date:'yyyy-MM-dd'"><
+            <input matStartDate (dateChange)="setWeek($event)">
+            <input matEndDate>
+          </mat-date-range-input>
+          {{ startDate | date: 'dd MMMM y' }}-{{ endDate | date: 'dd MMMM y' }}
+        </button>
+      </div>
+
       <div *ngIf="selectedTab=='Month'">
-        <button mat-button (click)="monthDatepicker.open()">
+        <button mat-button (click)="openDatepicker(monthDatepicker)">
           {{ currentDate | date: 'MMMM y' }}
           <input matInput [matDatepicker]="monthDatepicker" class="hidden-datepicker-input" [max]="maxDate">
         </button>
       </div>
 
       <div *ngIf="selectedTab=='Year'">
-        <button mat-button (click)="yearDatepicker.open()">
+        <button mat-button (click)="openDatepicker(yearDatepicker)">
           {{ currentDate | date: 'y' }}
           <input matInput [matDatepicker]="yearDatepicker" class="hidden-datepicker-input" [max]="maxDate">
         </button>
@@ -30,8 +40,9 @@
       </button>
 
       <mat-datepicker #dayDatepicker></mat-datepicker>
+      <mat-date-range-picker #weekDatepicker></mat-date-range-picker>
       <mat-datepicker #monthDatepicker
-                      startView="multi-year"
+                      startView="year"
                       (monthSelected)="setMonth($event, monthDatepicker)">
       </mat-datepicker>  
       <mat-datepicker #yearDatepicker
@@ -64,6 +75,6 @@
   </div>
 
   <div *ngIf="!showChart" class="no-expenses-message">
-      No expenses found! Please select another day.
+      No expenses found! Please select another date.
   </div>
 </div>
