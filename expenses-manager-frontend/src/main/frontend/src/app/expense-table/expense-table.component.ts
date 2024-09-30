@@ -21,6 +21,7 @@ import {
   DateRange,
   MAT_DATE_RANGE_SELECTION_STRATEGY,
 } from '@angular/material/datepicker';
+import * as moment from 'moment';
 
 @Injectable()
 export class SevenDayRangeSelectionStrategy<D> implements MatDateRangeSelectionStrategy<D> {

@@ -111,7 +111,7 @@ export class DailyStatsComponent implements OnInit, OnDestroy {
     this.reloadService.reloadComponents$
       .pipe(takeUntil(this.destroy$)) 
       .subscribe(() => {
-        this.fetchDataForSelectedDate(this.currentDate);
+        this.fetchDataForSelectedDate();
       });
     }
 
