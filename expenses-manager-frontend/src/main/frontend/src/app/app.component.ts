@@ -9,5 +9,5 @@ import { Router } from '@angular/router';
 export class AppComponent {
     title = 'expenses-manager';
     
-    constructor(public routes: Router) { }
+    constructor(public router: Router) { }
 }

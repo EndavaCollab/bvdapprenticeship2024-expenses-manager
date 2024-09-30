@@ -26,6 +26,7 @@ import { DailyStatsComponent } from './daily-stats/daily-stats.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ExpenseService } from './services/expense-service/expense.service';
 
+import {MatCardModule} from '@angular/material/card';
 
 import { AddExpenseDialogComponent } from './add-expense-dialog/add-expense-dialog.component';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -38,11 +39,12 @@ import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import {MatTabsModule} from "@angular/material/tabs";
 import {TopbarComponent} from "./topbar/topbar.component";
 import { DatePipe } from '@angular/common';
-import { ExpenseTableComponent } from './expense-table/expense-table.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { NotificationComponent } from './notification/notification.component';
 import {MatListModule} from "@angular/material/list";
 import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
+import { DatepickerComponent } from './datepicker/datepicker.component';
+import { EvolutionChartComponent } from './evolution-chart/evolution-chart.component';
 
 @NgModule({
     declarations: [
@@ -54,11 +56,12 @@ import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
         LoginComponent,
         AddExpenseDialogComponent,
         TopbarComponent,
-        ExpenseTableComponent,
         NotificationComponent,
         DailyStatsComponent,
         ConfirmDialogComponent,
-        RightSidebarComponent
+        RightSidebarComponent,
+        DatepickerComponent,
+        EvolutionChartComponent
     ],
     imports: [
         BrowserModule,
@@ -81,7 +84,8 @@ import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
         MatSortModule,
         MatMenuModule,
         NgxChartsModule,
-        MatListModule
+        MatListModule,
+        MatCardModule
     ],
     providers: [DatePipe, ExpenseService],
     bootstrap: [AppComponent]

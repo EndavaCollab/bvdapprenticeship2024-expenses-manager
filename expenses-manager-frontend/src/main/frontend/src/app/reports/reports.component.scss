@@ -1,0 +1,36 @@
+.container {
+    margin-block: 2.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.row{
+    inline-size: 100%;
+}
+
+.overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.card {
+    margin: 1rem;
+    padding: 1.6rem;
+    box-shadow: 0 0.5rem 1rem var(--shadow-color);
+    border-radius: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+}
+.card-title {
+    margin-block-end: 3.3rem;
+    font-size: 1.6rem;
+}
+.card-subtitle {
+    font-weight: 600;
+    font-size: 2.4rem;
+}
+.card-title,
+.card-subtitle {
+    font-family: var(--font-family);
+}

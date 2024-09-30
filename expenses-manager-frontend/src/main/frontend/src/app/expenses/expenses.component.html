@@ -1,0 +1,120 @@
+<app-datepicker [(startDate)]="startDate" [(endDate)]="endDate" (updateRequest)="update()"></app-datepicker>
+
+<table mat-table [dataSource]="expenses" matSort (matSortChange)="sortData($event)" class="expense-table">
+  
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef class="column"> Actions </th>
+    <td mat-cell class="column" *matCellDef="let element">
+      <button class="actions-button" (click)="toggleActions(element.id)">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <div *ngIf="showActionsMap[element.id]">
+        <button mat-icon-button (click)="openEditExpenseDialog(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="confirmDelete(element)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="column"> Date </th>
+    <td mat-cell class="column" *matCellDef="let element"> {{element.date | date: 'dd/MM/yyyy'}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="amount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="column"> Amount </th>
+    <td mat-cell class="column" *matCellDef="let element"> {{element.amount}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="currency">
+    <th mat-header-cell *matHeaderCellDef class="column">
+      <div class="filter-header"> Currency 
+        <button mat-icon-button class="filter-button" [matMenuTriggerFor]="currencyMenu">
+          <img src="../../assets/images/filter.svg">
+        </button>
+        <mat-menu #currencyMenu="matMenu">
+          <ng-container *ngFor="let currency of currencies">
+            <button mat-menu-item (click)="filterByCurrency(currency)">{{currency.code}} </button>
+          </ng-container>
+        </mat-menu>
+      </div>
+    </th>
+    <td mat-cell class="column" *matCellDef="let element"> {{getCurrencyCode(element.currencyId)}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="category">
+    <th mat-header-cell *matHeaderCellDef class="column">
+      <div class="filter-header"> Category
+        <button mat-icon-button class="filter-button" [matMenuTriggerFor]="categoryMenu">
+          <img src="../../assets/images/filter.svg">
+        </button>
+        <mat-menu #categoryMenu="matMenu">
+          <ng-container *ngFor="let category of categories">
+            <button class="category-button" [ngStyle]="{'color': category.color, 
+            'background-color': hexToRgba(category.color)}" mat-menu-item (click)="filterByCategory(category)">{{category.description}} </button>
+          </ng-container>
+        </mat-menu>
+      </div>
+    </th>
+    <td mat-cell class="column" *matCellDef="let element">
+      <div class="category-text" [ngStyle]="{'color': getCategoryColor(element.categoryId), 
+      'background-color': hexToRgba(getCategoryColor(element.categoryId))}">
+        {{getCategoryDescription(element.categoryId)}}
+      </div> 
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef class="column"> Description </th>
+    <td mat-cell class="column description" *matCellDef="let element">
+      <div class="description-content">
+        {{element.description}}
+      </div>
+    </td>
+  </ng-container>
+  
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<div class="paginator">
+  <!-- Buton Previous -->
+  <button class="paginator-button" (click)="goToPreviousPage()" [disabled]="currentPage === 1">
+    &lt;
+  </button>
+
+  <!-- Prima pagină -->
+  <button class="paginator-button" (click)="goToPage(1)" [class.active]="currentPage === 1">
+    1
+  </button>
+
+  <!-- Puncte "..." înainte, dacă suntem pe pagina 5 sau mai departe -->
+  <button class="paginator-button" *ngIf="(currentPage > 3) && (maxPages > 5)">
+    ...
+  </button>
+
+  <!-- Pagini din mijloc -->
+  <ng-container *ngFor="let page of getMiddlePages()">
+    <button class="paginator-button" (click)="goToPage(page)" [class.active]="currentPage === page">
+      {{ page }}
+    </button>
+  </ng-container>
+
+  <!-- Puncte "..." după, dacă suntem pe pagina 6 sau mai înainte și sunt mai multe pagini -->
+  <button class="paginator-button" *ngIf="(currentPage < maxPages - 2) && (maxPages > 5)">
+    ...
+  </button>
+
+  <!-- Ultima pagină -->
+  <button class="paginator-button" (click)="goToPage(maxPages)" [class.active]="currentPage === maxPages" *ngIf="maxPages > 5">
+    {{ maxPages }}
+  </button>
+
+  <!-- Buton Next -->
+  <button class="paginator-button" (click)="goToNextPage()" [disabled]="currentPage === maxPages || maxPages==0">
+    &gt;
+  </button>
+</div>

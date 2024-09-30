@@ -1,15 +1,41 @@
 .container{
     display: grid;
     grid-template-columns: 22rem 1fr 40rem;
+    grid-template-rows: 7.1rem 1fr;
     height: 100%;
     padding-left: 0%;
     max-inline-size: unset;
 }
 
-.notifications{
-    position:fixed;
-    top: 2rem; 
-    left: 2rem; 
+app-sidebar {
+    grid-column: 1;
+    grid-row: span 2;
+}
+
+app-topbar {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+app-expenses {
+    grid-column: 2 / span 2;
+    grid-row: 2 / span 2;
+}
+
+app-reports {
+    grid-column: 2 / span 2;
+    grid-row: 2 / span 2;
+}
+
+app-right-sidebar {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.notifications {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
     inline-size: calc(100% - 4rem);
-    z-index: 1000; 
+    z-index: 1000;
 }

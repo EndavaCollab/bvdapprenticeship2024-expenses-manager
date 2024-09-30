@@ -1,9 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { ExpenseService } from '../services/expense-service/expense.service';
 import { CategoryService } from '../services/category-service/category.service';
 import { Category, Expense } from '../models';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 import { ReloadService } from '../services/reload-service/reload.service';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -14,10 +16,15 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class DailyStatsComponent implements OnInit, OnDestroy {
 
+  @Input() selectedTab="";
+  @Input() startDate!:Date;
+  @Input() endDate!:Date;
+
+  chartView: [number, number] = [300, 300];
   currentDate = new Date();
   maxDate = new Date(); 
-  startDate = new Date();
-  endDate = new Date();
+  pickedStartDate = new Date();
+  pickedEndDate = new Date();
 
   categories: Category[] = []; 
   expenses: Expense[] = [];
@@ -33,17 +40,32 @@ export class DailyStatsComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(
+  constructor(public router: Router,
     private expenseService: ExpenseService, 
     private categoryService: CategoryService,
     private reloadService: ReloadService
   ) { }
 
   ngOnInit(): void {
-    this.setDate();
-    this.fetchCategories();
-    this.fetchDataForSelectedDate(this.currentDate);
-    this.fetchExpenses();
+    if (this.router.url==='/home'){
+
+      this.setDate();
+      this.fetchCategories();
+      this.fetchDataForSelectedDate(this.currentDate);
+      this.fetchExpenses(this.pickedStartDate, this.pickedEndDate);
+    }
+    else{
+      this.fetchCategories();
+      this.fetchExpenses(this.startDate, this.endDate);
+      
+    }
+    this.updateChartView();
+
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.updateChartView();
+      });
 
     this.reloadService.reloadComponents$
       .pipe(takeUntil(this.destroy$)) 
@@ -64,8 +86,8 @@ export class DailyStatsComponent implements OnInit, OnDestroy {
     });
   }
 
-  fetchExpenses(): void {
-    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+  fetchExpenses(startDate:Date, endDate:Date): void {
+    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), startDate, endDate, this.reloadService.getCurrentCurrency()).subscribe({
       next: (expenses: Expense[]) => {
         this.expenses = expenses;
       },
@@ -83,12 +105,12 @@ export class DailyStatsComponent implements OnInit, OnDestroy {
   }
 
   setDate(): void {
-    this.startDate.setHours(0);
-    this.startDate.setMinutes(0);
-    this.startDate.setSeconds(0);
-    this.endDate.setHours(23);
-    this.endDate.setMinutes(59);
-    this.endDate.setSeconds(59);
+    this.pickedStartDate.setHours(0);
+    this.pickedStartDate.setMinutes(0);
+    this.pickedStartDate.setSeconds(0);
+    this.pickedEndDate.setHours(23);
+    this.pickedEndDate.setMinutes(59);
+    this.pickedEndDate.setSeconds(59);
   }
 
   previousDay(): void {
@@ -114,13 +136,13 @@ export class DailyStatsComponent implements OnInit, OnDestroy {
   
   fetchDataForSelectedDate(date: Date): void {
     this.data = [];
-    this.startDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-    this.endDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-    this.fetch();
+    this.pickedStartDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    this.pickedEndDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    this.fetch(this.pickedStartDate, this.pickedEndDate);
   }
   
-  fetch(): void {
-    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+  fetch(startDate:Date, endDate:Date): void {
+    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), startDate, endDate, this.reloadService.getCurrentCurrency()).subscribe({
       next: (expenses: Expense[]) => {
         this.expenses = expenses;
         if (expenses.length === 0) {
@@ -165,4 +187,11 @@ export class DailyStatsComponent implements OnInit, OnDestroy {
     return this.categories.filter(cat => categoryNames.includes(cat.description));
   }
   
+  updateChartView() {
+    if (this.router.url === '/reports') {
+      this.chartView = [200, 200]; // Dimensiuni pentru ruta reports
+    } else {
+      this.chartView = [300, 300]; // Dimensiuni pentru alte rute
+    }
+  }
 }

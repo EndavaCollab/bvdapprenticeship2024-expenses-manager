@@ -69,6 +69,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
         endOfWeek.setHours(23, 59, 59);
 
         this.getTotalAmount(this.userId, startOfWeek, endOfWeek);
+
         break;
 
       case 'Month':

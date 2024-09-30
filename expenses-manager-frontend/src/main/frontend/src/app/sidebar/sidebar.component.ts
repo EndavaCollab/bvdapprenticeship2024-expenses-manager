@@ -19,5 +19,4 @@ export class SidebarComponent implements OnInit {
       this.localService.removeData("name");
     this.router.navigate(['/login']); 
   }
-
 }
