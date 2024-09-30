@@ -18,6 +18,7 @@ export class AddExpenseDialogComponent implements OnInit {
   currentDate = new Date();
   submitted = false;
   isEditMode = false; // Variabilă pentru a determina modul de editare sau adăugare
+  description: string = '';
 
   categories: Category[] = [];
   currencies: Currency[] = [];
