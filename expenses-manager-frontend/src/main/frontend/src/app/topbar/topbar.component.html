@@ -6,8 +6,8 @@
           <div class="b-home">
             <button mat-button class="add-expense-button" (click)="openDialog()">+</button>
           </div>
-          <div style="margin: 1rem;"> 
-            <app-daily-stats selectedTab="{{tab}}"></app-daily-stats>
+          <div style="margin-top: 15rem;"> 
+            <app-daily-stats></app-daily-stats>
           </div>
         </ng-container>
         <ng-container *ngSwitchCase="'/expenses'" style="font-family: 'Outfit', sans-serif !important;">

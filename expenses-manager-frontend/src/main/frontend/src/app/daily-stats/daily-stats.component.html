@@ -1,54 +1,19 @@
 <div class="chart-container">
   <div class="date-picker-container">
-      <button mat-icon-button (click)="previousPeriod()">
+      <button mat-icon-button (click)="previousDay()">
           <mat-icon>chevron_left</mat-icon>
       </button>
 
-      <div *ngIf="selectedTab=='Day'">
-        <button mat-button (click)="openDatepicker(dayDatepicker)">
+      <button mat-button (click)="picker.open()">
           {{ currentDate | date: 'EEEE - d MMMM y' }}
-          <input matInput [matDatepicker]="dayDatepicker" class="hidden-datepicker-input" (dateChange)="onDateChange($event)" [max]="maxDate">
-        </button>
-      </div>
+      </button>
 
-      <div *ngIf="selectedTab=='Week'">
-        <button mat-button (click)="openWeekDatepicker(weekDatepicker)">
-          <mat-date-range-input [rangePicker]="weekDatepicker" class="hidden-datepicker-input" [max]="weekMaxDate | date:'yyyy-MM-dd'"><
-            <input matStartDate (dateChange)="setWeek($event)">
-            <input matEndDate>
-          </mat-date-range-input>
-          {{ startDate | date: 'dd MMMM y' }}-{{ endDate | date: 'dd MMMM y' }}
-        </button>
-      </div>
-
-      <div *ngIf="selectedTab=='Month'">
-        <button mat-button (click)="openDatepicker(monthDatepicker)">
-          {{ currentDate | date: 'MMMM y' }}
-          <input matInput [matDatepicker]="monthDatepicker" class="hidden-datepicker-input" [max]="maxDate">
-        </button>
-      </div>
-
-      <div *ngIf="selectedTab=='Year'">
-        <button mat-button (click)="openDatepicker(yearDatepicker)">
-          {{ currentDate | date: 'y' }}
-          <input matInput [matDatepicker]="yearDatepicker" class="hidden-datepicker-input" [max]="maxDate">
-        </button>
-      </div>
-
-      <button mat-icon-button (click)="nextPeriod()">
+      <button mat-icon-button (click)="nextDay()">
           <mat-icon>chevron_right</mat-icon>
       </button>
 
-      <mat-datepicker #dayDatepicker></mat-datepicker>
-      <mat-date-range-picker #weekDatepicker></mat-date-range-picker>
-      <mat-datepicker #monthDatepicker
-                      startView="year"
-                      (monthSelected)="setMonth($event, monthDatepicker)">
-      </mat-datepicker>  
-      <mat-datepicker #yearDatepicker
-                      startView="multi-year"
-                      (yearSelected)="setYear($event, yearDatepicker)">
-      </mat-datepicker> 
+      <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" [max]="maxDate" style="display: none;">
+      <mat-datepicker #picker touchUi="true"></mat-datepicker>      
   </div>
 
   <hr class="red-divider"> <!-- Linia roșie vizibilă -->
@@ -75,6 +40,6 @@
   </div>
 
   <div *ngIf="!showChart" class="no-expenses-message">
-      No expenses found! Please select another date.
+      No expenses found! Please select another day.
   </div>
 </div>

@@ -8,18 +8,6 @@
     <button class="date-buttons" (click)="goToNextDay()" [disabled]="disableButton()">&gt;</button>
   </div>
 
-  <div class="datepicker-buttons" *ngIf="selectedTab=='Week'">
-    <button class="date-buttons" (click)="goToPreviousWeek()">&lt;</button>
-    <button class="date-buttons date-picker-button" (click)="openWeekDatepicker(weekDatepicker)">
-      <mat-date-range-input [rangePicker]="weekDatepicker" class="hidden-datepicker-input" [max]="weekMaxDate | date:'yyyy-MM-dd'">
-        <input matStartDate (dateChange)="setWeek($event)">
-        <input matEndDate>
-      </mat-date-range-input>
-      {{ displayWeek() }}<mat-icon>expand_more</mat-icon>
-    </button>
-    <button class="date-buttons" (click)="goToNextWeek()" [disabled]="disableButton()">&gt;</button>
-  </div>
-
   <div class="datepicker-buttons" *ngIf="selectedTab=='Month'">
     <button class="date-buttons" (click)="goToPreviousMonth()">&lt;</button>
     <button class="date-buttons date-picker-button" (click)="openDatepicker(monthDatepicker)">
@@ -39,9 +27,8 @@
   </div>
 
   <mat-datepicker #dayDatepicker></mat-datepicker>
-  <mat-date-range-picker #weekDatepicker></mat-date-range-picker>
   <mat-datepicker #monthDatepicker
-                  startView="year"
+                  startView="multi-year"
                   (monthSelected)="setMonthAndYear($event, monthDatepicker)">
   </mat-datepicker>
   <mat-datepicker #yearDatepicker
