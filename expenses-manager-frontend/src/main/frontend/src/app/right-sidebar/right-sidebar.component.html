@@ -14,7 +14,7 @@
     <mat-list-item *ngFor="let item of date.value | keyvalue">
       <img src="../../assets/icons/{{ item.key }}.svg" class="icon-image" alt="icon">
       <h2 class="category">{{ item.key }}</h2>
-      <h2 class="price-tag">{{reloadService.getCurrentCurrency() + item.value}}</h2>
+      <h2 class="price-tag">{{ reloadService.getCurrentCurrency() }} {{ item.value | number:'1.0-2' }}</h2>
       <mat-divider></mat-divider>
     </mat-list-item>
   </div>

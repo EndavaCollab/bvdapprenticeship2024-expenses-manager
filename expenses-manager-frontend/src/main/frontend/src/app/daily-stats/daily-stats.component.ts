@@ -1,9 +1,11 @@
-import { Component, Injectable, Input, OnInit } from '@angular/core';
+import { Component, Injectable, Input, OnDestroy, OnInit } from '@angular/core';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerInputEvent, MatDateRangePicker } from '@angular/material/datepicker';
 import { ExpenseService } from '../services/expense-service/expense.service';
 import { CategoryService } from '../services/category-service/category.service';
 import { Category, Expense } from '../models';
+import { ReloadService } from '../services/reload-service/reload.service';
+import { Subject, takeUntil } from 'rxjs';
 
 import {
   MatDateRangeSelectionStrategy,
@@ -46,7 +48,7 @@ export class SevenDayRangeSelectionStrategy<D> implements MatDateRangeSelectionS
     },
   ],
 })
-export class DailyStatsComponent implements OnInit {
+export class DailyStatsComponent implements OnInit, OnDestroy {
 
   currentDate = new Date();
   maxDate = new Date(); 
@@ -92,10 +94,12 @@ export class DailyStatsComponent implements OnInit {
         break;
     }
   }
+  private destroy$ = new Subject<void>();
 
   constructor(
     private expenseService: ExpenseService, 
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private reloadService: ReloadService
   ) { }
 
   ngOnInit(): void {
@@ -103,6 +107,17 @@ export class DailyStatsComponent implements OnInit {
     this.fetchCategories();
     this.fetchDataForSelectedDate();
     this.fetchExpenses();
+
+    this.reloadService.reloadComponents$
+      .pipe(takeUntil(this.destroy$)) 
+      .subscribe(() => {
+        this.fetchDataForSelectedDate(this.currentDate);
+      });
+    }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   fetchCategories(): void {

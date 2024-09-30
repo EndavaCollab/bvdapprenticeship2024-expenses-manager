@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AddExpenseDialogComponent } from '../add-expense-dialog/add-expense-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ExpenseService } from '../services/expense-service/expense.service';
 import { ReloadService } from '../services/reload-service/reload.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-topbar',
@@ -11,11 +12,13 @@ import { ReloadService } from '../services/reload-service/reload.service';
   styleUrls: ['./topbar.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TopbarComponent implements OnInit {
+export class TopbarComponent implements OnInit, OnDestroy {
   tabs = ['Day', 'Week', 'Month', 'Year', 'Custom'];
   totalAmount: number = 0;
   userId: number = Number(localStorage.getItem('userId'));
   selectedTab: number = 0;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     public router: Router, 
@@ -27,9 +30,16 @@ export class TopbarComponent implements OnInit {
   ngOnInit(): void {
     this.onTabChange(0);
 
-    this.reloadService.reloadTopbar$.subscribe(() => {
-      this.onTabChange(this.selectedTab);
-    });
+    this.reloadService.reloadComponents$
+      .pipe(takeUntil(this.destroy$))  
+      .subscribe(() => {
+        this.onTabChange(this.selectedTab);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getTotalAmount(userId: number, startDate?: Date, endDate?: Date): void {
@@ -82,8 +92,8 @@ export class TopbarComponent implements OnInit {
       width: '45rem',
       data: {
         onExpenseAdded: () => {
-          this.onTabChange(this.selectedTab);
           this.reloadService.reloadExpenses();
+          this.reloadService.reloadComponents();
         }
       }
     });
