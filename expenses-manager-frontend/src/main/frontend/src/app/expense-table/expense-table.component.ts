@@ -4,7 +4,7 @@ import { ExpenseService } from '../services/expense-service/expense.service';
 import { CategoryService } from '../services/category-service/category.service';
 import { CurrencyService } from '../services/currency-service/currency.service';
 import { FormControl } from '@angular/forms';
-import { MatDatepicker, MatDatepickerInputEvent, MatDateRangePicker } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
@@ -14,48 +14,10 @@ import { AddExpenseDialogComponent } from '../add-expense-dialog/add-expense-dia
 import { Sort } from '@angular/material/sort';
 import { ReloadService } from '../services/reload-service/reload.service';
 
-import {Injectable} from '@angular/core';
-import {DateAdapter} from '@angular/material/core';
-import {
-  MatDateRangeSelectionStrategy,
-  DateRange,
-  MAT_DATE_RANGE_SELECTION_STRATEGY,
-} from '@angular/material/datepicker';
-import * as moment from 'moment';
-
-@Injectable()
-export class SevenDayRangeSelectionStrategy<D> implements MatDateRangeSelectionStrategy<D> {
-  constructor(private _dateAdapter: DateAdapter<D>) {}
-
-  selectionFinished(date: D | null): DateRange<D> {
-    return this._createSevenDayRange(date);
-  }
-
-  createPreview(activeDate: D | null): DateRange<D> {
-    return this._createSevenDayRange(activeDate);
-  }
-
-  private _createSevenDayRange(date: D | null): DateRange<D> {
-    if (date) {
-      const start = this._dateAdapter.addCalendarDays(date, -3);
-      const end = this._dateAdapter.addCalendarDays(date, 3);
-      return new DateRange<D>(start, end);
-    }
-
-    return new DateRange<D>(null, null);
-  }
-}
-
 @Component({
   selector: 'app-expense-table',
   templateUrl: './expense-table.component.html',
-  styleUrls: ['./expense-table.component.scss'],
-  providers: [
-    {
-      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-      useClass: SevenDayRangeSelectionStrategy,
-    },
-  ],
+  styleUrls: ['./expense-table.component.scss']
 })
 export class ExpenseTableComponent implements OnInit {
   displayedColumns: string[] = ['actions', 'date', 'amount', 'currency', 'category', 'description'];
@@ -81,7 +43,6 @@ export class ExpenseTableComponent implements OnInit {
   startDate!: Date;
   endDate!: Date;
   currentDate: Date = new Date;
-  weekMaxDate: Date = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + 3, 23, 59, 59);
 
   @Input()
   set selectedTab(value: string) {
@@ -105,8 +66,6 @@ export class ExpenseTableComponent implements OnInit {
         break;
 
       case 'Week':
-        this.startDate = new Date(momentDate.year(), momentDate.month(), momentDate.date() - 3, 0, 0, 0);
-        this.endDate = new Date(momentDate.year(), momentDate.month(), momentDate.date() + 3, 23, 59, 59);
         break;
 
       case 'Month':
@@ -121,6 +80,9 @@ export class ExpenseTableComponent implements OnInit {
       case 'Year':
         this.startDate = new Date(momentDate.year(), 0, 1, 0, 0, 0);
         this.endDate = new Date(momentDate.year(), 11, 31, 23, 59, 59);
+        break;
+
+      case 'Custom':
         break;
     }
   }
@@ -255,24 +217,6 @@ export class ExpenseTableComponent implements OnInit {
     datepicker.close();
   }
 
-  setWeek(event: MatDatepickerInputEvent<Date>): void {
-    const ctrlValue = this.date.value.clone() as Moment;
-
-    const selectedDate = _moment(event.value); 
-
-    if (ctrlValue) {
-        const updatedDate = ctrlValue
-            .year(selectedDate.year())
-            .month(selectedDate.month())
-            .date(selectedDate.date() + 3); 
-
-        // Actualizăm valoarea datei
-        this.date.setValue(updatedDate);
-
-        this.updateTable("week");
-    }
-  }
-
   setMonthAndYear(normalizedMonthAndYear: Date, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.date.value.clone() as Moment;
     const newMonthAndYear = _moment(normalizedMonthAndYear);
@@ -302,30 +246,23 @@ export class ExpenseTableComponent implements OnInit {
   }
 
   updateTable(selectedTime: string) {
-    if (selectedTime == "week"){
-      this.startDate.setFullYear(this.date.value.year(), this.date.value.month(), this.date.value.date()-3);
-      this.endDate.setFullYear(this.date.value.year(), this.date.value.month(), this.date.value.date()+3);
-    }
-    else{
+    this.startDate.setFullYear(this.date.value.year());
+    this.endDate.setFullYear(this.date.value.year());
+    if (selectedTime == "month" || selectedTime == "day") {
+      this.startDate.setMonth(this.date.value.month());
+      this.endDate.setDate(1); 
+      this.endDate.setMonth(this.date.value.month());
 
-      this.startDate.setFullYear(this.date.value.year());
-      this.endDate.setFullYear(this.date.value.year());
-      if (selectedTime == "month" || selectedTime == "day") {
-        this.startDate.setMonth(this.date.value.month());
-        this.endDate.setDate(1);
-        this.endDate.setMonth(this.date.value.month());
-
-        if (selectedTime == "day") {
-          this.startDate.setDate(this.date.value.date());
-          this.endDate.setDate(this.date.value.date());
-        }
-        else {
-          const nextMonth = this.startDate.getMonth() + 1;
-          const nextYear = nextMonth === 12 ? this.startDate.getFullYear() + 1 : this.startDate.getFullYear();
-          const firstDayOfNextMonth = new Date(nextYear, nextMonth % 12, 1);
-          const lastDayOfMonth = new Date(firstDayOfNextMonth.getTime() - 1);
-          this.endDate.setDate(lastDayOfMonth.getDate());
-        }
+      if (selectedTime == "day") {
+        this.startDate.setDate(this.date.value.date());
+        this.endDate.setDate(this.date.value.date());
+      }
+      else {
+        const nextMonth = this.startDate.getMonth() + 1;
+        const nextYear = nextMonth === 12 ? this.startDate.getFullYear() + 1 : this.startDate.getFullYear();
+        const firstDayOfNextMonth = new Date(nextYear, nextMonth % 12, 1);
+        const lastDayOfMonth = new Date(firstDayOfNextMonth.getTime() - 1);
+        this.endDate.setDate(lastDayOfMonth.getDate());
       }
     }
 
@@ -351,16 +288,11 @@ export class ExpenseTableComponent implements OnInit {
     this.updateOverlay();
   }
 
-  openWeekDatepicker(datepicker: MatDateRangePicker<Date>) {
-    datepicker.open();
-    this.updateOverlay();
-  }
-
   private updateOverlay() {
     setTimeout(() => {
       const changeViewButton = document.querySelector('.mat-calendar-period-button');
       if (changeViewButton) {
-        if (this.selectedTab !== "Day" && this.selectedTab !== "Week") {
+        if (this.selectedTab !== "Day") {
           changeViewButton.classList.add('hide-change-view-button');
         } else {
           changeViewButton.classList.remove('hide-change-view-button');
@@ -372,18 +304,6 @@ export class ExpenseTableComponent implements OnInit {
   displayDay(): string {
     const selectedDate = this.date.value;
     return selectedDate ? selectedDate.format('DD MMMM YYYY') : 'Select Day';
-  }
-
-  displayWeek(): string {
-    if (!this.startDate || !this.endDate) {
-      return 'Select Week';
-    }
-  
-    // Formatăm startDate și endDate
-    const formattedStart = moment(this.startDate).format('DD MMMM YYYY');
-    const formattedEnd = moment(this.endDate).format('DD MMMM YYYY');
-  
-    return `${formattedStart} - ${formattedEnd}`;
   }
 
   displayMonthAndYear(): string {
@@ -406,18 +326,6 @@ export class ExpenseTableComponent implements OnInit {
     this.currentPage = 1;
     this.date.value.add(1, 'day');
     this.updateTable("day");
-  }
-
-  goToPreviousWeek(): void{
-    this.currentPage = 1;
-    this.date.value.subtract(7, 'days');
-    this.updateTable("week");
-  }
-
-  goToNextWeek(): void{
-    this.currentPage = 1;
-    this.date.value.add(7, 'days');
-    this.updateTable("week");
   }
 
   goToPreviousMonth(): void{
@@ -581,8 +489,6 @@ export class ExpenseTableComponent implements OnInit {
     if (this.selectedTab==="Year" && this.date.value.year()==this.currentDate.getFullYear())
       return true;
     if (this.selectedTab==="Month" && this.date.value.year()==this.currentDate.getFullYear() && this.date.value.month()==this.currentDate.getMonth())
-      return true;
-    if (this.selectedTab === "Week" && this.endDate >= this.currentDate)
       return true;
     if (this.selectedTab==="Day" && this.date.value.year()==this.currentDate.getFullYear() && this.date.value.month()==this.currentDate.getMonth() && this.date.value.date()==this.currentDate.getDate())
       return true;

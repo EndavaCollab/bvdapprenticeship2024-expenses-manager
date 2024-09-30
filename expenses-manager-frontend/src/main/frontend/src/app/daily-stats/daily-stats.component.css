@@ -16,15 +16,6 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 1.5rem;
-
-    .hidden-datepicker-input {
-        position: absolute;
-        opacity: 0;
-        inline-size: 0rem;
-        block-size: 0rem;
-        bottom: 0rem;
-        left: 0.5rem;
-      }
 }
 
 .red-divider { 
@@ -74,8 +65,4 @@
     left: 50% !important; 
     transform: translateX(-50%) !important; 
     z-index: 1000 !important; 
-}
-
-::ng-deep .hide-change-view-button {
-    display: none !important;
 }

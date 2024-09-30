@@ -23,7 +23,6 @@
 
         .date-picker-button{
             position: relative;
-            white-space: nowrap; /* Previne împărțirea textului */
         }
 
         .hidden-datepicker-input {
@@ -33,11 +32,7 @@
             block-size: 0rem;
             bottom: 1.2rem;
             left: 0.5rem;
-        }
-
-        ::ng-deep .mat-date-range-input-container {
-            display: none; /* Ascunde separatorul dintre Start date și End date */
-        }
+          }
     }
 }
   
@@ -105,7 +100,6 @@
         padding: 0;
       }
     }
-
 }
 
 .paginator{
