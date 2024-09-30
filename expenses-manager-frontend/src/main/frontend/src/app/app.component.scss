@@ -1,31 +1,35 @@
-.container {
+.container{
     display: grid;
     grid-template-columns: 22rem 1fr 40rem;
     grid-template-rows: 7.1rem 1fr;
     height: 100%;
     padding-left: 0%;
     max-inline-size: unset;
+}
 
-    app-sidebar {
-        grid-column: 1;
-        grid-row: 1 / span 2;
-    }
+app-sidebar {
+    grid-column: 1;
+    grid-row: span 2;
+}
 
-    app-topbar {
-        grid-column: 2;
-        grid-row: 1;
-    }
+app-topbar {
+    grid-column: 2;
+    grid-row: 1;
+}
 
-    router-outlet {
-        grid-column: 1;
-        grid-row: 2;
-    }
+app-expenses {
+    grid-column: 2 / span 2;
+    grid-row: 2 / span 2;
+}
 
-    app-right-sidebar {
-        grid-column: 3;
-        grid-row: 1;
-        border-left: 1px solid #000; /* Linie între sidebar-ul din dreapta și conținut */
-    }
+app-reports {
+    grid-column: 2 / span 2;
+    grid-row: 2 / span 2;
+}
+
+app-right-sidebar {
+    grid-column: 3;
+    grid-row: 1;
 }
 
 .notifications {

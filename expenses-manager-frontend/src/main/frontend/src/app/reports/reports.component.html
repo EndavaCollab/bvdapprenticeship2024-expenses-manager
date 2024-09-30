@@ -3,15 +3,25 @@
 
 </div>
 <div class="container">
-    <div class="stats">
-        <app-daily-stats selectedTab="{{selectedTab}}" [startDate]="startDate" [endDate]="endDate"></app-daily-stats>
+    <div class="row">
+        <div class="col">
+            <div class="stats">
+                <app-daily-stats selectedTab="{{selectedTab}}" [startDate]="startDate"
+                    [endDate]="endDate"></app-daily-stats>
+            </div>
+        </div>
+        <div class="col">
+            <div class="overview">
+                <div class="card" appearance="outlined" *ngFor="let category of filteredCategories"
+                    [ngStyle]="{'color': getCategoryColor(category.id)}">
+                    <span class="card-title">{{getCategoryDescription(category.id)}}</span>
+                    <span class="card-subtitle">{{reloadService.getCurrentCurrency()}}{{categoryExpense.get(category.id)
+                        | number : '0.2-2'}} </span>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="overview">
-        <mat-card class="card" appearance="outlined" *ngFor="let category of filteredCategories"
-            [ngStyle]="{'color': getCategoryColor(category.id)}">
-            <mat-card-content>{{getCategoryDescription(category.id)}}</mat-card-content>
-            <mat-card-content>{{categoryExpense.get(category.id)}}</mat-card-content>
-        </mat-card>
-    </div>
+
+    <app-evolution-chart class="chart" selectedTab="{{selectedTab}}" [startDate]="startDate"
+        [endDate]="endDate"></app-evolution-chart>
 </div>
-<app-evolution-chart selectedTab="{{selectedTab}}" [startDate]="startDate" [endDate]="endDate"></app-evolution-chart>

@@ -48,6 +48,11 @@ export class ExpensesComponent implements OnInit {
     this.categoryService.getAllCategories().subscribe({
       next: (dbCategories) => {
         this.categories = dbCategories;
+        this.categories.push({
+          id: 0,
+          description: 'All',
+          color: '#ccc'
+      });
       },
       error: (error) => {
         console.error('Error fetching categories:', error);
@@ -57,6 +62,10 @@ export class ExpensesComponent implements OnInit {
     this.currencyService.getAllCurrencies().subscribe({
       next: (dbCurrencies) => {
         this.currencies = dbCurrencies;
+        this.currencies.push({
+          id: 0,
+          code: 'All'
+        })
       },
       error: (error) => {
         console.error('Error fetching currencies:', error);
@@ -176,7 +185,7 @@ export class ExpensesComponent implements OnInit {
 
           this.expenseService.updateExpense(expense.id, expense).subscribe({
             next: () => {
-              this.fetchExpenses(); // Refresh the expense list after update
+              this.update(); // Refresh the expense list after update
             },
             error: (error) => {
               console.error('Error updating expense:', error); // Log if there's an error
@@ -185,19 +194,6 @@ export class ExpensesComponent implements OnInit {
         } else {
           console.error('Expense ID is undefined, cannot update.'); // Log if ID is missing
         }
-      }
-    });
-  }
-  
-  fetchExpenses(): void {
-    const userId = localStorage.getItem("userId");
-    this.expenseService.getExpensesByUserId(userId).subscribe({
-      next: (response) => {
-        this.expenses = response; 
-        this.showActionsMap = {}; 
-      },
-      error: (error) => {
-        console.error('Error getting expenses:', error);
       }
     });
   }
@@ -210,7 +206,7 @@ export class ExpensesComponent implements OnInit {
         if (expense.id !== undefined) {
           this.expenseService.deleteExpense(expense.id).subscribe({
             next: () => {
-              this.fetchExpenses();
+              this.update();
             },
             error: (error) => {
               console.error('Error deleting expense:', error);

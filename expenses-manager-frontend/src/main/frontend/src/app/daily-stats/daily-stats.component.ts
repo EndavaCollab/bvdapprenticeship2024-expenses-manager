@@ -87,7 +87,7 @@ export class DailyStatsComponent implements OnInit, OnDestroy {
   }
 
   fetchExpenses(startDate:Date, endDate:Date): void {
-    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), startDate, endDate).subscribe({
+    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), startDate, endDate, this.reloadService.getCurrentCurrency()).subscribe({
       next: (expenses: Expense[]) => {
         this.expenses = expenses;
       },
@@ -142,7 +142,7 @@ export class DailyStatsComponent implements OnInit, OnDestroy {
   }
   
   fetch(startDate:Date, endDate:Date): void {
-    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), startDate, endDate).subscribe({
+    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), startDate, endDate, this.reloadService.getCurrentCurrency()).subscribe({
       next: (expenses: Expense[]) => {
         this.expenses = expenses;
         if (expenses.length === 0) {

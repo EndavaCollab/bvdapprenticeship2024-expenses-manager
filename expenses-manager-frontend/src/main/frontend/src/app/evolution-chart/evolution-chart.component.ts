@@ -3,6 +3,7 @@ import { Category, Expense } from '../models';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { ExpenseService } from '../services/expense-service/expense.service';
 import { CategoryService } from '../services/category-service/category.service';
+import { ReloadService } from '../services/reload-service/reload.service';
 
 @Component({
   selector: 'app-evolution-chart',
@@ -17,6 +18,7 @@ export class EvolutionChartComponent implements OnInit {
 
   categories: Category[] = [];
   expenses: Expense[] = [];
+  userId: number = Number(localStorage.getItem('userId'));
   data: {
     name: string,
     series: {
@@ -26,6 +28,7 @@ export class EvolutionChartComponent implements OnInit {
     }[]
   }[] = [];
   showChart = false;
+  totalAmount!: number;
 
   colorScheme: Color = {
     name: 'custom',
@@ -36,20 +39,66 @@ export class EvolutionChartComponent implements OnInit {
 
   constructor(
     private expenseService: ExpenseService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    public reloadService: ReloadService
   ) { }
 
   ngOnInit(): void {
     this.fetchCategories();
     this.fetchExpenses();
+
+    this.reloadService.tabChange$.subscribe(tabName => {
+      if (tabName) {
+        
+        this.getTotalAmount(this.userId, tabName);
+      }
+    });
+  }
+
+  getTotalAmount(userId: number, period: string): void {
+    const date = new Date();
+    let startDate;
+    let endDate;
+    switch(period){
+      case 'Day':
+        startDate=new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        endDate=new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+        break;
+        
+      case 'Week':
+        startDate = new Date(date);
+        startDate.setDate(startDate.getDate() - startDate.getDay());
+        startDate.setHours(0, 0, 0);
+
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6);
+        endDate.setHours(23, 59, 59);
+        break;
+
+      case 'Month':
+        startDate=new Date(date.getFullYear(), date.getMonth(), 1);
+        endDate=new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59);
+        break;
+
+      case 'Year':
+        startDate=new Date(date.getFullYear(), 0, 1);
+        endDate=new Date(date.getFullYear(), 11, 31, 23, 59, 59);
+        break;
+
+      case 'Custom':
+        break;
+      }
+      
+    this.expenseService.getTotalAmountBetweenDates(userId, startDate,endDate, this.reloadService.getCurrentCurrency())
+      .subscribe(amount => this.totalAmount = amount);
   }
 
   formatXAxis = (date: string) => {
-    if (this.selectedTab=='Month'){
+    if (this.selectedTab == 'Month') {
       const dateObj = new Date(date);
       return dateObj.getDate().toString();
     }
-      return date.split(' ')[0];
+    return date.split(' ')[0];
   };
 
   fetchCategories(): void {
@@ -60,7 +109,7 @@ export class EvolutionChartComponent implements OnInit {
   }
 
   fetchExpenses(): void {
-    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), this.startDate, this.endDate, this.reloadService.getCurrentCurrency()).subscribe({
       next: (expenses: Expense[]) => {
         this.expenses = expenses;
       },
@@ -75,29 +124,29 @@ export class EvolutionChartComponent implements OnInit {
     return category?.description || 'Unknown';
   }
 
-  fetch(selectedTab:string): void {
-    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+  fetch(selectedTab: string): void {
+    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), this.startDate, this.endDate, this.reloadService.getCurrentCurrency()).subscribe({
       next: (expenses: Expense[]) => {
         this.expenses = expenses;
 
-      if (selectedTab=='Month')
-        this.groupExpensesByDay(expenses);
-      if (selectedTab=='Year')
+        if (selectedTab == 'Month')
+          this.groupExpensesByDay(expenses);
+        if (selectedTab == 'Year')
           this.groupExpensesByMonth(expenses);
 
         const categoryColorMapping: { [key: string]: string } = {};
-        
+
         this.data.forEach(monthData => {
-            monthData.series.forEach(series => {
-                const color = series.color || '#ccc'; // Default color
-                categoryColorMapping[series.name] = color;
-            });
+          monthData.series.forEach(series => {
+            const color = series.color || '#ccc'; // Default color
+            categoryColorMapping[series.name] = color;
+          });
         });
 
         this.data.sort((a, b) => new Date(a.name).getTime() - new Date(b.name).getTime());
 
         this.colorScheme.domain = [...new Set(this.data.flatMap(monthData => monthData.series.map(s => s.color || '#ccc')))];
-        
+
         this.showChart = this.data.length > 0;
       },
       error: (error) => {
@@ -155,11 +204,10 @@ export class EvolutionChartComponent implements OnInit {
         };
       })
     }));
-
   }
 
   private groupExpensesByMonth(expenses: Expense[]): void {
-    
+
     const allMonths = this.getAllMonthsInRange(this.startDate, this.endDate);
 
     const groupedByMonth: { [month: string]: { [category: string]: number } } = {};
@@ -186,15 +234,15 @@ export class EvolutionChartComponent implements OnInit {
       if (!groupedByMonth[month]) {
         groupedByMonth[month] = {};
         this.categories.forEach(cat => {
-          groupedByMonth[month][cat.description] = 0; 
+          groupedByMonth[month][cat.description] = 0;
         });
       }
     });
 
     this.data = Object.keys(groupedByMonth).map(month => ({
-      name: this.formatMonth(month), 
+      name: this.formatMonth(month),
       series: Object.keys(groupedByMonth[month])
-        .filter(categoryName => groupedByMonth[month][categoryName] > 0) 
+        .filter(categoryName => groupedByMonth[month][categoryName] > 0)
         .map(categoryName => {
           const category = this.categories.find(cat => cat.description === categoryName);
           return {
@@ -206,8 +254,8 @@ export class EvolutionChartComponent implements OnInit {
         .sort((cat1, cat2) => {
           const id1 = this.categories.find(cat => cat.description === cat1.name)?.id || 0;
           const id2 = this.categories.find(cat => cat.description === cat2.name)?.id || 0;
-          return id1 - id2; 
-      })
+          return id1 - id2;
+        })
     }));
   }
 
@@ -239,7 +287,7 @@ export class EvolutionChartComponent implements OnInit {
     while (currentDate.getFullYear() < endYear || (currentDate.getFullYear() === endYear && currentDate.getMonth() + 1 <= endMonth)) {
       const yearMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`;
       months.push(yearMonth);
-      currentDate.setMonth(currentDate.getMonth() + 1); 
+      currentDate.setMonth(currentDate.getMonth() + 1);
     }
 
     return months;

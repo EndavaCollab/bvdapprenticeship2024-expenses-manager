@@ -6,17 +6,17 @@
     padding: 1.5rem;
     border-radius: 1rem;
     box-shadow: 0 0.5rem 1rem var(--shadow-color);
-    position: relative;
     margin: 1rem;
     max-width: 80rem;
     box-shadow: 0 0.5rem 1rem var(--shadow-color);
 }
 
-.title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1.5rem;
+.header{
+    font-family: var(--font-family);
+}
+
+.expense-text{
+    text-align: right;
 }
 
 .red-divider { 

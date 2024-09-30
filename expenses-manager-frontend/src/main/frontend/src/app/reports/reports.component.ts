@@ -73,7 +73,7 @@ export class ReportsComponent implements OnInit {
   }
 
   update(){
-    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), this.startDate, this.endDate).subscribe({
+    this.expenseService.getExpensesByUserId(localStorage.getItem("userId"), this.startDate, this.endDate, this.reloadService.getCurrentCurrency()).subscribe({
       next: (response) => {
         this.expenses = response;
         this.setExpensesForEachCategory();

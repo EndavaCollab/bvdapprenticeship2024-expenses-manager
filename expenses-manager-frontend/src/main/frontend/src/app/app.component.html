@@ -10,5 +10,7 @@
     <app-sidebar></app-sidebar>
     <app-topbar></app-topbar>
     <app-right-sidebar></app-right-sidebar>
-    <router-outlet></router-outlet>
+    <app-home *ngIf="router.url == '/home'"></app-home>
+    <app-expenses *ngIf="router.url == '/expenses'"></app-expenses>
+    <app-reports *ngIf="router.url == '/reports'"></app-reports>
 </div>

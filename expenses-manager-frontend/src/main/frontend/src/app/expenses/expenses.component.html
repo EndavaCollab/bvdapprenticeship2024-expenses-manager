@@ -1,6 +1,6 @@
 <app-datepicker [(startDate)]="startDate" [(endDate)]="endDate" (updateRequest)="update()"></app-datepicker>
 
-<table mat-table [dataSource]="expenses" matSort (matSortChange)="sortData($event)" class="mat-elevation-z8 expense-table">
+<table mat-table [dataSource]="expenses" matSort (matSortChange)="sortData($event)" class="expense-table">
   
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef class="column"> Actions </th>

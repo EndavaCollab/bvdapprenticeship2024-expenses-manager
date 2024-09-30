@@ -16,7 +16,7 @@
       <mat-datepicker #picker touchUi="true"></mat-datepicker>      
   </div>
 
-  <div class *ngIf="router.url === '/reports'">
+  <div class="title" *ngIf="router.url === '/reports'">
     <p>All categories</p>
   </div>
 
@@ -44,6 +44,6 @@
   </div>
 
   <div *ngIf="!showChart" class="no-expenses-message">
-      No expenses found! Please select another day.
+      No expenses found! Please select another date.
   </div>
 </div>

@@ -1,6 +1,6 @@
 <div class="chart-container" *ngIf="selectedTab=='Month' || selectedTab=='Year'">
-    <div>
-      <p>All categories</p>
+    <div class="header">
+      <p>Evolution</p>
     </div>
   
     <hr class="red-divider"> <!-- Linia roșie vizibilă -->
@@ -8,7 +8,7 @@
     <div class="chart-and-legend">
         <ngx-charts-bar-vertical-stacked
         *ngIf="showChart"
-        [view]="[600, 150]"
+        [view]="[800, 150]"
         [results]="data"
         [scheme]="colorScheme"
         [xAxis]="true"

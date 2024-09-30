@@ -1,6 +1,6 @@
 <div class="horizontal-container"> 
   <h2>{{ userName }}</h2>
-  <mat-select *ngIf="router.url == '/home'" [(value)]="selectedCurrencyIndex" (selectionChange)="onCurrencyChange(currencies[$event.value].code)">
+  <mat-select *ngIf="router.url != '/expenses'" [(value)]="selectedCurrencyIndex" (selectionChange)="onCurrencyChange(currencies[$event.value].code)">
     <mat-option *ngFor="let currency of currencies; let i = index" [value]="i"> 
       {{ currency.code }} 
     </mat-option>

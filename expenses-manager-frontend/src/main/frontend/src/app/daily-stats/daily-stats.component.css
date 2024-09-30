@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.25); 
+    background-color: rgba(255, 255, 255, 0.25);
     padding: 1.5rem;
     border-radius: 1rem;
     box-shadow: 0 0.5rem 1rem var(--shadow-color);
@@ -11,10 +11,17 @@
     margin: 0 auto;
 }
 
-.reports-chart{
-    background-color: rgba(255, 255, 255, 0.25); 
+.reports-chart {
+    background-color: rgba(255, 255, 255, 0.25);
     margin: 12px;
     box-shadow: 0 0.5rem 1rem var(--shadow-color);
+
+    .title {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: var(--font-family);
+    }
 }
 
 .date-picker-container {
@@ -24,9 +31,9 @@
     margin-bottom: 1.5rem;
 }
 
-.red-divider { 
+.red-divider {
     border: none;
-    border-top: 2px solid black; 
+    border-top: 2px solid black;
     width: 100%;
     margin: 1rem 0;
 }
@@ -34,14 +41,14 @@
 .chart-and-legend {
     display: flex;
     justify-content: center;
-    align-items: center; 
+    align-items: center;
     width: 100%;
 }
 
 .fixed-chart {
-    position: fixed; 
+    position: fixed;
     top: 10%;
-    left: 5rem; 
+    left: 5rem;
 }
 
 .legend-container {
@@ -67,8 +74,12 @@
 
 .mat-datepicker-popup {
     position: absolute !important;
-    top: calc(100% + 10px) !important; 
-    left: 50% !important; 
-    transform: translateX(-50%) !important; 
-    z-index: 1000 !important; 
+    top: calc(100% + 10px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 1000 !important;
+}
+
+.chart {
+    margin: 0 auto;
 }
