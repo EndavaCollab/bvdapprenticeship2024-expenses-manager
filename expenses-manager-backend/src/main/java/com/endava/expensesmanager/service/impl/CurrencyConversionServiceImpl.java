@@ -41,7 +41,7 @@ public class CurrencyConversionServiceImpl implements CurrencyConversionService 
         loadExchangeRates();
     }
 
-    @Scheduled(cron = "0 0 0 * * MON")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void loadExchangeRates(){
         try {
             List<Currency> currencies = currencyRepository.findAll();
@@ -60,9 +60,6 @@ public class CurrencyConversionServiceImpl implements CurrencyConversionService 
                     }
 
                     exchangeRatesCache.put(baseCurrency.getCode(), filteredRates);
-                }
-                else{
-                    throw new BadRequestException("Failed to load rates for base currency: " + baseCurrency.getCode());
                 }
             }
         } catch (Exception e){
